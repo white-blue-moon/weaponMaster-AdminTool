@@ -1,14 +1,13 @@
 <script>
 	import { Router, Route } from 'svelte-routing';
+	import { PATHS } from './constants/paths';
+
+	import Home from './routes/Home.svelte';
 </script>
 
 <Router>
-	<Route />
+	<Route path={ PATHS.HOME } component= { Home }/>
 </Router>
 
 <style>
-	/* Svelte 에서 기본 세팅된 공백 값 제거 */
-	:global(body) {
-		padding: 0;
-	}
 </style>
