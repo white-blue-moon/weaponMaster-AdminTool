@@ -1,17 +1,39 @@
 <script>
-    function handleMouseOver(e) {
-        e.currentTarget.classList.add('active');
-        const submenu = e.currentTarget.querySelector('ul');
+    function handleMouseEnter(e) {
+        const target = e.currentTarget;
+        target.classList.add('active');
+
+        const submenu = target.querySelector('ul');
         if (submenu) {
-          submenu.style.display = 'block';
+            submenu.style.display = 'block'; // 표시 설정
+            submenu.style.height = '0'; // 초기 높이를 0으로 설정
+
+            // 브라우저 리렌더링을 강제하여 애니메이션이 적용되도록 처리
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    submenu.style.height = '55px'; // 트랜지션 시작
+                });
+            })
         }
     }
 
-    function handleMouseOut(e) {
-        e.currentTarget.classList.remove('active');
-        const submenu = e.currentTarget.querySelector('ul');
+    function handleMouseLeave(e) {
+        const target = e.currentTarget;
+        target.classList.remove('active');
+
+        const submenu = target.querySelector('ul');
         if (submenu) {
-          submenu.style.display = 'none';
+            submenu.style.height = '0'; // 트랜지션 종료 상태로 설정
+
+            submenu.addEventListener(
+                'transitionend',
+                function handler() {
+                    if (submenu.style.height === '0px') {
+                        submenu.style.display = 'none'; // 트랜지션 종료 후 숨김
+                    }
+                    submenu.removeEventListener('transitionend', handler); // 이벤트 제거
+                }
+            );
         }
     }
 </script>
@@ -24,7 +46,7 @@
     </h1>
     <ul>
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
-        <li class="m1" on:mouseover={handleMouseOver} on:mouseout={handleMouseOut}>
+        <li class="m1" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
             <a href="/">API Docs</a>
             <ul>
                 <li>
@@ -35,7 +57,7 @@
         </li>
         
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
-        <li class="m2" on:mouseover={handleMouseOver} on:mouseout={handleMouseOut}>
+        <li class="m2" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
             <a href="/">이용안내</a>
             <ul>
                 <li>
@@ -48,7 +70,7 @@
         </li>
 
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
-        <li class="m3" on:mouseover={handleMouseOver} on:mouseout={handleMouseOut}>
+        <li class="m3" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
             <a href="/">지원센터</a>
             <ul>
                 <li>
@@ -73,8 +95,20 @@
     .nav ul li:first-child{margin-left:307px}
     .nav ul li a{display:block;float:left;padding:0;margin-right:30px;font-size:15px;color:#818181}
     .nav ul li.active a{padding-bottom:25px;color:#2d2d2d;border-bottom:3px solid #fabe00}
-
-    .nav ul li ul{display:none;position:absolute;top:75px;left:0;height:55px;width:100%;z-index:900;background:#fff;}
+ 
+    .nav ul li ul {
+        position: absolute;
+        top: 75px;
+        left: 0;
+        height: 0;
+        width: 100%;
+        z-index: 900;
+        background: #fff;
+        overflow: hidden;
+        display: none; /* 기본적으로 숨김 */
+        transition: height 0.3s ease; /* height 애니메이션 적용 */
+    }
+ 
     .nav ul li ul li{position:relative;left:50%;padding:0;margin:0 0 0 -600px !important;width:1200px}
     .nav ul li ul li a{float:left;padding:0;margin:18px 30px 0 0;font-size:15px;color:#818181 !important}
     .nav ul li ul li a:hover{color:#e0aa00 !important}
