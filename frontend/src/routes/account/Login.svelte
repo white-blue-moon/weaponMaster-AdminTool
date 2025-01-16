@@ -2,11 +2,11 @@
     // import { API } from '../../constants/api';
     // import { apiFetch, handleApiError } from '../../utils/apiFetch';
     // import { userInfo, isLoggedIn } from "../../utils/auth";
+    import { PATHS } from "../../constants/paths";
 
     import Gnb from "../../components/Gnb.svelte";
     import VisualBanner from "../../components/VisualBanner.svelte";
     import Footer from "../../components/Footer.svelte";
-  import { PATHS } from "../../constants/paths";
 
     let userId = "";
     let password = "";
