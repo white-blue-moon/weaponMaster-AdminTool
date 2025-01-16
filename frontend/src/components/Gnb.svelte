@@ -49,35 +49,30 @@
     <ul>
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <li class="m1" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
-            <a href="/">API Docs</a>
+            <a href="/">Site Setting</a>
             <ul>
                 <li>
-                    <a href="/contents/apiDocs/df">던전앤파이터</a>
-                    <a href="/contents/apiDocs/cyphers">사이퍼즈</a>
+                    <a href="/contents/apiDocs/df">홈페이지 설정 제어</a>
                 </li>
             </ul>
         </li>
         
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <li class="m2" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
-            <a href="/">이용안내</a>
+            <a href="/">권한부여</a>
             <ul>
                 <li>
-                    <a href="/contents/guide/pages/all">공통 가이드</a>
-                    <a href="/contents/guide/pages/code">결과 코드 정보</a>
-                    <a href="/contents/bi">BI 가이드</a>
-                    <a href="/contents/policy">약관 및 정책</a>
+                    <a href="/contents/guide/pages/all">관리자 권한 관리</a>
                 </li>
             </ul>
         </li>
 
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <li class="m3" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
-            <a href="/">지원센터</a>
+            <a href="/">점검 제어</a>
             <ul>
                 <li>
-                    <a href="/contents/notice/list">공지사항</a>
-                    <a href="/contents/faq">FAQ</a>
+                    <a href="/contents/notice/list">홈페이지 점검 상태 제어</a>
                 </li>
             </ul>
         </li>
@@ -116,8 +111,8 @@
     .nav ul li ul li a{float:left;padding:0;margin:18px 30px 0 0;font-size:15px;color:#818181 !important}
     .nav ul li ul li a:hover{color:#e0aa00 !important}
     .nav ul li.m1 ul li a:first-child{margin-left:305px;}
-    .nav ul li.m2 ul li a:first-child{margin-left:397px;}
-    .nav ul li.m3 ul li a:first-child{margin-left:481px;}
+    .nav ul li.m2 ul li a:first-child{margin-left:416px;}
+    .nav ul li.m3 ul li a:first-child{margin-left:501px;}
     .nav .topbtn{position:absolute;top:23px;left:50%;width:300px;margin-left:342px;text-align:right;}
     .nav .topbtn a{display:inline-block;width:77px;height:27px;border:1px solid #cecece;border-radius:10px;color:#b3b3b3;text-align:center;line-height:28px;font-size:11px;}
     .nav .topbtn a:hover{border:1px solid #a7a7a7;color:#818181}
