@@ -60,6 +60,8 @@
 <VisualBanner background="/img/svisual1.jpg" title="로그인"/>
 
 <section class="content">
+    <h3>어드민 툴에 오신 것을 환영합니다.</h3>
+
     <article class="login">
         <form action="/account/login" method="post" id="loginForm" on:submit={ onSubmitLogin }>
             <ul class="login_normal">
@@ -106,7 +108,7 @@
         width: 660px;
     }
 
-    /* .content h3 {
+    .content h3 {
         position: relative;
         margin-top: 60px;
         color: #6a6e76;
@@ -114,7 +116,7 @@
         font-weight: 400;
         text-align: center;
         line-height: 25px;
-    } */
+    }
     
     .login {
         position: relative;
