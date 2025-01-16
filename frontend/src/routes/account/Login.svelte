@@ -57,7 +57,7 @@
 
 
 <Gnb />
-<VisualBanner />
+<VisualBanner background="/img/svisual1.jpg" title="로그인"/>
 
 <section class="content">
     <article class="login">
