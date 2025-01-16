@@ -1,4 +1,6 @@
 <script>
+    import { PATHS } from "../constants/paths";
+
     function handleMouseEnter(e) {
         const target = e.currentTarget;
         target.classList.add('active');
@@ -81,7 +83,8 @@
         </li>
     </ul>
     <div class="topbtn">
-        <a href="javascript:goLogin(true)">로그인</a>
+        <a href={ PATHS.ACCOUNT.LOGIN }>로그인</a>
+        <a href={ PATHS.ACCOUNT.JOIN }>회원가입</a>
     </div>
 </div>
 
