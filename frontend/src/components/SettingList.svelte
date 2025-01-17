@@ -3,19 +3,14 @@
     // import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
 
-    export let categoryType;
-    export let articleType;
-
-    let page;
-
     const PAGE_SIZE = 10; // 한 페이지에 표시할 게시물 수
     const GROUP_PAGING_SIZE = 10; // 한 그룹에 표시할 페이지 번호 개수
 
-    let articles = [];
+    let settings = [];
+    let displayedSettings = [];
     let totalPageNum = 1;
     let currentPageNum = 1; // 현재 페이지
-    let displayedArticles = [];
-
+    
     onMount(async () => {
         // const response = await apiFetch(API.ARTICLES.LIST(categoryType, articleType), {
         //     method: "GET",
@@ -29,7 +24,7 @@
     });
 
     function updateDisplayedArticles() {
-        displayedArticles = articles.slice((currentPageNum - 1) * PAGE_SIZE, currentPageNum * PAGE_SIZE);
+        displayedSettings = settings.slice((currentPageNum - 1) * PAGE_SIZE, currentPageNum * PAGE_SIZE);
     }
 
     function changePage(pageNum) {
@@ -49,14 +44,14 @@
 
     // ========== [더미 테스트] ===========
         // 더미 데이터 생성
-    articles = Array.from({ length: 24 }, (_, index) => ({
+    settings = Array.from({ length: 24 }, (_, index) => ({
         id: index + 1,
         title: `Test Article ${index + 1}`,
         createDate: new Date(2025, 0, index + 1).toISOString(), // 2025년 1월 기준 날짜 생성
         viewCount: Math.floor(Math.random() * 1000) + 1, // 1 ~ 1000 사이 랜덤 조회수
     }));
 
-    totalPageNum = Math.ceil(articles.length / PAGE_SIZE); // 총 페이지 수 계산
+    totalPageNum = Math.ceil(settings.length / PAGE_SIZE); // 총 페이지 수 계산
     updateDisplayedArticles(); // 초기 데이터 업데이트
 </script>
 
@@ -100,7 +95,7 @@
     </article>
 
     <article class="board_list news_list">
-        {#each displayedArticles as article}
+        {#each displayedSettings as setting}
             <ul>
                 <li class="category">
                     분류
@@ -110,12 +105,12 @@
                         { getArticleFilterText(article.categoryType, article.articleType, article.articleDetailType) }
                     {/if} -->
                 </li>
-                <li class="title" data-no={ article.id }>
-                    <a href='/'>{ article.title }</a>
+                <li class="title" data-no={ setting.id }>
+                    <a href='/'>{ setting.title }</a>
                     <div class="iconset"></div>
                 </li>
-                <li class="date">{ article.createDate.split('T')[0] }</li>
-                <li class="hits">{ article.viewCount.toLocaleString() }</li>
+                <li class="date">{ setting.createDate.split('T')[0] }</li>
+                <li class="hits">#{ setting.id }</li>
             </ul>
         {/each}
     </article>
@@ -442,7 +437,7 @@
     .board_list ul li.hits {
         width: 110px;
         padding-left: 24px;
-        background: url("#{$DF_UI}/img/board/board_ico_view.png") no-repeat 0 calc(50% + 1px);
+        // background: url("#{$DF_UI}/img/board/board_ico_view.png") no-repeat 0 calc(50% + 1px);
         text-align: left;
         font-size: 13px;
     }

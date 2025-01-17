@@ -7,7 +7,7 @@
 
 
 <Gnb />
-<VisualBanner />
+<VisualBanner title="홈페이지 설정 제어"/>
 <SettingList />
 <Footer />
 
