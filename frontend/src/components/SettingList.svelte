@@ -1,6 +1,6 @@
 <script>
-    // import { API } from '../constants/api';
-    // import { apiFetch, handleApiError } from '../utils/apiFetch';
+    import { API } from '../constants/api';
+    import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
 
     const PAGE_SIZE = 10; // 한 페이지에 표시할 게시물 수
@@ -12,15 +12,15 @@
     let currentPageNum = 1; // 현재 페이지
     
     onMount(async () => {
-        // const response = await apiFetch(API.ARTICLES.LIST(categoryType, articleType), {
-        //     method: "GET",
-        // }).catch(handleApiError);
+        const response = await apiFetch(API.SITE_SETTING.LIST, {
+            method: "GET",
+        }).catch(handleApiError);
 
-        // if (response.success) {
-        //     articles = response.articles;
-        //     totalPageNum = Math.ceil(articles.length / PAGE_SIZE);
-        //     updateDisplayedArticles();
-        // }
+        if (response != null) {
+            settings = response;
+            totalPageNum = Math.ceil(settings.length / PAGE_SIZE);
+            updateDisplayedArticles();
+        }
     });
 
     function updateDisplayedArticles() {
@@ -40,24 +40,12 @@
         { length: currentGroupEnd - currentGroupStart + 1 }, // ex. 1 ~ 10 을 표현하려면 + 1 해야 함 (start ~ end 모두 표현하려면 +1 필요)
         (_, i) => currentGroupStart + i
     );
-
-
-    // ========== [더미 테스트] ===========
-        // 더미 데이터 생성
-    settings = Array.from({ length: 24 }, (_, index) => ({
-        id: index + 1,
-        title: `Test Article ${index + 1}`,
-        createDate: new Date(2025, 0, index + 1).toISOString(), // 2025년 1월 기준 날짜 생성
-        viewCount: Math.floor(Math.random() * 1000) + 1, // 1 ~ 1000 사이 랜덤 조회수
-    }));
-
-    totalPageNum = Math.ceil(settings.length / PAGE_SIZE); // 총 페이지 수 계산
-    updateDisplayedArticles(); // 초기 데이터 업데이트
 </script>
 
 
 <section class="content news">
     <!-- <h3>{ ARTICLE_TYPE_TEXT[categoryType][articleType] }</h3> -->
+    
     <article class="news_header">
         <div class="category_type_c">
             <!-- {#each articleFilters as articleFilter}
@@ -98,18 +86,18 @@
         {#each displayedSettings as setting}
             <ul>
                 <li class="category">
-                    분류
+                    { setting.is_active }
                     <!-- {#if article.articleDetailType === ARTICLE_DETAIL_TYPE.NEWS.NOTICE.INSPECTION}
                         <b>{ getArticleFilterText(article.categoryType, article.articleType, article.articleDetailType) }</b>
                     {:else}
                         { getArticleFilterText(article.categoryType, article.articleType, article.articleDetailType) }
                     {/if} -->
                 </li>
-                <li class="title" data-no={ setting.id }>
-                    <a href='/'>{ setting.title }</a>
+                <li class="title">
+                    <a href='/'>{ setting.settings_comment }</a>
                     <div class="iconset"></div>
                 </li>
-                <li class="date">{ setting.createDate.split('T')[0] }</li>
+                <li class="date">2015-01-17<!--{ setting.createDate.split('T')[0] }--></li>
                 <li class="hits">#{ setting.id }</li>
             </ul>
         {/each}
