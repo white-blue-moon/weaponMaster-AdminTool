@@ -1,6 +1,6 @@
 <script>
     import { API } from '../constants/api';
-    import { SETTING_STATE_TEXT } from '../constants/settingState';
+    import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState';
     import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
     // import { userInfo, isLoggedIn } from "../utils/auth";
@@ -30,7 +30,7 @@
     });
 
     async function handleDelete() {
-        const isConfirm = confirm("정말 해당 게시물을 삭제하시겠습니까?");
+        const isConfirm = confirm("정말 현재 설정(항목)을 삭제하시겠습니까?");
         if (!isConfirm) {
             return;
         }
@@ -43,12 +43,12 @@
         // }).catch(handleApiError);
 
         // if (response.success) {
-        //     alert('게시물이 삭제되었습니다.');
+        //     alert('설정(항목)이 삭제되었습니다.');
         //     // window.location.href = page.listPath;
         //     return;
         // }
         
-        alert('게시물 삭제에 실패하였습니다.');
+        alert('설정(항목) 삭제에 실패하였습니다.');
         return;
     }
 
@@ -56,6 +56,14 @@
     function handleStateChange(event) {
         // setting.active_state = Number(event.target.value); // 선택된 값을 설정
     }
+
+    // RESERVED 날짜 선택 기본 오전 10:00으로 설정
+    const now = new Date();
+    now.setHours(10, 0, 0, 0); 
+    // 'YYYY-MM-DDTHH:mm' 형식으로 변환
+    const datePart = now.toLocaleDateString("en-CA"); // ISO 날짜 형식 (YYYY-MM-DD)
+    const timePart = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); // 24시간제 (HH:mm)
+    const defaultDatetime = `${datePart}T${timePart}`;
 </script>
 
 {#if setting}
@@ -70,6 +78,13 @@
                         {/each}
                     </select>
                 </dt>
+                <!-- RESERVED 상태일 경우에만 날짜 선택 엘리먼트 렌더링 -->
+                {#if setting.active_state === SETTING_STATE.RESERVED}
+                    <dd class="reserved">
+                        <label class="reserved_label" for="reserved-date">설정 ON 예약 날짜</label>
+                        <input type="datetime-local" id="reserved-date" value={ defaultDatetime }/>
+                    </dd>
+                {/if}
                 <dd>
                     <p>
                         { setting.settings_comment }
@@ -169,6 +184,30 @@
         font-size: 16px;
         font-weight: 400;
     }
+
+    .board_view dl .reserved {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border: 1px solid #e0e2ec;
+        border-left: 0;
+        background: #f8f9fb;
+        color: #36393f;
+        font-size: 16px;
+        font-weight: 400;
+    }
+
+    .board_view dl .reserved .reserved_label {
+        margin-bottom: 5px;
+    }
+
+    .board_view dl .reserved #reserved-date {
+        margin: 5px;
+    }
+
     
     .board_view dl dd {
         display: flex;
