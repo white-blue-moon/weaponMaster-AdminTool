@@ -1,6 +1,7 @@
 <script>
     import { API } from '../constants/api';
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState';
+    import { SETTING_LABEL } from '../constants/siteSettingLabel'
     import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
     // import { userInfo, isLoggedIn } from "../utils/auth";
@@ -10,7 +11,8 @@
     let url = window.location.pathname;
     let settingID = url.split('/').pop();
     // let page = {};
-    let setting = {};
+    let siteSetting = {};
+    let settings = {};
 
     // 상태 배열 생성
     const stateEntries = Object.entries(SETTING_STATE_TEXT);
@@ -21,7 +23,8 @@
         }).catch(handleApiError);
 
         if (response != null) {
-            setting = response;
+            siteSetting = response;
+            settings = { ...siteSetting.settings }
         }
     }
 
@@ -52,11 +55,6 @@
         return;
     }
 
-    // 상태 변경 핸들러
-    function handleStateChange(event) {
-        // setting.active_state = Number(event.target.value); // 선택된 값을 설정
-    }
-
     // RESERVED 날짜 선택 기본 오전 10:00으로 설정
     const now = new Date();
     now.setHours(10, 0, 0, 0); 
@@ -64,41 +62,55 @@
     const datePart = now.toLocaleDateString("en-CA"); // ISO 날짜 형식 (YYYY-MM-DD)
     const timePart = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); // 24시간제 (HH:mm)
     const defaultDatetime = `${datePart}T${timePart}`;
+
+    function handleEdit() {
+        const settingsJson = JSON.stringify(settings)
+        console.log('settingsJson: ', settings)
+    }
 </script>
 
-{#if setting}
+{#if siteSetting}
     <section class="content news">
         <!-- <h3>{ ARTICLE_TYPE_TEXT[setting.categoryType][setting.articleType] }</h3> -->
         <div class="board_view news_view">
             <dl>
                 <dt>
-                    <select bind:value={ setting.active_state }>
+                    <select bind:value={ siteSetting.active_state }>
                         {#each stateEntries as [key, value]}
                             <option value={ Number(key) }>{ value }</option>
                         {/each}
                     </select>
                 </dt>
+
                 <!-- RESERVED 상태일 경우에만 날짜 선택 엘리먼트 렌더링 -->
-                {#if setting.active_state === SETTING_STATE.RESERVED}
+                {#if siteSetting.active_state === SETTING_STATE.RESERVED}
                     <dd class="reserved">
                         <label class="reserved_label" for="reserved-date">설정 ON 예약 날짜</label>
                         <input type="datetime-local" id="reserved-date" value={ defaultDatetime }/>
                     </dd>
                 {/if}
+
                 <dd>
-                    <p>
-                        { setting.settings_comment }
-                    </p>
+                    <p>{ siteSetting.settings_comment }</p>
                     <p class="sinfo">
                         <!-- <span class="arthor">{ setting.userId }</span>  -->
-                        <span class="date">{ formatDate(setting.create_date) }</span>
+                        <span class="date">{ formatDate(siteSetting.create_date) }</span>
                         <!-- <span class="hits">{ setting.viewCount }</span> -->
                     </p>
                 </dd>
             </dl>
             <div class="bd_viewcont">
                 <div class="operation_guide">
-                    { @html JSON.stringify(setting.settings) }
+
+                    <div class="settings-container">
+                        {#each Object.keys(settings) as key}
+                            <div class="setting-item">
+                                <div class="setting-label">{ SETTING_LABEL[key] }</div>
+                                <input type="number" bind:value={ settings[key] } min="0"/>
+                            </div>
+                        {/each}
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -106,7 +118,7 @@
         <article class="bdview_btnarea line">
             <div class="btnst2">
                 <!-- 수정, 삭제는 관리자/소유자에게만 보이기 -->
-                <a href='/' id="editButton" class="btn btntype_bk46 bold" style="width:140px">수정 완료</a>
+                <a on:click={ handleEdit } id="editButton" class="btn btntype_bk46 bold" style="width:140px">수정 완료</a>
                 <a on:click={ handleDelete } id="deleteButton" class="btn btntype_bk46 bold" style="width:140px">삭제</a>
                 <a href='/' class="btn btntype_bk46 bold list" style="width:140px">목록</a>
             </div>          
@@ -257,11 +269,15 @@
     }
     
     .board_view  .bd_viewcont {
-        padding: 45px 0 150px 0;
+        padding: 45px 0 95px 0;
         color: #36393f;
         font-size: 16px;
         line-height: 30px;
         font-weight: 400;
+
+        display: flex; /* Flexbox 활성화 */
+        justify-content: center; /* 가로 중앙 정렬 */
+        align-items: center; /* 세로 중앙 정렬 */
     }
     
     .operation_guide {
@@ -285,6 +301,43 @@
     :global(.operation_guide p strong[style*="color: rgb(0, 102, 204)"]) {
         color: rgb(57, 132, 198) !important;
     }
+
+
+
+    // ==========[ 수정 테스트 중]==========
+    // 홈페이지 설정 값 입력 목록
+    .settings-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* 항목 간 간격 */
+    }
+
+    .setting-item {
+        display: flex;
+        align-items: center; /* 입력 칸과 라벨을 수직 중앙 정렬 */
+        justify-content: flex-start; /* 좌측 정렬 */
+    }
+
+    .setting-item .setting-label {
+        flex: 0 0 250px; /* 라벨의 고정 너비 설정 */
+        text-align: right; /* 라벨 텍스트를 우측 정렬 */
+        margin-right: 20px; /* 라벨과 입력 칸 사이 간격 */
+        // border: #151518 solid 1px;
+        // padding-right: 7px;
+    }
+    
+    .setting-item input {
+        width: 80px; /* 숫자 입력 칸의 고정 너비 */
+        height: 30px; /* 숫자 입력 칸의 고정 높이 */
+        text-align: center; /* 숫자를 중앙 정렬 */
+    }
+    
+    input[type="number"]::-webkit-inner-spin-button {
+        opacity: 1; /* (증가/감소) 버튼 기본 숨겨진 상태 해제 */
+    }
+    // ==========[ 수정 테스트 중]==========
+
+
 
     .bdview_bnrarea {
         position: relative;
