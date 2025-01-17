@@ -15,8 +15,7 @@ app.get('/', (req, res) => {
 app.get('/site_setting/list', (req, res) => {
     db.query('SELECT * FROM site_setting ORDER BY id DESC', (err, results) => {
         if (err) {
-            const errMsg = { message: err }
-            return res.status(500).send(errMsg)
+            return res.status(500).send(err)
         }
         res.json(results)
     })
@@ -26,10 +25,8 @@ app.get('/site_setting/:id', (req, res) => {
     const { id } = req.params;
     db.query('SELECT * FROM site_setting WHERE id = ?', [id], (err, results) => {
         if (err) {
-            const errMsg = { message: err.message || 'Database query error' };
-            return res.status(500).send(errMsg);
+           return res.status(500).send(err);
         }
-
         if (results.length === 0) {
             return res.status(404).send({ message: `No site_setting found with id ${id}` });
         }

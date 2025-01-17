@@ -12,6 +12,9 @@
     // let page = {};
     let setting = {};
 
+    // 상태 배열 생성
+    const stateEntries = Object.entries(SETTING_STATE_TEXT);
+
     async function fetchArticle() {
         const response = await apiFetch(API.SITE_SETTING.READ(settingID), {
             method: 'GET',
@@ -48,6 +51,11 @@
         alert('게시물 삭제에 실패하였습니다.');
         return;
     }
+
+    // 상태 변경 핸들러
+    function handleStateChange(event) {
+        // setting.active_state = Number(event.target.value); // 선택된 값을 설정
+    }
 </script>
 
 {#if setting}
@@ -55,7 +63,13 @@
         <!-- <h3>{ ARTICLE_TYPE_TEXT[setting.categoryType][setting.articleType] }</h3> -->
         <div class="board_view news_view">
             <dl>
-                <dt>{ SETTING_STATE_TEXT[setting.active_state] }</dt>
+                <dt>
+                    <select bind:value={ setting.active_state }>
+                        {#each stateEntries as [key, value]}
+                            <option value={ Number(key) }>{ value }</option>
+                        {/each}
+                    </select>
+                </dt>
                 <dd>
                     <p>
                         { setting.settings_comment }

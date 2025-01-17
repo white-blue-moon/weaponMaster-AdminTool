@@ -9,7 +9,8 @@ export async function apiFetch(url, options = {}) {
 
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'API 요청 실패');
+        const errJson = JSON.stringify(errorData)
+        throw new Error(errJson || 'API 요청 실패');
     }
 
     return response.json();
