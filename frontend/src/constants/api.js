@@ -5,4 +5,10 @@ export const API = {
     SITE_SETTING: {
         LIST: `${ROOT}/site_setting/list`,
     },
+    ADMIN_USER: {
+        // TODO
+    },
+    INSPECTIOIN: {
+        // TODO
+    },
 };

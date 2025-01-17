@@ -2,15 +2,21 @@
     import { API } from '../constants/api';
     import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
+    import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
+    
+    export let settings = [];
+    export let state = SETTING_STATE;
+    export let stateText = SETTING_STATE_TEXT;
+    const stateEntries = Object.entries(state); // 상태 키와 값을 추출하여 사용하기 위한 배열 생성
 
-    const PAGE_SIZE = 10; // 한 페이지에 표시할 게시물 수
-    const GROUP_PAGING_SIZE = 10; // 한 그룹에 표시할 페이지 번호 개수
-
-    let settings = [];
     let displayedSettings = [];
     let totalPageNum = 1;
     let currentPageNum = 1; // 현재 페이지
+
+    const PAGE_SIZE = 10; // 한 페이지에 표시할 게시물 수
+    const GROUP_PAGING_SIZE = 10; // 한 그룹에 표시할 페이지 번호 개수
     
+    // TODO export 로 세팅 값 받아오도록 추후 수정 필요
     onMount(async () => {
         const response = await apiFetch(API.SITE_SETTING.LIST, {
             method: "GET",
@@ -44,17 +50,11 @@
 
 
 <section class="content news">
-    <!-- <h3>{ ARTICLE_TYPE_TEXT[categoryType][articleType] }</h3> -->
-    
     <article class="news_header">
         <div class="category_type_c">
-            <!-- {#each articleFilters as articleFilter}
-                    <a has-detail-type={ articleFilter.hasDetailType } filter-type={ articleFilter.filterType }>
-                        { articleFilter.filterText }
-                    </a>
-            {/each} -->
-            <a>필터링 #1</a>
-            <a>필터링 #2</a>
+            {#each stateEntries as [key, value]}
+                <a id={ key }>{ stateText[(value)] }</a>
+            {/each}
         </div> 
         <div class="board_srch">
             <div class="select_gy" style="width:120px">
@@ -86,18 +86,13 @@
         {#each displayedSettings as setting}
             <ul>
                 <li class="category">
-                    { setting.is_active }
-                    <!-- {#if article.articleDetailType === ARTICLE_DETAIL_TYPE.NEWS.NOTICE.INSPECTION}
-                        <b>{ getArticleFilterText(article.categoryType, article.articleType, article.articleDetailType) }</b>
-                    {:else}
-                        { getArticleFilterText(article.categoryType, article.articleType, article.articleDetailType) }
-                    {/if} -->
+                    { stateText[setting.active_state] }
                 </li>
                 <li class="title">
                     <a href='/'>{ setting.settings_comment }</a>
                     <div class="iconset"></div>
                 </li>
-                <li class="date">2015-01-17<!--{ setting.createDate.split('T')[0] }--></li>
+                <li class="date">{ setting.create_date.split('T')[0] }</li>
                 <li class="hits">#{ setting.id }</li>
             </ul>
         {/each}
