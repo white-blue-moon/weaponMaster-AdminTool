@@ -4,6 +4,7 @@ export const API = {
     HOME: ROOT,
     SITE_SETTING: {
         LIST: `${ROOT}/site_setting/list`,
+        READ: (id) => `${ROOT}/site_setting/${id}`,
     },
     ADMIN_USER: {
         // TODO

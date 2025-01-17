@@ -49,10 +49,10 @@
     <ul>
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <li class="m1" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
-            <a href="/">Site Setting</a>
+            <a href={ PATHS.HOME }>Site Setting</a>
             <ul>
                 <li>
-                    <a href="/contents/apiDocs/df">홈페이지 설정 제어</a>
+                    <a href={ PATHS.HOME }>홈페이지 설정 제어</a>
                 </li>
             </ul>
         </li>

@@ -3,6 +3,7 @@
     import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
+  import { PATHS } from '../constants/paths';
     
     export let settings = [];
     export let state = SETTING_STATE;
@@ -64,7 +65,7 @@
                         <option value="2">제목</option>
                     </select>
                     <div class="select-element">
-                        <span class="active-option">제목+본문</span>
+                        <span class="active-option">제목</span>
                         <div class="option-list" style="max-height: 205px; height: 84px;">
                             <ul>
                                 <li data-value="1">제목+본문</li>
@@ -89,7 +90,7 @@
                     { stateText[setting.active_state] }
                 </li>
                 <li class="title">
-                    <a href='/'>{ setting.settings_comment }</a>
+                    <a href={ PATHS.SITE_SETTING.EDIT(setting.id) }>{ setting.settings_comment }</a>
                     <div class="iconset"></div>
                 </li>
                 <li class="date">{ setting.create_date.split('T')[0] }</li>
