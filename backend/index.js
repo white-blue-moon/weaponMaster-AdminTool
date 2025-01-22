@@ -33,13 +33,24 @@ app.get('/site_setting/:id', asyncHandler(async (req, res) => {
      res.json(results[0])
 }))
 
-app.post('/site_setting/:id', asyncHandler(async (req, res) => {
+app.put('/site_setting/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
     const { settings } = req.body
 
     const [results] = await db.query('UPDATE site_setting SET settings = ? WHERE id = ?', [JSON.stringify(settings), id])
     if (results.affectedRows === 0) {
         return res.status(404).send({ message: `[UPDATE ERROR] site_setting with id ${id}` })
+    }
+
+    res.send({ success: true })
+}))
+
+app.delete('/site_setting/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const [results] = await db.query('DELETE FROM site_setting WHERE id = ?', [id])
+    if (results.affectedRows === 0) {
+        return res.status(404).send({ message: `[DELETE ERROR] site_setting with id ${id}` })
     }
 
     res.send({ success: true })

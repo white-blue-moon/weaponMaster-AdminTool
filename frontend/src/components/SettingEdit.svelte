@@ -33,27 +33,25 @@
         await fetchArticle();
     });
 
+    // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요
     async function handleDelete() {
         const isConfirm = confirm("정말 현재 설정(항목)을 삭제하시겠습니까?");
         if (!isConfirm) {
-            return;
+            return
         }
 
-        // const response = await apiFetch(API.ARTICLES.DELETE(settingID), {
-        //     method: 'DELETE',
-        //     body: JSON.stringify({
-        //         "userId": $userInfo,
-        //     }),
-        // }).catch(handleApiError);
+        const response = await apiFetch(API.SITE_SETTING.DELETE(settingID), {
+            method: 'DELETE',
+        }).catch(handleApiError)
 
-        // if (response.success) {
-        //     alert('설정(항목)이 삭제되었습니다.');
-        //     // window.location.href = page.listPath;
-        //     return;
-        // }
+        if (response.success) {
+            alert('설정(항목)이 삭제되었습니다.');
+            location.href = PATHS.HOME
+            return
+        }
         
-        alert('설정(항목) 삭제에 실패하였습니다.');
-        return;
+        alert('설정(항목) 삭제에 실패하였습니다.')
+        return
     }
 
     // TODO 달력 디폴트 날짜 할당 로직 함수화 하기
@@ -67,8 +65,8 @@
     const defaultDatetime = `${datePart}T${timePart}`;
 
     async function handleEdit() {
-        const response = await apiFetch(API.SITE_SETTING.UPDATE(4), {
-            method: 'POST',
+        const response = await apiFetch(API.SITE_SETTING.UPDATE(settingID), {
+            method: 'PUT',
             body: JSON.stringify({
                 "settings": settings,
             }),

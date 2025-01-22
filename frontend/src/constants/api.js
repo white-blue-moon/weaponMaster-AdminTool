@@ -6,6 +6,7 @@ export const API = {
         LIST:   `${ROOT}/site_setting/list`,
         READ:   (id) => `${ROOT}/site_setting/${id}`,
         UPDATE: (id) => `${ROOT}/site_setting/${id}`,
+        DELETE: (id) => `${ROOT}/site_setting/${id}`,
     },
     ADMIN_USER: {
         // TODO
