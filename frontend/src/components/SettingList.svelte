@@ -101,7 +101,7 @@
     
     <!-- TODO 권한 있는 상태에서만 보이도록 하기 -->
     <article class="btnarea_r mt30">
-        <a href="/" class="btn btntype_bu46 bold" id="newArticleButton" style="width:160px">INSERT</a>
+        <a href={ PATHS.SITE_SETTING.INSERT } class="btn btntype_bu46 bold" id="newArticleButton" style="width:160px">INSERT</a>
     </article>
 
     <article class="paging mt60">

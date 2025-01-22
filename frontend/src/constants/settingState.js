@@ -1,7 +1,7 @@
 export const SETTING_STATE = {
-    OFF:      0,
-    ON:       1,
-    RESERVED: 2,
+    OFF:        0,
+    ON:         1,
+    RESERVED:   2,
 }
 
 export const SETTING_STATE_TEXT = {

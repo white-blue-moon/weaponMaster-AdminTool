@@ -9,28 +9,41 @@
     import { PATHS } from '../constants/paths';
     // import { CATEGORY_TYPE, CATEGORY_TYPE_TEXT, ARTICLE_TYPE_TEXT } from '../constants/articles';
     
+    export let isInsert = false
+    const STATE_NOT_SELECTED = -1
+
     let url = window.location.pathname;
     let settingID = url.split('/').pop();
-    // let page = {};
     let siteSetting = {};
     let settings = {};
 
     // 상태 배열 생성
     const stateEntries = Object.entries(SETTING_STATE_TEXT);
 
-    async function fetchArticle() {
-        const response = await apiFetch(API.SITE_SETTING.READ(settingID), {
+    async function fetchSetting() {
+        let apiURL = API.SITE_SETTING.READ(settingID)
+        if (isInsert) {
+            apiURL = API.SITE_SETTING.READ_LAST
+        }
+
+        const response = await apiFetch(apiURL, {
             method: 'GET',
         }).catch(handleApiError);
 
         if (response != null) {
             siteSetting = response;
+            if (isInsert) {
+                const id = siteSetting.id++
+                siteSetting.active_state = STATE_NOT_SELECTED
+                siteSetting.settings_comment = ""
+            }
+            
             settings = { ...siteSetting.settings }
         }
     }
 
     onMount(async ()=> {
-        await fetchArticle();
+        await fetchSetting();
     });
 
     // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요
@@ -45,7 +58,7 @@
         }).catch(handleApiError)
 
         if (response.success) {
-            alert('설정(항목)이 삭제되었습니다.');
+            alert('설정(항목)이 삭제되었습니다.')
             location.href = PATHS.HOME
             return
         }
@@ -65,10 +78,18 @@
     const defaultDatetime = `${datePart}T${timePart}`;
 
     async function handleEdit() {
-        const response = await apiFetch(API.SITE_SETTING.UPDATE(settingID), {
-            method: 'PUT',
+        let apiURL = API.SITE_SETTING.UPDATE(settingID)
+        let apiMethod = 'PUT'
+        if (isInsert) {
+            apiURL = API.SITE_SETTING.CREATE
+            apiMethod = 'POST'
+        }
+
+        siteSetting.settings = settings
+        const response = await apiFetch(apiURL, {
+            method: apiMethod,
             body: JSON.stringify({
-                "settings": settings,
+                "siteSetting": siteSetting,
             }),
         }).catch(handleApiError);
 
@@ -83,15 +104,16 @@
     }
 </script>
 
-{#if siteSetting}
+{#if siteSetting}       
     <section class="content news">
         <!-- <h3>{ ARTICLE_TYPE_TEXT[setting.categoryType][setting.articleType] }</h3> -->
         <div class="board_view news_view">
             <dl>
                 <dt>
                     <select bind:value={ siteSetting.active_state }>
-                        {#each stateEntries as [key, value]}
-                            <option value={ Number(key) }>{ value }</option>
+                        <option class="active-not-selected" value={ STATE_NOT_SELECTED } disabled selected hidden>활성화 여부 선택</option>
+                        {#each stateEntries as [state, text]}
+                            <option value={Number(state)}>{text}</option>
                         {/each}
                     </select>
                 </dt>
@@ -105,14 +127,23 @@
                 {/if}
 
                 <dd>
-                    <p>{ siteSetting.settings_comment }</p>
+                    <p class="title">
+                        <input type="text" bind:value={ siteSetting.settings_comment } placeholder="설정 제목을 입력해 주세요.">
+                    </p>
                     <p class="sinfo">
                         <!-- <span class="arthor">{ setting.userId }</span>  -->
-                        <span class="date">{ formatDate(siteSetting.create_date) }</span>
+                        <span class="date">
+                            {#if isInsert}
+                                INSERT SETTING
+                            {:else}
+                                { formatDate(siteSetting.create_date) }
+                            {/if}
+                        </span>
                         <!-- <span class="hits">{ setting.viewCount }</span> -->
                     </p>
                 </dd>
             </dl>
+
             <div class="bd_viewcont">
                 <div class="operation_guide">
 
@@ -132,8 +163,16 @@
         <article class="bdview_btnarea line">
             <div class="btnst2">
                 <!-- 수정, 삭제는 관리자/소유자에게만 보이기 -->
-                <a on:click={ handleEdit } id="editButton" class="btn btntype_bk46 bold" style="width:140px">수정 완료</a>
-                <a on:click={ handleDelete } id="deleteButton" class="btn btntype_bk46 bold" style="width:140px">삭제</a>
+                <a on:click={ handleEdit } id="editButton" class="btn btntype_bk46 bold" style="width:140px">
+                    {#if isInsert}
+                        추가하기
+                    {:else}
+                        수정 완료
+                    {/if}
+                </a>
+                {#if !isInsert}
+                    <a on:click={ handleDelete } id="deleteButton" class="btn btntype_bk46 bold" style="width:140px">삭제</a>
+                {/if}
                 <a href='/' class="btn btntype_bk46 bold list" style="width:140px">목록</a>
             </div>          
         </article>
@@ -211,6 +250,10 @@
         font-weight: 400;
     }
 
+    option:disabled {
+        color: #3392ff !important;
+    }
+
     .board_view dl .reserved {
         display: flex;
         align-items: center;
@@ -256,6 +299,30 @@
     .board_view dl dd p {
         display: flex;
         align-items: center;
+    }
+
+    .board_view dl dd p.title {
+        padding: 0;
+    }   
+
+    .board_view dl dd p input {
+        padding: 30px;
+        height: 139px;
+        line-height: 70px;
+        border: none;
+        border-top: 0.5px solid #eeedf2;
+        border-bottom: 0.5px solid #eeedf2;
+        font-size: 22px;
+        color: #36393f;
+    }
+
+    .board_view dl dd p input::placeholder {
+        color: #6a6e76;
+    }
+
+    input[type="text"] {
+        display: block;
+        width: 100%;
     }
     
     .board_view dl dd p:nth-child(2) {

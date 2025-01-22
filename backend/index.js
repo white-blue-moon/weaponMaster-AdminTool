@@ -17,9 +17,41 @@ const asyncHandler = (fn) => (req, res, next) => {
 };
 
 // TODO DB 에러처리 필요, 반환 값 공통화 필요
+app.post('/site_setting', asyncHandler(async (req, res) => {
+    const { siteSetting } = req.body
+    console.log('siteSetting: ', siteSetting)
+    console.log('typeof siteSetting: ', typeof siteSetting)
+    if (!siteSetting || typeof siteSetting !== 'object') {
+        return res.status(400).send({ message: '[INSERT ERROR] Invalid input. Please provide a valid siteSetting object.' })
+    }
+
+    const state = siteSetting.active_state
+    const title = siteSetting.settings_comment
+    const settings = JSON.stringify(siteSetting.settings)
+    if (state === undefined || !settings) {
+        return res.status(400).send({ message: '[INSERT ERROR] Missing required fields: active_state or settings.' })
+    }
+
+    const [results] = await db.query('INSERT INTO site_setting (active_state, settings_comment, settings) VALUES (?, ?, ?)', [state, title || null, settings])
+    if (results.affectedRows === 0) {
+        return res.status(404).send({ message: `[INSERT ERROR] site_setting` })
+    }
+
+    res.send({ success: true })
+}))
+
 app.get('/site_setting/list', asyncHandler(async (req, res) => {
     const [results] = await db.query('SELECT * FROM site_setting ORDER BY id DESC')
     res.json(results)
+}))
+
+app.get('/site_setting/last', asyncHandler(async (req, res) => {
+    const [results] = await db.query('SELECT * FROM site_setting ORDER BY id DESC LIMIT 1')
+    if (results.length === 0) {
+        return res.status(404).send({ message: `[SELECT ERROR] No last site_setting found` })
+    }
+
+    res.json(results[0])
 }))
 
 app.get('/site_setting/:id', asyncHandler(async (req, res) => {
@@ -35,9 +67,14 @@ app.get('/site_setting/:id', asyncHandler(async (req, res) => {
 
 app.put('/site_setting/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { settings } = req.body
-
-    const [results] = await db.query('UPDATE site_setting SET settings = ? WHERE id = ?', [JSON.stringify(settings), id])
+    const { siteSetting } = req.body
+    
+    const state = siteSetting.active_state
+    const title = siteSetting.settings_comment
+    const settings = JSON.stringify(siteSetting.settings)
+    console.log("settings: ", settings) 
+    
+    const [results] = await db.query('UPDATE site_setting SET active_state = ?, settings_comment = ?, settings = ? WHERE id = ?', [state, title, settings, id])
     if (results.affectedRows === 0) {
         return res.status(404).send({ message: `[UPDATE ERROR] site_setting with id ${id}` })
     }
