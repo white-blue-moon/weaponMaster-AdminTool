@@ -13,28 +13,38 @@ app.get('/', (req, res) => {
 })
 
 const asyncHandler = (fn) => (req, res, next) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
+    Promise.resolve(fn(req, res, next)).catch(next)
 };
 
-
+// TODO DB 에러처리 필요, 반환 값 공통화 필요
 app.get('/site_setting/list', asyncHandler(async (req, res) => {
-    const [results] = await db.query('SELECT * FROM site_setting ORDER BY id DESC');
-    res.json(results);
-}));
+    const [results] = await db.query('SELECT * FROM site_setting ORDER BY id DESC')
+    res.json(results)
+}))
 
 app.get('/site_setting/:id', asyncHandler(async (req, res) => {
-     const { id } = req.params;
-     const [results] = await db.query('SELECT * FROM site_setting WHERE id = ?', [id]);
-     if (results.length === 0) {
-         return res.status(404).send({ message: `No site_setting found with id ${id}` });
-     }
-     
-     res.json(results[0]);
-}));
+     const { id } = req.params
 
+     const [results] = await db.query('SELECT * FROM site_setting WHERE id = ?', [id])
+     if (results.length === 0) {
+         return res.status(404).send({ message: `[SELECT ERROR] No site_setting found with id ${id}` })
+     }
+
+     res.json(results[0])
+}))
+
+app.post('/site_setting/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { settings } = req.body
+
+    const [results] = await db.query('UPDATE site_setting SET settings = ? WHERE id = ?', [JSON.stringify(settings), id])
+    if (results.affectedRows === 0) {
+        return res.status(404).send({ message: `[UPDATE ERROR] site_setting with id ${id}` })
+    }
+
+    res.send({ success: true })
+}))
 
 app.listen(port, () => {
     console.log(`[AdminTool backend Server] running at http://localhost:${port}`)
 })
-
-

@@ -6,6 +6,7 @@
     import { onMount } from "svelte";
     // import { userInfo, isLoggedIn } from "../utils/auth";
     import { formatDate } from "../utils/time";
+    import { PATHS } from '../constants/paths';
     // import { CATEGORY_TYPE, CATEGORY_TYPE_TEXT, ARTICLE_TYPE_TEXT } from '../constants/articles';
     
     let url = window.location.pathname;
@@ -55,17 +56,32 @@
         return;
     }
 
+    // TODO 달력 디폴트 날짜 할당 로직 함수화 하기
     // RESERVED 날짜 선택 기본 오전 10:00으로 설정
     const now = new Date();
-    now.setHours(10, 0, 0, 0); 
+    now.setHours(10, 0, 0, 0);
+
     // 'YYYY-MM-DDTHH:mm' 형식으로 변환
     const datePart = now.toLocaleDateString("en-CA"); // ISO 날짜 형식 (YYYY-MM-DD)
     const timePart = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); // 24시간제 (HH:mm)
     const defaultDatetime = `${datePart}T${timePart}`;
 
-    function handleEdit() {
-        const settingsJson = JSON.stringify(settings)
-        console.log('settingsJson: ', settings)
+    async function handleEdit() {
+        const response = await apiFetch(API.SITE_SETTING.UPDATE(4), {
+            method: 'POST',
+            body: JSON.stringify({
+                "settings": settings,
+            }),
+        }).catch(handleApiError);
+
+        if (response.success) {
+            alert('설정이 수정되었습니다.')
+            location.href = PATHS.HOME
+            return
+        }
+
+        alert('설정 수정에 실패하였습니다.')
+        return
     }
 </script>
 
