@@ -33,7 +33,6 @@
         if (response != null) {
             siteSetting = response;
             if (isInsert) {
-                const id = siteSetting.id++
                 siteSetting.active_state = STATE_NOT_SELECTED
                 siteSetting.settings_comment = ""
             }
@@ -77,7 +76,25 @@
     const timePart = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); // 24시간제 (HH:mm)
     const defaultDatetime = `${datePart}T${timePart}`;
 
+    function isValidForm() {
+        if (siteSetting.active_state == STATE_NOT_SELECTED) {
+            alert("홈페이지 설정 활성화 여부를 선택해 주세요.")
+            return false
+        }
+
+        if (siteSetting.settings_comment == "") {
+            alert("홈페이지 설정 제목을 입력해 주세요.")
+            return false
+        }
+
+        return true
+    }
+
     async function handleEdit() {
+        if (!isValidForm()) {
+            return
+        }
+
         let apiURL = API.SITE_SETTING.UPDATE(settingID)
         let apiMethod = 'PUT'
         if (isInsert) {
@@ -94,12 +111,12 @@
         }).catch(handleApiError);
 
         if (response.success) {
-            alert('설정이 수정되었습니다.')
+            alert('설정 (추가/수정)이 반영되었습니다.')
             location.href = PATHS.HOME
             return
         }
 
-        alert('설정 수정에 실패하였습니다.')
+        alert('설정 (추가/수정)반영에 실패하였습니다.')
         return
     }
 </script>
@@ -111,7 +128,9 @@
             <dl>
                 <dt>
                     <select bind:value={ siteSetting.active_state }>
-                        <option class="active-not-selected" value={ STATE_NOT_SELECTED } disabled selected hidden>활성화 여부 선택</option>
+                        <option class="active-not-selected" value={ STATE_NOT_SELECTED } disabled selected>
+                            활성화 여부 선택
+                        </option>
                         {#each stateEntries as [state, text]}
                             <option value={Number(state)}>{text}</option>
                         {/each}
