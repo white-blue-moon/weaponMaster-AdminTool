@@ -7,8 +7,7 @@
     // import { userInfo, isLoggedIn } from "../utils/auth";
     import { formatDate } from "../utils/time";
     import { PATHS } from '../constants/paths';
-    // import { CATEGORY_TYPE, CATEGORY_TYPE_TEXT, ARTICLE_TYPE_TEXT } from '../constants/articles';
-    
+
     export let isInsert = false
     const STATE_NOT_SELECTED = -1
 
@@ -19,6 +18,16 @@
 
     // 상태 배열 생성
     const stateEntries = Object.entries(SETTING_STATE_TEXT);
+
+    // TODO 달력 디폴트 날짜 할당 로직 함수화 하기
+    // RESERVED 날짜 선택 기본 오전 10:00으로 설정
+    const now = new Date();
+    now.setHours(10, 0, 0, 0);
+
+    // 'YYYY-MM-DDTHH:mm' 형식으로 변환
+    const datePart = now.toLocaleDateString("en-CA"); // ISO 날짜 형식 (YYYY-MM-DD)
+    const timePart = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); // 24시간제 (HH:mm)
+    let   reservedDate = `${datePart}T${timePart}`;
 
     async function fetchSetting() {
         let apiURL = API.SITE_SETTING.READ(settingID)
@@ -31,10 +40,14 @@
         }).catch(handleApiError);
 
         if (response != null) {
-            siteSetting = response;
+            siteSetting = response.siteSetting
             if (isInsert) {
                 siteSetting.active_state = STATE_NOT_SELECTED
                 siteSetting.settings_comment = ""
+            }
+
+            if (siteSetting.active_state == SETTING_STATE.RESERVED) {
+                reservedDate = response.reservedDate
             }
             
             settings = { ...siteSetting.settings }
@@ -66,16 +79,6 @@
         return
     }
 
-    // TODO 달력 디폴트 날짜 할당 로직 함수화 하기
-    // RESERVED 날짜 선택 기본 오전 10:00으로 설정
-    const now = new Date();
-    now.setHours(10, 0, 0, 0);
-
-    // 'YYYY-MM-DDTHH:mm' 형식으로 변환
-    const datePart = now.toLocaleDateString("en-CA"); // ISO 날짜 형식 (YYYY-MM-DD)
-    const timePart = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); // 24시간제 (HH:mm)
-    const defaultDatetime = `${datePart}T${timePart}`;
-
     function isValidForm() {
         if (siteSetting.active_state == STATE_NOT_SELECTED) {
             alert("홈페이지 설정 활성화 여부를 선택해 주세요.")
@@ -106,7 +109,9 @@
         const response = await apiFetch(apiURL, {
             method: apiMethod,
             body: JSON.stringify({
-                "siteSetting": siteSetting,
+                "siteSetting":  siteSetting,
+                "reservedDate": reservedDate,
+
             }),
         }).catch(handleApiError);
 
@@ -121,9 +126,9 @@
     }
 </script>
 
+
 {#if siteSetting}       
     <section class="content news">
-        <!-- <h3>{ ARTICLE_TYPE_TEXT[setting.categoryType][setting.articleType] }</h3> -->
         <div class="board_view news_view">
             <dl>
                 <dt>
@@ -141,7 +146,7 @@
                 {#if siteSetting.active_state === SETTING_STATE.RESERVED}
                     <dd class="reserved">
                         <label class="reserved_label" for="reserved-date">설정 ON 예약 날짜</label>
-                        <input type="datetime-local" id="reserved-date" value={ defaultDatetime }/>
+                        <input type="datetime-local" id="reserved-date" bind:value={ reservedDate }/>
                     </dd>
                 {/if}
 
@@ -296,7 +301,6 @@
         margin: 5px;
     }
 
-    
     .board_view dl dd {
         display: flex;
         flex-direction: column;
@@ -422,8 +426,6 @@
         flex: 0 0 250px; /* 라벨의 고정 너비 설정 */
         text-align: right; /* 라벨 텍스트를 우측 정렬 */
         margin-right: 20px; /* 라벨과 입력 칸 사이 간격 */
-        // border: #151518 solid 1px;
-        // padding-right: 7px;
     }
     
     .setting-item input {

@@ -3,11 +3,13 @@
     import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
-  import { PATHS } from '../constants/paths';
+    import { PATHS } from '../constants/paths';
+  import { formatDate } from '../utils/time';
     
     export let settings = [];
     export let state = SETTING_STATE;
     export let stateText = SETTING_STATE_TEXT;
+    let   reservedInfoMap
     const stateEntries = Object.entries(state); // 상태 키와 값을 추출하여 사용하기 위한 배열 생성
 
     let displayedSettings = [];
@@ -24,7 +26,15 @@
         }).catch(handleApiError);
 
         if (response != null) {
-            settings = response;
+            settings     = response.siteSettings;
+            reservedInfoMap = response.reservedInfo.reduce((acc, item) => {
+                const key = item.settings_id;
+                if (!acc[key]) {
+                    acc[key] = item;
+                }
+                return acc;
+            }, {})
+
             totalPageNum = Math.ceil(settings.length / PAGE_SIZE);
             updateDisplayedArticles();
         }
@@ -90,7 +100,12 @@
                     { stateText[setting.active_state] }
                 </li>
                 <li class="title">
-                    <a href={ PATHS.SITE_SETTING.EDIT(setting.id) }>{ setting.settings_comment }</a>
+                    <a href={ PATHS.SITE_SETTING.EDIT(setting.id) }>
+                        { setting.settings_comment }
+                        {#if setting.active_state == SETTING_STATE.RESERVED}
+                            &nbsp;(예약: {formatDate(reservedInfoMap[setting.id].reserved_date)})
+                        {/if}
+                    </a>
                     <div class="iconset"></div>
                 </li>
                 <li class="date">{ setting.create_date.split('T')[0] }</li>
