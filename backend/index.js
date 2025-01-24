@@ -111,7 +111,7 @@ app.get('/site_setting/:id', asyncHandler(async (req, res) => {
             return res.status(404).send({ message: `[SELECT ERROR] No site_setting_reserved found with settings_id ${id}` })
         }
 
-        reservedDate = reservedRes.reserved_date
+        reservedDate = reservedRes[0].reserved_date
      }
 
      res.json({
@@ -169,6 +169,20 @@ app.put('/site_setting/:id', asyncHandler(async (req, res) => {
 
         // 에약 내역 cron 등록
         reserveCron(id, reservedDate)
+    }
+
+    // 2-3. 예약 -> 예약 시간 변경 (예약 내역 업데이트)
+    if (selectRes[0].active_state == STATE_RESERVED && state == STATE_RESERVED) {
+        if (selectRes[0].reserved_date != reservedDate) {
+            const [updateRes] = await db.query('UPDATE site_setting_reserved SET reserved_date = ?, reserved_state = ? WHERE settings_id = ?', [reservedDate, ACTIVE_ON_BEFORRE, id])
+            if (updateRes.affectedRows === 0) {
+                console.error(`[UPDATE ERROR] site_setting_reserves, settings_id: ${id}`)
+                return
+            }
+    
+            // 에약 내역 cron 갱신
+            reserveCron(id, reservedDate)
+        }  
     }
 
     // 3. site_setting 업데이트

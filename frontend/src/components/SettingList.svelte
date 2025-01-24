@@ -4,7 +4,7 @@
     import { onMount } from "svelte";
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { PATHS } from '../constants/paths';
-  import { formatDate } from '../utils/time';
+    import { formatDateReadable } from '../utils/time';
     
     export let settings = [];
     export let state = SETTING_STATE;
@@ -49,6 +49,10 @@
             currentPageNum = pageNum;
             updateDisplayedArticles();
         }
+    }
+
+    function getReservedDateText(id) {
+        return formatDateReadable(reservedInfoMap[id].reserved_date)
     }
 
     $: currentGroupStart = Math.floor((currentPageNum - 1) / GROUP_PAGING_SIZE) * GROUP_PAGING_SIZE + 1; // 첫번째 페이징 번호를 1단위로 끊으려면 -1 필요, Math.floor(1.6) = 1
@@ -103,7 +107,9 @@
                     <a href={ PATHS.SITE_SETTING.EDIT(setting.id) }>
                         { setting.settings_comment }
                         {#if setting.active_state == SETTING_STATE.RESERVED}
-                            &nbsp;(예약: {formatDate(reservedInfoMap[setting.id].reserved_date)})
+                            <span class="reservation-info">
+                                &nbsp;({ getReservedDateText(setting.id) } 예약)
+                            </span>
                         {/if}
                     </a>
                     <div class="iconset"></div>
@@ -420,6 +426,10 @@
     .board_list ul li.title b {
         color: #3392ff;
         font-weight: 500;
+    }
+
+    .reservation-info {
+        color: #3392ff;
     }
 
     .news_list ul li.date {
