@@ -51,6 +51,16 @@
         }
     }
 
+    // 상태에 따라 동적으로 CSS 클래스 이름 생성
+    function getStateClass(state) {
+        switch (state) {
+            case SETTING_STATE.OFF:      return "state-off"
+            case SETTING_STATE.ON:       return "state-on"
+            case SETTING_STATE.RESERVED: return "state-reserved"
+            default: return ""
+        }
+    }
+
     function getReservedDateText(id) {
         return formatDateReadable(reservedInfoMap[id].reserved_date)
     }
@@ -67,8 +77,8 @@
 <section class="content news">
     <article class="news_header">
         <div class="category_type_c">
-            {#each stateEntries as [key, value]}
-                <a id={ key }>{ stateText[(value)] }</a>
+            {#each stateEntries as [_, state]}
+                <a>{ stateText[(state)] }</a>
             {/each}
         </div> 
         <div class="board_srch">
@@ -100,7 +110,7 @@
     <article class="board_list news_list">
         {#each displayedSettings as setting}
             <ul>
-                <li class="category">
+                <li class="category { getStateClass(setting.active_state) }">
                     { stateText[setting.active_state] }
                 </li>
                 <li class="title">
@@ -341,6 +351,7 @@
         background: #f8f9fb;
         color: #6a6e76;
         font-size: 14px;
+        outline: none; /* 기본 포커스 스타일 제거 */
     }
 
     input[type="text"] {
@@ -454,6 +465,14 @@
     .board_list ul li {
         color: #898c92;
         font-weight: 400;
+    }
+
+    .news_list ul li.category.state-on {
+        color:#4caf50;
+    }
+
+    .news_list ul li.category.state-reserved {
+        color:#e0aa00;
     }
 
     .news_list ul li.category b {

@@ -27,14 +27,12 @@ export function formatDateReadable(inputDate) {
     return date.toLocaleString('ko-KR', options);
 }
 
+// calender 에서 사용하는 시간 포맷
 export function formatToDateTime(inputDate, timeZone = "Asia/Seoul") {
     const date = new Date(inputDate)
 
-    // 날짜 부분 ('YYYY-MM-DD')
-    const datePart = date.toLocaleDateString("en-CA", { timeZone })
-
-    // 시간 부분 ('HH:mm')
-    const timePart = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone })
+    const datePart = date.toLocaleDateString("en-CA", { timeZone }) // 날짜 부분 ('YYYY-MM-DD')
+    const timePart = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone }) // 시간 부분 ('HH:mm')
 
     return `${datePart}T${timePart}`
 }
