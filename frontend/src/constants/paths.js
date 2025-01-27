@@ -9,4 +9,10 @@ export const PATHS = {
         EDIT:   (id) => `/site_setting/edit/${id}`,
         EDIT_TEMPLATE:  '/site_setting/edit/:id',
     },
+    ACCESS_LEVEL: {
+        LIST:   `/access_level/list`,
+        INSERT: `/access_level/insert`,
+        EDIT:   (id) => `/access_level/edit/${id}`,
+        EDIT_TEMPLATE:  '/access_level/edit/:id',
+    },
 };

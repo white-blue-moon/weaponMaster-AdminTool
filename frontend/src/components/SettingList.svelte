@@ -1,58 +1,15 @@
 <script>
-    import { API } from '../constants/api';
-    import { apiFetch, handleApiError } from '../utils/apiFetch';
-    import { onMount } from "svelte";
+    import { API } from '../constants/api'
+    import { apiFetch, handleApiError } from '../utils/apiFetch'
+    import { onMount } from "svelte"
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
-    import { PATHS } from '../constants/paths';
-    import { formatDateReadable } from '../utils/time';
+    import { PATHS } from '../constants/paths'
+    import { formatDateReadable } from '../utils/time'
     
-    export let settings = [];
-    export let state = SETTING_STATE;
-    export let stateText = SETTING_STATE_TEXT;
-    let   reservedInfoMap
-    const stateEntries = Object.entries(state); // 상태 키와 값을 추출하여 사용하기 위한 배열 생성
-
-    let displayedSettings = [];
-    let totalPageNum = 1;
-    let currentPageNum = 1; // 현재 페이지
-
-    const PAGE_SIZE = 10; // 한 페이지에 표시할 게시물 수
-    const GROUP_PAGING_SIZE = 10; // 한 그룹에 표시할 페이지 번호 개수
-    
-    // TODO export 로 세팅 값 받아오도록 추후 수정 필요
-    onMount(async () => {
-        const response = await apiFetch(API.SITE_SETTING.LIST, {
-            method: "GET",
-        }).catch(handleApiError);
-
-        if (response != null) {
-            settings     = response.siteSettings;
-            reservedInfoMap = response.reservedInfo.reduce((acc, item) => {
-                const key = item.settings_id;
-                if (!acc[key]) {
-                    acc[key] = item;
-                }
-                return acc;
-            }, {})
-
-            totalPageNum = Math.ceil(settings.length / PAGE_SIZE);
-            updateDisplayedArticles();
-        }
-    });
-
-    function updateDisplayedArticles() {
-        displayedSettings = settings.slice((currentPageNum - 1) * PAGE_SIZE, currentPageNum * PAGE_SIZE);
-    }
-
-    function changePage(pageNum) {
-        if (pageNum >= 1 && pageNum <= totalPageNum) {
-            currentPageNum = pageNum;
-            updateDisplayedArticles();
-        }
-    }
-
-    // 상태에 따라 동적으로 CSS 클래스 이름 생성
-    function getStateClass(state) {
+    export let settings = []
+    export let state = SETTING_STATE
+    export let stateText = SETTING_STATE_TEXT
+    export let getStateClass = (state) => {
         switch (state) {
             case SETTING_STATE.OFF:      return "state-off"
             case SETTING_STATE.ON:       return "state-on"
@@ -61,23 +18,65 @@
         }
     }
 
-    function getReservedDateText(id) {
-        return formatDateReadable(reservedInfoMap[id].reserved_date)
+    let   reservedInfoMap
+    const stateList = Object.values(state)
+
+    let displayedSettings = []
+    let totalPageNum = 1
+    let currentPageNum = 1 // 현재 페이지
+
+    const PAGE_SIZE = 10         // 한 페이지에 표시할 게시물 수
+    const GROUP_PAGING_SIZE = 10 // 한 그룹에 표시할 페이지 번호 개수
+
+    function updateDisplayedArticles() {
+        displayedSettings = settings.slice((currentPageNum - 1) * PAGE_SIZE, currentPageNum * PAGE_SIZE)
     }
 
-    $: currentGroupStart = Math.floor((currentPageNum - 1) / GROUP_PAGING_SIZE) * GROUP_PAGING_SIZE + 1; // 첫번째 페이징 번호를 1단위로 끊으려면 -1 필요, Math.floor(1.6) = 1
-    $: currentGroupEnd   = Math.min(currentGroupStart + GROUP_PAGING_SIZE - 1, totalPageNum); // 마지막 페이징 번호를 10 단위로 끊으려면 -1 필요
+    function changePage(pageNum) {
+        if (pageNum >= 1 && pageNum <= totalPageNum) {
+            currentPageNum = pageNum
+            updateDisplayedArticles()
+        }
+    }
+
+    $: currentGroupStart = Math.floor((currentPageNum - 1) / GROUP_PAGING_SIZE) * GROUP_PAGING_SIZE + 1 // 첫번째 페이징 번호를 1단위로 끊으려면 -1 필요, Math.floor(1.6) = 1
+    $: currentGroupEnd   = Math.min(currentGroupStart + GROUP_PAGING_SIZE - 1, totalPageNum) // 마지막 페이징 번호를 10 단위로 끊으려면 -1 필요
     $: currentGroupPages = Array.from(
         { length: currentGroupEnd - currentGroupStart + 1 }, // ex. 1 ~ 10 을 표현하려면 + 1 해야 함 (start ~ end 모두 표현하려면 +1 필요)
         (_, i) => currentGroupStart + i
-    );
+    )
+
+    // TODO export 로 세팅 값 받아오도록 추후 수정 필요
+    onMount(async () => {
+        const response = await apiFetch(API.SITE_SETTING.LIST, {
+            method: "GET",
+        }).catch(handleApiError)
+
+        if (response != null) {
+            settings  = response.siteSettings
+            reservedInfoMap = response.reservedInfo.reduce((acc, item) => {
+                const key = item.settings_id
+                if (!acc[key]) {
+                    acc[key] = item
+                }
+                return acc
+            }, {})
+
+            totalPageNum = Math.ceil(settings.length / PAGE_SIZE)
+            updateDisplayedArticles()
+        }
+    })
+
+    function getReservedDateText(id) {
+        return formatDateReadable(reservedInfoMap[id].reserved_date)
+    }
 </script>
 
 
 <section class="content news">
     <article class="news_header">
         <div class="category_type_c">
-            {#each stateEntries as [_, state]}
+            {#each stateList as state}
                 <a>{ stateText[(state)] }</a>
             {/each}
         </div> 
@@ -151,6 +150,7 @@
         <a class="end" on:click={ () => changePage(totalPageNum) }>END</a>
     </article>
 </section>
+
 <!-- TODO 별도 컴포넌트로 빼기 -->
 <a class="top" style="position: fixed; display: inline;" id="gnbTopBtn">TOP</a>
 

@@ -59,10 +59,10 @@
         
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <li class="m2" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
-            <a href="/">권한부여</a>
+            <a href={ PATHS.ACCESS_LEVEL.LIST }>권한관리</a>
             <ul>
                 <li>
-                    <a href="/contents/guide/pages/all">관리자 권한 관리</a>
+                    <a href={ PATHS.ACCESS_LEVEL.LIST }>접근 권한 관리</a>
                 </li>
             </ul>
         </li>
