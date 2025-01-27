@@ -6,13 +6,11 @@
 
     const imgFileName = background.split("/").pop();
     const visual260 = "svisual_df.jpg";
-    const isVisual260 = imgFileName == visual260;
-
 </script>
 
-<div class="{ isVisual260 ? 's_visual260' : 's_visual' } s_df"  style="--background-img: url({ NEOPLE_UI + background })">
+<div class="{ imgFileName == visual260 ? 's_visual260' : 's_visual' } s_df"  style="--background-img: url({ NEOPLE_UI + background })">
     <h2>{ title }</h2>
-    {#if isVisual260}
+    {#if imgFileName == visual260}
         <h3>
             어드민 툴에 오신 것을 환영합니다.<br>
             Weapon Master 운영에 필요한 다양한 기능을 제공하고 있습니다.

@@ -10,8 +10,11 @@ export const API = {
         UPDATE:      (id) => `${ROOT}/site_setting/${id}`,
         DELETE:      (id) => `${ROOT}/site_setting/${id}`,
     },
-    ADMIN_USER: {
-        // TODO
+    ACCESS_LEVEL: {
+        LIST:       `${ROOT}/access_level/list`,
+        READ:        (id) => `${ROOT}/access_level/${id}`,
+        UPDATE:      (id) => `${ROOT}/access_level/${id}`,
+        DELETE:      (id) => `${ROOT}/access_level/${id}`,
     },
     INSPECTIOIN: {
         // TODO

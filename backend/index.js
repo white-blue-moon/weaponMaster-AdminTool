@@ -224,6 +224,14 @@ app.delete('/site_setting/:id', asyncHandler(async (req, res) => {
     res.send({ success: true })
 }))
 
+app.get('/access_level/list', asyncHandler(async (req, res) => {
+    const [results] = await db.query('SELECT * FROM user_info ORDER BY id DESC')
+
+    res.json({
+        userInfoList:  results,
+    })
+}))
+
 app.listen(port, () => {
     console.log(`[AdminTool backend Server] running at http://localhost:${port}`)
 })
