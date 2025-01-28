@@ -10,8 +10,7 @@
     export let state = SETTING_STATE
     export let stateText = SETTING_STATE_TEXT
     export let getStateClass = (state) => {}
-    export let hrefEdit = ""
-    export let hrefInsert = ""
+    export let hrefBase = ""
 
     export let reservedInfoMap
     const stateList = Object.values(state)
@@ -103,7 +102,7 @@
                     { stateText[setting.state] }
                 </li>
                 <li class="title">
-                    <a href={ hrefEdit(setting.id) }>
+                    <a href={ hrefBase.EDIT(setting.id) }>
                         { setting.title }
                         {#if state === SETTING_STATE && setting.state == SETTING_STATE.RESERVED}
                             <span class="reservation-info">

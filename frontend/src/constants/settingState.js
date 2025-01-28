@@ -16,6 +16,6 @@ export const ACCESS_LEVEL = {
 }
 
 export const ACCESS_LEVEL_TEXT = {
-    [ACCESS_LEVEL.NORMAL]:      "일반",
-    [ACCESS_LEVEL.ADMIN]:       "관리자",
+    [ACCESS_LEVEL.NORMAL]:  "일반",
+    [ACCESS_LEVEL.ADMIN]:   "관리자",
 }

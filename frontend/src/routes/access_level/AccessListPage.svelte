@@ -29,10 +29,10 @@
         if (response != null) {
             settings  = response.userInfoList.reduce((acc, item) => {
                 acc.push({
+                    id:          item.id,
                     state:       item.user_type,
                     title:       item.user_id,
-                    create_date: item.join_date,
-                    id:          item.id,
+                    create_date: item.join_date,          
                 })
 
                 return acc
@@ -51,7 +51,7 @@
         state={ ACCESS_LEVEL }
         stateText={ ACCESS_LEVEL_TEXT }
         getStateClass={ getStateClass }
-        hrefEdit={ PATHS.ACCESS_LEVEL.EDIT }
+        hrefBase={ PATHS.ACCESS_LEVEL }
     />
     <Footer />
 {/if}

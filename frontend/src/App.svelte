@@ -3,32 +3,30 @@
 	import { PATHS } from './constants/paths'
 
 	import Home from './routes/Home.svelte'
-	import SiteSettingInsert from './routes/site_setting/SiteSettingInsert.svelte'
-	import SiteSettingEdit from './routes/site_setting/SiteSettingEdit.svelte'
+	import SettingInsertPage from './routes/site_setting/SettingInsertPage.svelte'
+	import SettingEditPage from './routes/site_setting/SettingEditPage.svelte'
 
-	import Login from './routes/account/Login.svelte'
-	import Join from './routes/account/Join.svelte'
+	import LoginPage from './routes/account/LoginPage.svelte'
+	import JoinPage from './routes/account/JoinPage.svelte'
 
-	import AccessLevelList from './routes/access_level/AccessLevelList.svelte'
-	import AccessLevelInsert from './routes/access_level/AccessLevelInsert.svelte'
-	import AccessLevelEdit from './routes/access_level/AccessLevelEdit.svelte'
+	import AccessListPage from './routes/access_level/AccessListPage.svelte'
+	import AccessEditPage from './routes/access_level/AccessEditPage.svelte'
 </script>
 
 
 <Router>
 	<!-- 홈, 홈페이지 설정 관련 -->
 	<Route path={ PATHS.HOME } component= { Home }/>
-	<Route path={ PATHS.SITE_SETTING.INSERT } component= { SiteSettingInsert }/>
-	<Route path={ PATHS.SITE_SETTING.EDIT_TEMPLATE } component= { SiteSettingEdit }/>
+	<Route path={ PATHS.SITE_SETTING.INSERT } component= { SettingInsertPage }/>
+	<Route path={ PATHS.SITE_SETTING.EDIT_TEMPLATE } component= { SettingEditPage }/>
 
 	<!-- 로그인 관련 -->
-	<Route path={ PATHS.ACCOUNT.LOGIN } component= { Login }/>
-	<Route path={ PATHS.ACCOUNT.JOIN }  component= { Join }/>
+	<Route path={ PATHS.ACCOUNT.LOGIN } component= { LoginPage }/>
+	<Route path={ PATHS.ACCOUNT.JOIN }  component= { JoinPage }/>
 
 	<!-- 권한 부여 -->
-	<Route path={ PATHS.ACCESS_LEVEL.LIST } component= { AccessLevelList }/>
-	<Route path={ PATHS.ACCESS_LEVEL.INSERT } component= { AccessLevelInsert }/>
-	<Route path={ PATHS.ACCESS_LEVEL.EDIT_TEMPLATE } component= { AccessLevelEdit }/>
+	<Route path={ PATHS.ACCESS_LEVEL.LIST } component= { AccessListPage }/>
+	<Route path={ PATHS.ACCESS_LEVEL.EDIT_TEMPLATE } component= { AccessEditPage }/>
 </Router>
 
 

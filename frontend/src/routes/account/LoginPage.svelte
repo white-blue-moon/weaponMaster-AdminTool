@@ -60,8 +60,6 @@
 <VisualBanner background="/img/svisual1.jpg" title="로그인"/>
 
 <section class="content">
-    <!-- <h3>어드민 툴에 오신 것을 환영합니다.</h3> -->
-
     <article class="login">
         <form action="/account/login" method="post" id="loginForm" on:submit={ onSubmitLogin }>
             <ul class="login_normal">

@@ -232,6 +232,19 @@ app.get('/access_level/list', asyncHandler(async (req, res) => {
     })
 }))
 
+app.get('/access_level/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const [results] = await db.query('SELECT * FROM user_info WHERE id = ?', [id])
+    if (results.length === 0) {
+        return res.status(404).send({ message: `[SELECT ERROR] No site_setting found with id ${id}` })
+    }
+
+    res.json({
+       userInfo: results[0],
+   })
+}))
+
 app.listen(port, () => {
     console.log(`[AdminTool backend Server] running at http://localhost:${port}`)
 })
