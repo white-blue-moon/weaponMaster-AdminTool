@@ -48,7 +48,6 @@
 
             if (siteSetting.active_state == SETTING_STATE.RESERVED) {
                 reservedDate = formatToDateTime(response.reservedDate) 
-                console.log(`AFTER reservedDate: `, reservedDate)
             }
             
             settings = { ...siteSetting.settings }

@@ -1,26 +1,23 @@
 <script>
-    import { API } from '../constants/api'
-    import { apiFetch, handleApiError } from '../utils/apiFetch'
     import { onMount } from "svelte"
     import { ACCESS_LEVEL, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
-    import { PATHS } from '../constants/paths'
     import { formatDateReadable } from '../utils/time'
     
-    export let settings = []
-    export let state = SETTING_STATE
-    export let stateText = SETTING_STATE_TEXT
+    export let settings      = []
+    export let state         = SETTING_STATE
+    export let stateText     = SETTING_STATE_TEXT
     export let getStateClass = (state) => {}
-    export let hrefBase = ""
+    export let hrefBase      = ""
 
     export let reservedInfoMap
     const stateList = Object.values(state)
 
     let settingsMap
     let displayedSettings = []
-    let totalPageNum = 1
-    let currentPageNum = 1 // 현재 페이지
+    let totalPageNum      = 1
+    let currentPageNum    = 1 // 현재 페이지
 
-    const PAGE_SIZE = 10         // 한 페이지에 표시할 게시물 수
+    const PAGE_SIZE         = 10 // 한 페이지에 표시할 게시물 수
     const GROUP_PAGING_SIZE = 10 // 한 그룹에 표시할 페이지 번호 개수
 
     function updateDisplayedArticles() {

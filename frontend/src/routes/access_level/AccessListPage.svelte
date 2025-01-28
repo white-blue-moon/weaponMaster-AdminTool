@@ -38,8 +38,6 @@
                 return acc
             }, [])
         }
-
-        console.log('before settings: ', settings)
     })
 </script>
 

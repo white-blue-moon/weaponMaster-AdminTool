@@ -1,51 +1,73 @@
 <script>
-    import { API } from '../constants/api';
-    import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState';
-    import { SETTING_LABEL } from '../constants/siteSettingLabel'
-    import { apiFetch, handleApiError } from '../utils/apiFetch';
-    import { onMount } from "svelte";
-    // import { userInfo, isLoggedIn } from "../utils/auth";
-    import { formatDate, formatToDateTime } from "../utils/time";
-    import { PATHS } from '../constants/paths';
+    import { API } from '../constants/api'
+    import { apiFetch, handleApiError } from '../utils/apiFetch'
+    import { ACCESS_LEVEL_TEXT, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
+    import { onMount } from "svelte"
+    // import { userInfo, isLoggedIn } from "../utils/auth"
+    import { formatDate, formatToDateTime } from "../utils/time"
+    import { PATHS } from '../constants/paths'
 
-    export let setting    = { state: 0, title: "", create_date: "" }
-    export let stateText  = SETTING_STATE_TEXT
-    export let isInsert   = false
-    export let hrefBase   = PATHS.SITE_SETTING
-    export let apiUrlBase = API.SITE_SETTING
 
-    const stateEntries = Object.entries(stateText)
+    export let isInsert = false
+
+    let url       = window.location.pathname
+    let settingID = url.split('/').pop()
+    let setting
+
+    const apiUrlBase = API.ACCESS_LEVEL
+    const hrefBase   = PATHS.ACCESS_LEVEL
+    const stateEntries = Object.entries(ACCESS_LEVEL_TEXT)
     const STATE_NOT_SELECTED = -1
+    
+    async function fetchSetting() {
+        const response = await apiFetch(apiUrlBase.READ(settingID), {
+            method: 'GET',
+        }).catch(handleApiError);
+
+        if (response != null) {
+            const userInfo = response.userInfo
+            setting = {
+                id:          userInfo.id,
+                state:       userInfo.user_type,
+                title:       userInfo.user_id,
+                create_date: userInfo.join_date, 
+            }      
+        }
+    }
+
+    onMount(async ()=> {
+        await fetchSetting()
+    })
 
     // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요
     async function handleDelete() {
-        const isConfirm = confirm("정말 현재 설정(항목)을 삭제하시겠습니까?");
+        const isConfirm = confirm(`정말 ${setting.title} 유저 정보를 삭제하시겠습니까?`);
         if (!isConfirm) {
             return
         }
 
-        const response = await apiFetch(apiUrlBase.DELETE(setting.id), {
+        const response = await apiFetch(apiUrlBase.DELETE(settingID), {
             method: 'DELETE',
         }).catch(handleApiError)
 
         if (response.success) {
-            alert('설정(항목)이 삭제되었습니다.')
-            location.href = PATHS.HOME
+            alert(`${setting.title} 유저 정보가 삭제되었습니다.`)
+            location.href = hrefBase.LIST
             return
         }
         
-        alert('설정(항목) 삭제에 실패하였습니다.')
+        alert(`${setting.title} 유저 정보 삭제에 실패하였습니다.`)
         return
     }
 
     function isValidForm() {
         if (setting.state == STATE_NOT_SELECTED) {
-            alert("설정 활성화 여부를 선택해 주세요.")
+            alert("유저의 권한 레벨이 선택되어 있지 않습니다.")
             return false
         }
 
-        if (setting.state == "") {
-            alert("설정 제목을 입력해 주세요.")
+        if (setting.title == "") {
+            alert("유저의 아이디명이 기입되어 있지 않습니다.")
             return false
         }
 
@@ -57,43 +79,33 @@
             return
         }
 
-        let apiURL = apiUrlBase.UPDATE(settingID)
-        let apiMethod = 'PUT'
-        if (isInsert) {
-            apiURL = apiUrlBase.CREATE
-            apiMethod = 'POST'
-        }
-
-        setting = settings
-        const response = await apiFetch(apiURL, {
+        const response = await apiFetch(apiUrlBase.UPDATE(settingID), {
             method: apiMethod,
             body: JSON.stringify({
-                "siteSetting":  siteSetting,
-                "reservedDate": reservedDate,
-
+                "setting": setting,
             }),
         }).catch(handleApiError);
 
         if (response.success) {
-            alert('설정 (추가/수정)이 반영되었습니다.')
-            location.href = PATHS.HOME
+            alert('설정 수정이 반영되었습니다.')
+            location.href = hrefBase.LIST
             return
         }
 
-        alert('설정 (추가/수정)반영에 실패하였습니다.')
+        alert('설정 수정 반영에 실패하였습니다.')
         return
     }
 </script>
 
 
-{#if siteSetting}       
+{#if setting}       
     <section class="content news">
         <div class="board_view news_view">
             <dl>
                 <dt>
-                    <select bind:value={ siteSetting.active_state }>
+                    <select bind:value={ setting.state }>
                         <option class="active-not-selected" value={ STATE_NOT_SELECTED } disabled selected>
-                            활성화 여부 선택
+                            권한 선택
                         </option>
                         {#each stateEntries as [state, text]}
                             <option value={Number(state)}>{text}</option>
@@ -101,35 +113,28 @@
                     </select>
                 </dt>
 
-                <!-- RESERVED 상태일 경우에만 날짜 선택 엘리먼트 렌더링 -->
-                {#if siteSetting.active_state === SETTING_STATE.RESERVED}
+                <!-- {#if siteSetting.active_state === SETTING_STATE.RESERVED}
                     <dd class="reserved">
                         <label class="reserved_label" for="reserved-date">설정 ON 예약 날짜</label>
                         <input type="datetime-local" id="reserved-date" bind:value={ reservedDate }/>
                     </dd>
-                {/if}
+                {/if} -->
 
                 <dd>
                     <p class="title">
-                        <input type="text" bind:value={ siteSetting.settings_comment } placeholder="설정 제목을 입력해 주세요.">
+                        <input type="text" bind:value={ setting.title } placeholder="아이디명을 기입해 주세요.">
                     </p>
                     <p class="sinfo">
-                        <!-- <span class="arthor">{ setting.userId }</span>  -->
                         <span class="date">
-                            {#if isInsert}
-                                INSERT SETTING
-                            {:else}
-                                { formatDate(siteSetting.create_date) }
-                            {/if}
+                            { formatDate(setting.create_date) }
                         </span>
-                        <!-- <span class="hits">{ setting.viewCount }</span> -->
                     </p>
                 </dd>
             </dl>
 
             <div class="bd_viewcont">
                 <div class="operation_guide">
-
+<!-- 
                     <div class="settings-container">
                         {#each Object.keys(settings) as key}
                             <div class="setting-item">
@@ -137,7 +142,7 @@
                                 <input type="number" bind:value={ settings[key] } min="0"/>
                             </div>
                         {/each}
-                    </div>
+                    </div> -->
 
                 </div>
             </div>
@@ -156,7 +161,7 @@
                 {#if !isInsert}
                     <a on:click={ handleDelete } id="deleteButton" class="btn btntype_bk46 bold" style="width:140px">삭제</a>
                 {/if}
-                <a href='/' class="btn btntype_bk46 bold list" style="width:140px">목록</a>
+                <a href={ hrefBase.LIST } class="btn btntype_bk46 bold list" style="width:140px">목록</a>
             </div>          
         </article>
 

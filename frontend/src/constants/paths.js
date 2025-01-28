@@ -5,6 +5,7 @@ export const PATHS = {
         LOGIN:  '/account/login',
     },
     SITE_SETTING: {
+        LIST:   '/',
         INSERT: `/site_setting/insert`,
         EDIT:   (id) => `/site_setting/edit/${id}`,
         EDIT_TEMPLATE:  '/site_setting/edit/:id',
