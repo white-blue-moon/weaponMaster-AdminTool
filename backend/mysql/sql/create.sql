@@ -22,7 +22,7 @@ CREATE TABLE inspection (
     start_date      TIMESTAMP   NOT NULL COMMENT '점검 시작 시간',
     end_date        TIMESTAMP   NOT NULL COMMENT '점검 종료 시간',
     create_date     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '점검 정보 최초 생성 시간',
-    update_date     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '점검 정보 최종 수정 시간',
+    update_date     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '점검 정보 최종 수정 시간'
 ) CHARSET=utf8 COMMENT='홈페이지 점검 정보 관리 테이블';
 -- 홈페이지 점검 정보 관리 테이블 인덱스 추가
 CREATE INDEX idx_inspection_active_state_date ON inspection (active_state, start_date, end_date);

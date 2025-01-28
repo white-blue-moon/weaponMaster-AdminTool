@@ -268,6 +268,20 @@ app.delete('/access_level/:id', asyncHandler(async (req, res) => {
     res.send({ success: true })
 }))
 
+app.get('/insepction/active', asyncHandler(async (req, res) => {
+    let isInspectionOn = false
+    const now = new Date()
+
+    const [results] = await db.query('SELECT * FROM inspection WHERE active_state = ? AND (start_date <= ? AND ? <= end_date)', [STATE_ACTIVE_ON, now, now])
+    if (results.length > 0) {
+        isInspectionOn = true
+    }
+
+    res.json({
+        isInspectionOn: isInspectionOn,
+   })
+}))
+
 app.listen(port, () => {
     console.log(`[AdminTool backend Server] running at http://localhost:${port}`)
 })
