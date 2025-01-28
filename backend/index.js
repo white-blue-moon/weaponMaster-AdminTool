@@ -237,12 +237,35 @@ app.get('/access_level/:id', asyncHandler(async (req, res) => {
 
     const [results] = await db.query('SELECT * FROM user_info WHERE id = ?', [id])
     if (results.length === 0) {
-        return res.status(404).send({ message: `[SELECT ERROR] No site_setting found with id ${id}` })
+        return res.status(404).send({ message: `[SELECT ERROR] No user_info found with id ${id}` })
     }
 
     res.json({
        userInfo: results[0],
    })
+}))
+
+app.put('/access_level/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { setting } = req.body
+
+    const [updateRes] = await db.query('UPDATE user_info SET user_type = ?, user_id = ? WHERE id = ?', [setting.state, setting.title, id])
+    if (updateRes.affectedRows === 0) {
+        return res.status(404).send({ message: `[UPDATE ERROR] user_info with id ${id}` })
+    }
+
+    res.send({ success: true })
+}))
+
+app.delete('/access_level/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const [results] = await db.query('DELETE FROM user_info WHERE id = ?', [id])
+    if (results.affectedRows === 0) {
+        return res.status(404).send({ message: `[DELETE ERROR] user_info with id ${id}` })
+    }
+
+    res.send({ success: true })
 }))
 
 app.listen(port, () => {

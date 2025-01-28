@@ -80,7 +80,7 @@
         }
 
         const response = await apiFetch(apiUrlBase.UPDATE(settingID), {
-            method: apiMethod,
+            method: 'PUT',
             body: JSON.stringify({
                 "setting": setting,
             }),
