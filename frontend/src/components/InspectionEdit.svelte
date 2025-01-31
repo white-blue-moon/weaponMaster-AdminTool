@@ -85,6 +85,9 @@
             return
         }
 
+        setting.start_date = inspecStartDate
+        setting.end_date   = inspecEndDate
+
         const response = await apiFetch(apiUrlBase.UPDATE(settingID), {
             method: 'PUT',
             body: JSON.stringify({
