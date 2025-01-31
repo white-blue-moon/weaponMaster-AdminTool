@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 
 const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next)
-};
+}
 
 // TODO DB 에러처리 필요, 반환 값 공통화 필요
 app.post('/site_setting', asyncHandler(async (req, res) => {
@@ -327,6 +327,20 @@ app.delete('/inspection/:id', asyncHandler(async (req, res) => {
     const [results] = await db.query('DELETE FROM inspection WHERE id = ?', [id])
     if (results.affectedRows === 0) {
         return res.status(404).send({ message: `[DELETE ERROR] inspection with id ${id}` })
+    }
+
+    res.send({ success: true })
+}))
+
+app.post('/inspection', asyncHandler(async (req, res) => {
+    const { setting } = req.body
+    if (!setting) {
+        return res.status(400).send({ message: '[INSERT ERROR] Invalid input. Please provide a valid inspection-input' })
+    }
+
+    const [results] = await db.query('INSERT INTO inspection (active_state, comment, start_date, end_date) VALUES (?, ?, ?, ?)', [setting.state, setting.title, setting.start_date, setting.end_date])
+    if (results.affectedRows === 0) {
+        return res.status(404).send({ message: `[INSERT ERROR] inspection` })
     }
 
     res.send({ success: true })

@@ -4,23 +4,23 @@
     import { INSPECTION_STATE_TEXT } from '../constants/settingState'
     import { onMount } from "svelte"
     // import { userInfo, isLoggedIn } from "../utils/auth"
-    import { formatDate, formatCalenderDate } from "../utils/time"
+    import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time"
     import { PATHS } from '../constants/paths'
 
 
     export let isInsert = false
 
-    let url       = window.location.pathname
-    let settingID = url.split('/').pop()
-    let setting
-
-    const apiUrlBase = API.INSPECTIOIN
-    const hrefBase   = PATHS.INSPECTION
+    const apiUrlBase   = API.INSPECTIOIN
+    const hrefBase     = PATHS.INSPECTION
     const stateEntries = Object.entries(INSPECTION_STATE_TEXT)
     const STATE_NOT_SELECTED = -1
 
-    let inspecStartDate
-    let inspecEndDate
+    let url       = window.location.pathname
+    let settingID = url.split('/').pop()
+    let setting   = { state: STATE_NOT_SELECTED, title: "" }
+
+    let inspecStartDate = getCalenderHourTime(5)
+    let inspecEndDate   = getCalenderHourTime(10)
     
     async function fetchSetting() {
         const response = await apiFetch(apiUrlBase.READ(settingID), {
@@ -42,7 +42,9 @@
     }
 
     onMount(async ()=> {
-        await fetchSetting()
+        if (!isInsert) {
+            await fetchSetting()
+        }
     })
 
     // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요
@@ -88,20 +90,27 @@
         setting.start_date = inspecStartDate
         setting.end_date   = inspecEndDate
 
-        const response = await apiFetch(apiUrlBase.UPDATE(settingID), {
-            method: 'PUT',
+        let apiUrl    = apiUrlBase.UPDATE(settingID)
+        let apiMethod = 'PUT' 
+        if (isInsert) {
+            apiUrl    = apiUrlBase.CREATE
+            apiMethod = 'POST'
+        }
+
+        const response = await apiFetch(apiUrl, {
+            method: apiMethod,
             body: JSON.stringify({
                 "setting": setting,
             }),
         }).catch(handleApiError);
 
         if (response.success) {
-            alert('점검 설정 수정이 반영되었습니다.')
+            alert('점검 설정 (수정/생성) 반영되었습니다.')
             location.href = hrefBase.LIST
             return
         }
 
-        alert('점검 설정 수정 반영에 실패하였습니다.')
+        alert('점검 설정 (수정/생성) 반영에 실패하였습니다.')
         return
     }
 </script>
@@ -133,30 +142,19 @@
 
                 <dd>
                     <p class="title">
-                        <input type="text" bind:value={ setting.title } placeholder="아이디명을 기입해 주세요.">
+                        <input type="text" bind:value={ setting.title } placeholder="점검 코멘트를 기입해 주세요.">
                     </p>
                     <p class="sinfo">
                         <span class="date">
-                            { formatDate(setting.create_date) }
+                            {#if isInsert}
+                                INSERT INSPECTION
+                            {:else}
+                                { formatDate(setting.create_date) }
+                            {/if}
                         </span>
                     </p>
                 </dd>
             </dl>
-
-            <div class="bd_viewcont">
-                <div class="operation_guide">
-<!-- 
-                    <div class="settings-container">
-                        {#each Object.keys(settings) as key}
-                            <div class="setting-item">
-                                <div class="setting-label">{ SETTING_LABEL[key] }</div>
-                                <input type="number" bind:value={ settings[key] } min="0"/>
-                            </div>
-                        {/each}
-                    </div> -->
-
-                </div>
-            </div>
         </div>
 
         <article class="bdview_btnarea line">
@@ -221,6 +219,7 @@
     .board_view {
         position: relative;
         margin-top: 23px;
+        padding-bottom: 23px;
         width: 1300px;
     }
 

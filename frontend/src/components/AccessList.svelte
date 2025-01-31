@@ -2,12 +2,13 @@
     import { onMount } from "svelte"
     import { ACCESS_LEVEL, INSPECTION_STATE, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { formatDateReadable, formatDateSimple } from '../utils/time'
+    import { PATHS } from "../constants/paths";
     
     export let settings      = []
     export let state         = SETTING_STATE
     export let stateText     = SETTING_STATE_TEXT
     export let getStateClass = (state) => {}
-    export let hrefBase      = ""
+    export let hrefBase      = PATHS.SITE_SETTING
 
     export let reservedInfoMap
     const stateList = Object.values(state)

@@ -5,29 +5,21 @@
     import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
     // import { userInfo, isLoggedIn } from "../utils/auth";
-    import { formatDate, formatCalenderDate } from "../utils/time";
+    import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time";
     import { PATHS } from '../constants/paths';
 
     export let isInsert = false
+
+    const stateEntries = Object.entries(SETTING_STATE_TEXT)
     const STATE_NOT_SELECTED = -1
 
-    let url = window.location.pathname;
-    let settingID = url.split('/').pop();
-    let siteSetting = {};
-    let settings = {};
+    let url = window.location.pathname
+    let settingID = url.split('/').pop()
+    let siteSetting = {}
+    let settings = {}
 
-    // 상태 배열 생성
-    const stateEntries = Object.entries(SETTING_STATE_TEXT);
-
-    // TODO 달력 디폴트 날짜 할당 로직 함수화 하기
     // RESERVED 날짜 선택 기본 오전 10:00으로 설정
-    const now = new Date();
-    now.setHours(10, 0, 0, 0);
-
-    // 'YYYY-MM-DDTHH:mm' 형식으로 변환
-    const datePart = now.toLocaleDateString("en-CA"); // ISO 날짜 형식 (YYYY-MM-DD)
-    const timePart = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); // 24시간제 (HH:mm)
-    let   reservedDate = `${datePart}T${timePart}`;
+    let reservedDate = getCalenderHourTime(10)
 
     async function fetchSetting() {
         let apiURL = API.SITE_SETTING.READ(settingID)
@@ -55,7 +47,7 @@
     }
 
     onMount(async ()=> {
-        await fetchSetting();
+        await fetchSetting()
     });
 
     // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요

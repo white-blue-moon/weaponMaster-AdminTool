@@ -1,4 +1,5 @@
 -- TODO 어드민 툴 유저 관리 테이블
+-- TODO 어드민 관련된 테이블은 admin_ 으로 네이밍 시작하는 건 어떨지 고려중
 
 -- 설정 예약 관리 테이블
 DROP TABLE IF EXISTS site_setting_reserved;
