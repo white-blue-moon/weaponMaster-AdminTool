@@ -1,7 +1,7 @@
 <script>
     import { API } from '../constants/api'
     import { apiFetch, handleApiError } from '../utils/apiFetch'
-    import { ACCESS_LEVEL_TEXT, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
+    import { ACCESS_LEVEL_TEXT, INSPECTION_STATE_TEXT, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { onMount } from "svelte"
     // import { userInfo, isLoggedIn } from "../utils/auth"
     import { formatDate, formatToDateTime } from "../utils/time"
@@ -14,10 +14,13 @@
     let settingID = url.split('/').pop()
     let setting
 
-    const apiUrlBase = API.ACCESS_LEVEL
-    const hrefBase   = PATHS.ACCESS_LEVEL
-    const stateEntries = Object.entries(ACCESS_LEVEL_TEXT)
+    const apiUrlBase = API.INSPECTIOIN
+    const hrefBase   = PATHS.INSPECTION
+    const stateEntries = Object.entries(INSPECTION_STATE_TEXT)
     const STATE_NOT_SELECTED = -1
+
+    let inspecStartDate
+    let inspecEndDate
     
     async function fetchSetting() {
         const response = await apiFetch(apiUrlBase.READ(settingID), {
@@ -25,13 +28,16 @@
         }).catch(handleApiError);
 
         if (response != null) {
-            const userInfo = response.userInfo
+            const inspection = response.inspection
             setting = {
-                id:          userInfo.id,
-                state:       userInfo.user_type,
-                title:       userInfo.user_id,
-                create_date: userInfo.join_date, 
-            }      
+                id:          inspection.id,
+                state:       inspection.active_state,
+                title:       inspection.comment,
+                create_date: inspection.create_date,
+            }
+            
+            inspecStartDate = formatToDateTime(inspection.start_date)
+            inspecEndDate   = formatToDateTime(inspection.end_date)
         }
     }
 
@@ -41,7 +47,7 @@
 
     // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요
     async function handleDelete() {
-        const isConfirm = confirm(`정말 ${setting.title} 유저 정보를 삭제하시겠습니까?`);
+        const isConfirm = confirm(`정말 ${setting.title} 점검 정보를 삭제하시겠습니까?`);
         if (!isConfirm) {
             return
         }
@@ -51,23 +57,23 @@
         }).catch(handleApiError)
 
         if (response.success) {
-            alert(`${setting.title} 유저 정보가 삭제되었습니다.`)
+            alert(`${setting.title} 점검 정보가 삭제되었습니다.`)
             location.href = hrefBase.LIST
             return
         }
         
-        alert(`${setting.title} 유저 정보 삭제에 실패하였습니다.`)
+        alert(`${setting.title} 점검 정보 삭제에 실패하였습니다.`)
         return
     }
 
     function isValidForm() {
         if (setting.state == STATE_NOT_SELECTED) {
-            alert("유저의 권한 레벨이 선택되어 있지 않습니다.")
+            alert("점검 활성화 여부가 선택되어 있지 않습니다.")
             return false
         }
 
         if (setting.title == "") {
-            alert("유저의 아이디명이 기입되어 있지 않습니다.")
+            alert("점검 코멘트 내용이 기입되어 있지 않습니다.")
             return false
         }
 
@@ -87,12 +93,12 @@
         }).catch(handleApiError);
 
         if (response.success) {
-            alert('설정 수정이 반영되었습니다.')
+            alert('점검 설정 수정이 반영되었습니다.')
             location.href = hrefBase.LIST
             return
         }
 
-        alert('설정 수정 반영에 실패하였습니다.')
+        alert('점검 설정 수정 반영에 실패하였습니다.')
         return
     }
 </script>
@@ -105,7 +111,7 @@
                 <dt>
                     <select bind:value={ setting.state }>
                         <option class="active-not-selected" value={ STATE_NOT_SELECTED } disabled selected>
-                            권한 선택
+                            활성화 여부 선택
                         </option>
                         {#each stateEntries as [state, text]}
                             <option value={Number(state)}>{text}</option>
@@ -113,12 +119,14 @@
                     </select>
                 </dt>
 
-                <!-- {#if siteSetting.active_state === SETTING_STATE.RESERVED}
                     <dd class="reserved">
-                        <label class="reserved_label" for="reserved-date">설정 ON 예약 날짜</label>
-                        <input type="datetime-local" id="reserved-date" bind:value={ reservedDate }/>
+                        <label class="reserved_label" for="start-date">점검 시작 날짜</label>
+                        <input type="datetime-local" id="start-date" bind:value={ inspecStartDate }/>
                     </dd>
-                {/if} -->
+                    <dd class="reserved">
+                        <label class="reserved_label" for="end-date">점검 종료 날짜</label>
+                        <input type="datetime-local" id="end-date" bind:value={ inspecEndDate }/>
+                    </dd>
 
                 <dd>
                     <p class="title">
@@ -247,12 +255,12 @@
         align-items: center;
         justify-content: center;
         position: relative;
-        width: 200px;
+        width: 280px;
         height: 200px;
         border: 1px solid #e0e2ec;
         border-left: 0;
         background: #f8f9fb;
-        color: #36393f;
+        color: #19191a;
         font-size: 16px;
         font-weight: 400;
     }

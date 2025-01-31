@@ -287,6 +287,27 @@ app.get('/insepction/active', asyncHandler(async (req, res) => {
    })
 }))
 
+app.get('/inspection/list', asyncHandler(async (req, res) => {
+    const [results] = await db.query('SELECT * FROM inspection ORDER BY id DESC')
+
+    res.json({
+        inspectionList: results,
+   })
+}))
+
+app.get('/inspection/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const [results] = await db.query('SELECT * FROM inspection WHERE id = ?', [id])
+    if (results.length === 0) {
+        return res.status(404).send({ message: `[SELECT ERROR] No inspection found with id ${id}` })
+    }
+
+    res.json({
+       inspection: results[0],
+   })
+}))
+
 app.listen(port, () => {
     console.log(`[AdminTool backend Server] running at http://localhost:${port}`)
 })

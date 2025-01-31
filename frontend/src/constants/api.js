@@ -17,6 +17,9 @@ export const API = {
         DELETE:      (id) => `${ROOT}/access_level/${id}`,
     },
     INSPECTIOIN: {
-        // TODO
+        LIST:       `${ROOT}/inspection/list`,
+        READ:        (id) => `${ROOT}/inspection/${id}`,
+        UPDATE:      (id) => `${ROOT}/inspection/${id}`,
+        DELETE:      (id) => `${ROOT}/inspection/${id}`,
     },
 };

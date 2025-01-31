@@ -22,17 +22,17 @@
     }
 
     onMount(async () => {
-        const response = await apiFetch(API.ACCESS_LEVEL.LIST, {
+        const response = await apiFetch(API.INSPECTIOIN.LIST, {
             method: "GET",
         }).catch(handleApiError)
 
         if (response != null) {
-            settings  = response.userInfoList.reduce((acc, item) => {
+            settings  = response.inspectionList.reduce((acc, item) => {
                 acc.push({
                     id:          item.id,
-                    state:       item.user_type,
-                    title:       item.user_id,
-                    create_date: item.join_date,          
+                    state:       item.active_state,
+                    title:       item.comment,
+                    create_date: item.create_date,          
                 })
 
                 return acc
