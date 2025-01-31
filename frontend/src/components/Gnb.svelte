@@ -69,17 +69,17 @@
 
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <li class="m3" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
-            <a href="/">점검 제어</a>
+            <a href={ PATHS.INSPECTION.LIST }>점검 제어</a>
             <ul>
                 <li>
-                    <a href="/contents/notice/list">홈페이지 점검 상태 제어</a>
+                    <a href={ PATHS.INSPECTION.LIST }>홈페이지 점검 상태 제어</a>
                 </li>
             </ul>
         </li>
     </ul>
     <div class="topbtn">
-        <a href={ PATHS.ACCOUNT.LOGIN }>로그인</a>
         <a href={ PATHS.ACCOUNT.JOIN }>회원가입</a>
+        <a href={ PATHS.ACCOUNT.LOGIN }>로그인</a>
     </div>
 </div>
 

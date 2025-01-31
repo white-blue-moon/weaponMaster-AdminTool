@@ -118,7 +118,7 @@
     <!-- TODO 권한 있는 상태에서만 보이도록 하기 -->
     {#if state != ACCESS_LEVEL} 
         <article class="btnarea_r mt30">
-            <a href={ hrefInsert } class="btn btntype_bu46 bold" id="newArticleButton" style="width:160px">INSERT</a>
+            <a href={ hrefBase.INSERT } class="btn btntype_bu46 bold" id="newArticleButton" style="width:160px">INSERT</a>
         </article>
     {/if}
 

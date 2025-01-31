@@ -19,3 +19,13 @@ export const ACCESS_LEVEL_TEXT = {
     [ACCESS_LEVEL.NORMAL]:  "일반",
     [ACCESS_LEVEL.ADMIN]:   "관리자",
 }
+
+export const INSPECTION_STATE = {
+    OFF: 0,
+    ON:  1,
+}
+
+export const INSPECTION_STATE_TEXT = {
+    [INSPECTION_STATE.OFF]:  "OFF",
+    [INSPECTION_STATE.ON]:   "ON",
+}
