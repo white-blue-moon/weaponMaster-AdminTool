@@ -2,6 +2,8 @@ import db from './mysql/db.js'
 import express from 'express'
 import cors from 'cors'
 import cron from 'node-cron'
+import { DateTime } from 'luxon'
+
 
 const app = express()
 const port = 7770
@@ -270,15 +272,18 @@ app.delete('/access_level/:id', asyncHandler(async (req, res) => {
 
 app.get('/insepction/active', asyncHandler(async (req, res) => {
     let isInspectionOn = false
-    const now = new Date()
+    let inspection
 
+    const now = getNowDate()
     const [results] = await db.query('SELECT * FROM inspection WHERE active_state = ? AND (start_date <= ? AND ? <= end_date)', [STATE_ACTIVE_ON, now, now])
     if (results.length > 0) {
         isInspectionOn = true
+        inspection = results[0]
     }
 
     res.json({
         isInspectionOn: isInspectionOn,
+        inspection:     inspection,
    })
 }))
 
@@ -347,4 +352,9 @@ function deleteCron(id) {
     }
 
     return
+}
+
+function getNowDate() {
+    const now = DateTime.now().setZone('Asia/Seoul').toFormat('yyyy-MM-dd HH:mm:ss')
+    return now
 }
