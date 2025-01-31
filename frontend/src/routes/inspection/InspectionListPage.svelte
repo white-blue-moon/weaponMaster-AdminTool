@@ -32,6 +32,8 @@
                     id:          item.id,
                     state:       item.active_state,
                     title:       item.comment,
+                    start_date:  item.start_date,
+                    end_date:    item.end_date,
                     create_date: item.create_date,          
                 })
 

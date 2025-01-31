@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte"
-    import { ACCESS_LEVEL, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
-    import { formatDateReadable } from '../utils/time'
+    import { ACCESS_LEVEL, INSPECTION_STATE, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
+    import { formatDateReadable, formatDateSimple } from '../utils/time'
     
     export let settings      = []
     export let state         = SETTING_STATE
@@ -105,6 +105,11 @@
                             <span class="reservation-info">
                                 &nbsp;({ getReservedDateText(setting.id) } 예약)
                             </span>
+                        {/if}
+                        {#if state === INSPECTION_STATE}
+                        <span class="reservation-info">
+                            &nbsp;({ formatDateSimple(setting.start_date) } ~ { formatDateSimple(setting.end_date) })
+                        </span>
                         {/if}
                     </a>
                     <div class="iconset"></div>

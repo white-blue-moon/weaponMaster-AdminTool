@@ -5,7 +5,7 @@
     import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
     // import { userInfo, isLoggedIn } from "../utils/auth";
-    import { formatDate, formatToDateTime } from "../utils/time";
+    import { formatDate, formatCalenderDate } from "../utils/time";
     import { PATHS } from '../constants/paths';
 
     export let isInsert = false
@@ -47,7 +47,7 @@
             }
 
             if (siteSetting.active_state == SETTING_STATE.RESERVED) {
-                reservedDate = formatToDateTime(response.reservedDate) 
+                reservedDate = formatCalenderDate(response.reservedDate) 
             }
             
             settings = { ...siteSetting.settings }

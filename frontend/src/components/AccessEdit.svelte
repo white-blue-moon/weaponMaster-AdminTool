@@ -4,7 +4,7 @@
     import { ACCESS_LEVEL_TEXT, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { onMount } from "svelte"
     // import { userInfo, isLoggedIn } from "../utils/auth"
-    import { formatDate, formatToDateTime } from "../utils/time"
+    import { formatDate } from "../utils/time"
     import { PATHS } from '../constants/paths'
 
 

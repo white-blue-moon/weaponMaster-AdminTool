@@ -1,10 +1,10 @@
 <script>
     import { API } from '../constants/api'
     import { apiFetch, handleApiError } from '../utils/apiFetch'
-    import { ACCESS_LEVEL_TEXT, INSPECTION_STATE_TEXT, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
+    import { INSPECTION_STATE_TEXT } from '../constants/settingState'
     import { onMount } from "svelte"
     // import { userInfo, isLoggedIn } from "../utils/auth"
-    import { formatDate, formatToDateTime } from "../utils/time"
+    import { formatDate, formatCalenderDate } from "../utils/time"
     import { PATHS } from '../constants/paths'
 
 
@@ -36,8 +36,8 @@
                 create_date: inspection.create_date,
             }
             
-            inspecStartDate = formatToDateTime(inspection.start_date)
-            inspecEndDate   = formatToDateTime(inspection.end_date)
+            inspecStartDate = formatCalenderDate(inspection.start_date)
+            inspecEndDate   = formatCalenderDate(inspection.end_date)
         }
     }
 
