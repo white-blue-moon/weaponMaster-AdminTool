@@ -10,13 +10,13 @@
 
     export let isInsert = false
 
-    const stateEntries = Object.entries(SETTING_STATE_TEXT)
+    const stateEntries       = Object.entries(SETTING_STATE_TEXT)
     const STATE_NOT_SELECTED = -1
 
-    let url = window.location.pathname
-    let settingID = url.split('/').pop()
+    let url         = window.location.pathname
+    let settingID   = url.split('/').pop()
     let siteSetting = {}
-    let settings = {}
+    let settings    = {}
 
     // RESERVED 날짜 선택 기본 오전 10:00으로 설정
     let reservedDate = getCalenderHourTime(10)
@@ -34,7 +34,7 @@
         if (response != null) {
             siteSetting = response.siteSetting
             if (isInsert) {
-                siteSetting.active_state = STATE_NOT_SELECTED
+                siteSetting.active_state     = STATE_NOT_SELECTED
                 siteSetting.settings_comment = ""
             }
 
