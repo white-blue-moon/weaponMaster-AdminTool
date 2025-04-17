@@ -56,6 +56,9 @@ export function formatCalenderDate(inputDate) {
 
 export function getCalenderHourTime(hour) {
     const now = new Date()
+
+    // 보통 당일에 세팅하기보다 최소 하루 전에 세팅하므로 하루 뒤의 날짜로 default 설정
+    now.setDate(now.getDate() + 1);
     now.setHours(hour, 0, 0, 0)
 
     const calenderDate = formatCalenderDate(now)
