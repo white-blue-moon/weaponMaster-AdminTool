@@ -164,7 +164,7 @@
                 <div class="operation_guide">
 
                     <div class="settings-container">
-                        {#each Object.keys(settings) as key}
+                        {#each Object.keys(SETTING_LABEL) as key}
                             <div class="setting-item">
                                 <div class="setting-label">{ SETTING_LABEL[key] }</div>
                                 <input type="number" bind:value={ settings[key] } min="0"/>
