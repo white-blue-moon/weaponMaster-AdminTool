@@ -1,5 +1,13 @@
--- TODO 어드민 툴 유저 관리 테이블
--- TODO 어드민 관련된 테이블은 admin_ 으로 네이밍 시작하는 건 어떨지 고려중
+-- 어드민 툴 유저 관리 테이블
+DROP TABLE IF EXISTS admin_tool_user_info;
+CREATE TABLE admin_tool_user_info (
+    id                  INT AUTO_INCREMENT PRIMARY KEY COMMENT '기본 키 컬럼',
+    user_id             VARCHAR(255)    NOT NULL COMMENT '유저 아이디',
+    user_pw             VARCHAR(255)    NOT NULL COMMENT '유저 비밀번호',
+    join_date           TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '회원가입한 시간',
+    last_login_date     TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '가장 마지막 로그인 시간',
+    UNIQUE (user_id)
+) CHARSET=utf8 COMMENT='어드민 툴 유저 관리 테이블';
 
 -- 설정 예약 관리 테이블
 DROP TABLE IF EXISTS site_setting_reserved;

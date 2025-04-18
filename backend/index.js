@@ -4,6 +4,7 @@ import cors from 'cors'
 import siteSettingAPI from "./api/site_setting.js"
 import accessLevelAPI from "./api/access_level.js"
 import inspectionAPI  from "./api/inspection.js"
+import accountAPI     from "./api/account.js"
 
 
 const app = express()
@@ -15,6 +16,7 @@ app.use(express.json()) // 요청 본문(JSON 형식)을 파싱하여 req.body�
 app.use('/site_setting', siteSettingAPI)
 app.use('/access_level', accessLevelAPI)
 app.use('/inspection',   inspectionAPI)
+app.use('/account',      accountAPI)
 
 app.listen(port, () => {
     console.log(`[AdminTool backend Server] running at http://localhost:${port}`)
