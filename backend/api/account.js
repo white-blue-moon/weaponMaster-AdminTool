@@ -12,8 +12,8 @@ router.get('/:userId', asyncHandler(async (req, res) => {
     const { userId } = req.params
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [userId])
-    if (results.affectedRows > 0) {
-        return res.status(404).send({ message: `[DUPLICATE] user_id: ${loginInfo.userId} already exist` })
+    if (results.length > 0) {
+        res.send({ success: false })
     }
 
     res.send({ success: true })
@@ -24,7 +24,7 @@ router.post('/join', asyncHandler(async (req, res) => {
     const { userInfo } = req.body
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [userInfo.userId])
-    if (results.affectedRows > 0) {
+    if (results.length > 0) {
         return res.status(404).send({ message: `[JOIN ERROR] user_id ${userInfo.userId} already exist` })
     }
 
@@ -41,7 +41,7 @@ router.post('/login', asyncHandler(async (req, res) => {
     const { loginInfo } = req.body
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [loginInfo.userId])
-    if (results.affectedRows === 0) {
+    if (results.length === 0) {
         return res.status(404).send({ message: `[LOGIN ERROR] can't find user_id: ${loginInfo.userId}` })
     }
 

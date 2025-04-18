@@ -1,6 +1,7 @@
 <script>
     import { API } from '../../constants/api'
     import { PATHS } from '../../constants/paths'
+    import { apiFetch, handleApiError } from '../../utils/apiFetch'
     
     import Gnb from '../../components/Gnb.svelte'
     import VisualBanner from '../../components/VisualBanner.svelte'
@@ -57,8 +58,10 @@
         const response = await apiFetch(API.ACCOUNT.JOIN, {
             method: 'POST',
             body: JSON.stringify({
-                "userId": userId,
-                "userPw": password,
+                "userInfo": {
+                    "userId": userId,
+                    "userPw": password,
+                },
             }),
         }).catch(handleApiError)
 
