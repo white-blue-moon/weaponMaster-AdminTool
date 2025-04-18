@@ -124,7 +124,11 @@
     <article class="board_list news_list">
         {#if displayedSettings.length == 0}
             <ul>
-                <li class="title">"{ searchKeyword }" 에 대한 검색 결과가 없습니다.</li>
+                {#if searchKeyword == ""}
+                    <li class="title">검색 결과가 없습니다.</li>
+                {:else}
+                    <li class="title">"{ searchKeyword }" 에 대한 검색 결과가 없습니다.</li>
+                {/if}
             </ul>
         {:else}
             {#each displayedSettings as setting}

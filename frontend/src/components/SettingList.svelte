@@ -5,6 +5,8 @@
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { PATHS } from '../constants/paths'
     import { formatDateReadable } from '../utils/time'
+
+    import BoardSearch from './BoardSearch.svelte'
     
     export let settings = []
     export let state = SETTING_STATE
@@ -19,34 +21,19 @@
     }
 
     let   reservedInfoMap
-    const stateList = Object.values(state)
+    let   settingsMap     = new Map()
+    const stateList       = Object.values(state)
 
     let displayedSettings = []
-    let totalPageNum = 1
-    let currentPageNum = 1 // 현재 페이지
+    let totalPageNo       = 1
+    let currentPageNo     = 1 // 현재 페이지
 
-    const PAGE_SIZE = 10         // 한 페이지에 표시할 게시물 수
+    const PAGE_SIZE         = 10 // 한 페이지에 표시할 게시물 수
     const GROUP_PAGING_SIZE = 10 // 한 그룹에 표시할 페이지 번호 개수
 
-    function updateDisplayedArticles() {
-        displayedSettings = settings.slice((currentPageNum - 1) * PAGE_SIZE, currentPageNum * PAGE_SIZE)
-    }
+    let selectedFilters = new Set()
+    let searchKeyword   = ""
 
-    function changePage(pageNum) {
-        if (pageNum >= 1 && pageNum <= totalPageNum) {
-            currentPageNum = pageNum
-            updateDisplayedArticles()
-        }
-    }
-
-    $: currentGroupStart = Math.floor((currentPageNum - 1) / GROUP_PAGING_SIZE) * GROUP_PAGING_SIZE + 1 // 첫번째 페이징 번호를 1단위로 끊으려면 -1 필요, Math.floor(1.6) = 1
-    $: currentGroupEnd   = Math.min(currentGroupStart + GROUP_PAGING_SIZE - 1, totalPageNum) // 마지막 페이징 번호를 10 단위로 끊으려면 -1 필요
-    $: currentGroupPages = Array.from(
-        { length: currentGroupEnd - currentGroupStart + 1 }, // ex. 1 ~ 10 을 표현하려면 + 1 해야 함 (start ~ end 모두 표현하려면 +1 필요)
-        (_, i) => currentGroupStart + i
-    )
-
-    // TODO export 로 세팅 값 받아오도록 추후 수정 필요
     onMount(async () => {
         const response = await apiFetch(API.SITE_SETTING.LIST, {
             method: "GET",
@@ -54,22 +41,96 @@
 
         if (response != null) {
             settings  = response.siteSettings
-            reservedInfoMap = response.reservedInfo.reduce((acc, item) => {
+            
+            buildSettingsMap()
+            buildReservedInfoMap(response.reservedInfo)
+            updateDisplayedSettings()
+        }
+    })
+
+    function buildSettingsMap() {
+        settingsMap.clear()
+        for (const setting of settings) {
+            const key = String(setting.active_state)
+
+            if (!settingsMap.has(key)) {
+                settingsMap.set(key, [])
+            }
+            settingsMap.get(key).push(setting)
+        }
+    }
+
+    function buildReservedInfoMap(reservedInfo) {
+        reservedInfoMap = reservedInfo.reduce((acc, item) => {
                 const key = item.settings_id
                 if (!acc[key]) {
                     acc[key] = item
                 }
                 return acc
             }, {})
+    }
 
-            totalPageNum = Math.ceil(settings.length / PAGE_SIZE)
-            updateDisplayedArticles()
+    function updateDisplayedSettings() {
+        let filtered = []
+
+        if (selectedFilters.size > 0) {
+            for (const key of selectedFilters) {
+                if (settingsMap.has(key)) {
+                    filtered.push(...settingsMap.get(key))
+                }
+            }
+        } else {
+            filtered = [...settings]
         }
-    })
+
+        if (searchKeyword.trim()) {
+            filtered = filtered.filter(setting => setting.settings_comment.includes(searchKeyword.trim()))
+        }
+
+        const start       = (currentPageNo - 1) * PAGE_SIZE
+        const end         = currentPageNo * PAGE_SIZE
+        displayedSettings = filtered.slice(start, end)
+        totalPageNo       = Math.ceil(filtered.length / PAGE_SIZE)
+    }
+
+    function changePage(pageNo) {
+        if (pageNo >= 1 && pageNo <= totalPageNo) {
+            currentPageNo = pageNo
+            updateDisplayedSettings()
+        }
+    }
 
     function getReservedDateText(id) {
         return formatDateReadable(reservedInfoMap[id].reserved_date)
     }
+
+    function toggleFilter(filterKey) {
+        filterKey = String(filterKey)
+
+        const newSet = new Set(selectedFilters) // 반응성을 위해 기존 Set 복사
+        if (newSet.has(filterKey)) {
+            newSet.delete(filterKey)
+        } else {
+            newSet.add(filterKey)
+        }
+        selectedFilters = newSet // 재할당으로 반응성 유도
+
+        currentPageNo = 1        // 필터 변경 시 페이지 리셋
+        updateDisplayedSettings()
+    }
+
+    function handleSearch(event) {
+        searchKeyword = event.detail.keyword
+        currentPageNo = 1
+        updateDisplayedSettings()
+    }
+
+    $: currentGroupStart = Math.floor((currentPageNo - 1) / GROUP_PAGING_SIZE) * GROUP_PAGING_SIZE + 1 // 첫번째 페이징 번호를 1단위로 끊으려면 -1 필요, Math.floor(1.6) = 1
+    $: currentGroupEnd   = Math.min(currentGroupStart + GROUP_PAGING_SIZE - 1, totalPageNo) // 마지막 페이징 번호를 10 단위로 끊으려면 -1 필요
+    $: currentGroupPages = Array.from(
+        { length: currentGroupEnd - currentGroupStart + 1 }, // ex. 1 ~ 10 을 표현하려면 + 1 해야 함 (start ~ end 모두 표현하려면 +1 필요)
+        (_, i) => currentGroupStart + i
+    )
 </script>
 
 
@@ -77,56 +138,45 @@
     <article class="news_header">
         <div class="category_type_c">
             {#each stateList as state}
-                <a>{ stateText[(state)] }</a>
+                <a class:selected={selectedFilters.has(String(state))} on:click={() => toggleFilter(state)}>
+                    { stateText[(state)] }
+                </a>
             {/each}
         </div> 
-        <div class="board_srch">
-            <div class="select_gy" style="width:120px">
-                <div class="select">
-                    <select id="searchType">
-                        <option value="1">제목+본문</option>
-                        <option value="2">제목</option>
-                    </select>
-                    <div class="select-element">
-                        <span class="active-option">제목</span>
-                        <div class="option-list" style="max-height: 205px; height: 84px;">
-                            <ul>
-                                <li data-value="1">제목+본문</li>
-                                <li data-value="2">제목</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bs_ipt">
-                <input type="text" id="searchKeyword" name="" class="search_input" autocomplete="off">
-                <a class="btn_del">삭제</a>
-                <label id="searchButton"></label>
-            </div>
-        </div>
+        <BoardSearch on:search={ handleSearch } />
     </article>
 
     <article class="board_list news_list">
-        {#each displayedSettings as setting}
+        {#if displayedSettings.length == 0}
             <ul>
-                <li class="category { getStateClass(setting.active_state) }">
-                    { stateText[setting.active_state] }
-                </li>
-                <li class="title">
-                    <a href={ PATHS.SITE_SETTING.EDIT(setting.id) }>
-                        { setting.settings_comment }
-                        {#if setting.active_state == SETTING_STATE.RESERVED}
-                            <span class="reservation-info">
-                                &nbsp;({ getReservedDateText(setting.id) } 예약)
-                            </span>
-                        {/if}
-                    </a>
-                    <div class="iconset"></div>
-                </li>
-                <li class="date">{ setting.create_date.split('T')[0] }</li>
-                <li class="hits">#{ setting.id }</li>
+                {#if searchKeyword == ""}
+                    <li class="title">검색 결과가 없습니다.</li>
+                {:else}
+                    <li class="title">"{ searchKeyword }" 에 대한 검색 결과가 없습니다.</li>
+                {/if}
             </ul>
-        {/each}
+        {:else}
+            {#each displayedSettings as setting}
+                <ul>
+                    <li class="category { getStateClass(setting.active_state) }">
+                        { stateText[setting.active_state] }
+                    </li>
+                    <li class="title">
+                        <a href={ PATHS.SITE_SETTING.EDIT(setting.id) }>
+                            { setting.settings_comment }
+                            {#if setting.active_state == SETTING_STATE.RESERVED}
+                                <span class="reservation-info">
+                                    &nbsp;({ getReservedDateText(setting.id) } 예약)
+                                </span>
+                            {/if}
+                        </a>
+                        <div class="iconset"></div>
+                    </li>
+                    <li class="date">{ setting.create_date.split('T')[0] }</li>
+                    <li class="hits">#{ setting.id }</li>
+                </ul>
+            {/each}
+        {/if}
     </article>
     
     <!-- TODO 권한 있는 상태에서만 보이도록 하기 -->
@@ -136,10 +186,10 @@
 
     <article class="paging mt60">
         <a class="first" on:click={ () => changePage(1) }>FIRST</a>
-        <a class="prev" on:click={ () => changePage(currentPageNum - 1) }>PREV</a>
+        <a class="prev" on:click={ () => changePage(currentPageNo - 1) }>PREV</a>
 
         {#each currentGroupPages as pageNum}
-            {#if pageNum === currentPageNum}
+            {#if pageNum === currentPageNo}
                 <span>{ pageNum }</span>
             {:else}
                 <a on:click={ () => changePage(pageNum) }>{ pageNum }</a>
@@ -147,7 +197,7 @@
         {/each}
 
         <a class="next" on:click={ () => changePage(currentGroupEnd + 1) }>NEXT</a>
-        <a class="end" on:click={ () => changePage(totalPageNum) }>END</a>
+        <a class="end" on:click={ () => changePage(totalPageNo) }>END</a>
     </article>
 </section>
 
@@ -239,146 +289,156 @@
         background: url("#{$DF_UI}/img/board/arrow_tri_dn_11x7.png") no-repeat 0 0;
     }
 
-    .board_srch {
-        display: flex;
-        margin-left: auto;
-        position: relative;
-        width: 380px;
+     // 필터링 선택 시 
+     .category_type_c a.selected {
+        background-color: #e0aa00; 
+        color: white;
     }
 
-    .board_srch .select_gy {
-        display: flex;
+    .category_type_c a.selected::before {
+        background-position: 0 -50px; // 체크 이미지 하얀색으로 변경 (이미지 내 위치 이동)            
     }
 
-    .select {
-        position: relative;
-        margin: 0;
-        width: 100%;
-        height: 42px;
-        z-index: 99;
-        font-size: 14px;
-        font-weight: 400;
-        color: #6a6e76;
-        z-index: 1;
-    }
+    // .board_srch {
+    //     display: flex;
+    //     margin-left: auto;
+    //     position: relative;
+    //     width: 380px;
+    // }
 
-    select {
-        display: none;
-    }
+    // .board_srch .select_gy {
+    //     display: flex;
+    // }
 
-    .select_gy .select .active-option {
-        background: #f8f9fb;
-        border-color: #e7e8ed;
-    }
+    // .select {
+    //     position: relative;
+    //     margin: 0;
+    //     width: 100%;
+    //     height: 42px;
+    //     z-index: 99;
+    //     font-size: 14px;
+    //     font-weight: 400;
+    //     color: #6a6e76;
+    //     z-index: 1;
+    // }
 
-    .select .active-option {
-        width: 100%;
-        height: 42px;
-        background: #fff;
-        border: 1px solid #e7e8ed;
-        color: #6a6e76;
-        line-height: 39px;
-        cursor: pointer;
-    }
+    // select {
+    //     display: none;
+    // }
 
-    .active-option {
-        padding: 0 0 0 13px;
-        width: 100%;
-        display: block;
-    }
+    // .select_gy .select .active-option {
+    //     background: #f8f9fb;
+    //     border-color: #e7e8ed;
+    // }
 
-    .select .active-option:before {
-        content: "";
-        position: absolute;
-        top: 14px;
-        right: 10px;
-        width: 15px;
-        height: 15px;
-        background: url("#{$DF_UI}/img/form/select.png") no-repeat;
-    }
+    // .select .active-option {
+    //     width: 100%;
+    //     height: 42px;
+    //     background: #fff;
+    //     border: 1px solid #e7e8ed;
+    //     color: #6a6e76;
+    //     line-height: 39px;
+    //     cursor: pointer;
+    // }
 
-    .select .option-list {
-        border: 1px solid #e7e8ed;
-        overflow-y: auto;
-    }
+    // .active-option {
+    //     padding: 0 0 0 13px;
+    //     width: 100%;
+    //     display: block;
+    // }
 
-    .option-list {
-        width: 100%;
-        position: absolute;
-        visibility: hidden;
-        z-index: 100;
-    }
+    // .select .active-option:before {
+    //     content: "";
+    //     position: absolute;
+    //     top: 14px;
+    //     right: 10px;
+    //     width: 15px;
+    //     height: 15px;
+    //     background: url("#{$DF_UI}/img/form/select.png") no-repeat;
+    // }
 
-    .select .option-list ul {
-        color: #6a6e76;
-        max-height: 245px;
-    }
+    // .select .option-list {
+    //     border: 1px solid #e7e8ed;
+    //     overflow-y: auto;
+    // }
 
-    .select_gy .select .option-list ul li.on {
-        background: #fff;
-    }
+    // .option-list {
+    //     width: 100%;
+    //     position: absolute;
+    //     visibility: hidden;
+    //     z-index: 100;
+    // }
 
-    .option-list li {
-        padding: 0 0 0 13px;
-        width: 100%;
-        height: 41px;
-        line-height: 39px;
-        border-bottom: 1px solid #e7e8ed;
-        cursor: pointer;
-    }
+    // .select .option-list ul {
+    //     color: #6a6e76;
+    //     max-height: 245px;
+    // }
+
+    // .select_gy .select .option-list ul li.on {
+    //     background: #fff;
+    // }
+
+    // .option-list li {
+    //     padding: 0 0 0 13px;
+    //     width: 100%;
+    //     height: 41px;
+    //     line-height: 39px;
+    //     border-bottom: 1px solid #e7e8ed;
+    //     cursor: pointer;
+    // }
 
     li {
         list-style: none;
     }
 
-    .board_srch .bs_ipt {
-        display: flex;
-        align-items: center;
-        width: 260px;
-        height: 42px;
-        border: 1px solid #e7e8ed;
-        border-left: none;
-        background: #f8f9fb;
-        font-size: 0;
-    }
+    // .board_srch .bs_ipt {
+    //     display: flex;
+    //     align-items: center;
+    //     width: 260px;
+    //     height: 42px;
+    //     border: 1px solid #e7e8ed;
+    //     border-left: none;
+    //     background: #f8f9fb;
+    //     font-size: 0;
+    // }
 
-    .board_srch .bs_ipt input[type="text"] {
-        padding: 0;
-        margin: 0;
-        width: calc(100% - 60px);
-        height: 40px;
-        border: none;
-        background: #f8f9fb;
-        color: #6a6e76;
-        font-size: 14px;
-        outline: none; /* 기본 포커스 스타일 제거 */
-    }
+    // .board_srch .bs_ipt input[type="text"] {
+    //     padding: 0;
+    //     margin: 0;
+    //     width: calc(100% - 60px);
+    //     height: 40px;
+    //     border: none;
+    //     background: #f8f9fb;
+    //     color: #6a6e76;
+    //     font-size: 14px;
+    //     outline: none; /* 기본 포커스 스타일 제거 */
+    // }
 
-    input[type="text"] {
-        display: block;
-        line-height: 53px;
-        text-indent: 20px;
-    }
+    // input[type="text"] {
+    //     display: block;
+    //     line-height: 53px;
+    //     text-indent: 20px;
+    // }
 
-    .board_srch .bs_ipt a.btn_del {
-        display: none;
-        position: relative;
-        margin-left: auto;
-        width: 30px;
-        height: 30px;
-        background: url("#{$DF_UI}/img/btn/btn_clse_18x18.png") no-repeat 50%;
-        cursor: pointer;
-        font-size: 0;
-        text-indent: -999px;
-    }
+    // .board_srch .bs_ipt a.btn_del {
+    //     display: none;
+    //     position: relative;
+    //     margin-left: auto;
+    //     width: 30px;
+    //     height: 30px;
+    //     background: url("#{$DF_UI}/img/btn/btn_clse_18x18.png") no-repeat 50%;
+    //     cursor: pointer;
+    //     font-size: 0;
+    //     text-indent: -999px;
+    // }
 
-    .board_srch .bs_ipt label {
-        margin-left: auto;
-        width: 30px;
-        height: 30px;
-        background: url("#{$DF_UI}/img/btn/btn_srch_30x30.png") no-repeat;
-        cursor: pointer;
-    }
+    // .board_srch .bs_ipt label {
+    //     margin-left: auto;
+    //     width: 30px;
+    //     height: 30px;
+    //     background: url("#{$DF_UI}/img/btn/btn_srch_30x30.png") no-repeat;
+    //     cursor: pointer;
+    // }
 
     /* 공지사항 리스트 영역 */
     .news_list {
