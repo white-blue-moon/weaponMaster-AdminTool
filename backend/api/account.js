@@ -7,6 +7,7 @@ import express from 'express'
 
 const router = express.Router()
 
+// TODO -> 공통 반환 값 처리 필요 (success: true/false)
 // 아이디 중복확인
 router.get('/:userId', asyncHandler(async (req, res) => {
     const { userId } = req.params
@@ -25,12 +26,12 @@ router.post('/join', asyncHandler(async (req, res) => {
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [userInfo.userId])
     if (results.length > 0) {
-        return res.status(404).send({ message: `[JOIN ERROR] user_id ${userInfo.userId} already exist` })
+        return res.status(404).send({ success: false, message: `[JOIN ERROR] user_id ${userInfo.userId} already exist` })
     }
 
     const [insertRes] = await db.query('INSERT admin_tool_user_info (user_id, user_pw) values (?, ?)', [userInfo.userId, userInfo.userPw])
     if (insertRes.affectedRows === 0) {
-        return res.status(404).send({ message: `[JOIN ERROR] INSERT data FAIL, user_id: ${userInfo.userId}` })
+        return res.status(404).send({ success: false, message: `[JOIN ERROR] INSERT data FAIL, user_id: ${userInfo.userId}` })
     }
 
     res.send({ success: true })
@@ -42,16 +43,16 @@ router.post('/login', asyncHandler(async (req, res) => {
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [loginInfo.userId])
     if (results.length === 0) {
-        return res.status(404).send({ message: `[LOGIN ERROR] can't find user_id: ${loginInfo.userId}` })
+        return res.send({ success: false, message: `[LOGIN ERROR] can't find user_id: ${loginInfo.userId}` })
     }
 
-    if ( loginInfo.userPw != results[0].user_pw) {
-        return res.status(404).send({ message: `[LOGIN ERROR] wrong pw, user_id: ${loginInfo.userId}` })
+    if (loginInfo.userPw != results[0].user_pw) {
+        return res.send({ success: false, message: `[LOGIN ERROR] wrong pw, user_id: ${loginInfo.userId}` })
     }
 
-    const [updateRes] = await db.query('UPDATE admin_tool_user_info SET last_login_date = ? WHERE user_id = ?', [reservedDate, getNowDate(), loginInfo.userId])
+    const [updateRes] = await db.query('UPDATE admin_tool_user_info SET last_login_date = ? WHERE user_id = ?', [getNowDate(), loginInfo.userId])
     if (updateRes.affectedRows === 0) {
-        return res.status(404).send({ message: `[LOGIN ERROR] UPDATE last_login_date FAIL, user_id: ${loginInfo.userId}` })
+        return res.status(404).send({ success: false, message: `[LOGIN ERROR] UPDATE last_login_date FAIL, user_id: ${loginInfo.userId}` })
     }
 
     res.send({ success: true })

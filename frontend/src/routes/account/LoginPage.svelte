@@ -1,57 +1,57 @@
 <script>
-    // import { API } from '../../constants/api';
-    // import { apiFetch, handleApiError } from '../../utils/apiFetch';
-    // import { userInfo, isLoggedIn } from "../../utils/auth";
-    import { PATHS } from "../../constants/paths";
+    import { API } from '../../constants/api'
+    import { apiFetch, handleApiError } from '../../utils/apiFetch'
+    import { userInfo, isLoggedIn } from "../../utils/auth"
+    import { PATHS } from "../../constants/paths"
 
-    import Gnb from "../../components/Gnb.svelte";
-    import VisualBanner from "../../components/VisualBanner.svelte";
-    import Footer from "../../components/Footer.svelte";
+    import Gnb from "../../components/Gnb.svelte"
+    import VisualBanner from "../../components/VisualBanner.svelte"
+    import Footer from "../../components/Footer.svelte"
 
-    let userId = "";
-    let password = "";
+    let userId   = ""
+    let password = ""
 
     function isValidForm() {
         if (userId == "") {
-            alert("아이디를 입력하여 주세요");
-            return false;
+            alert("아이디를 입력하여 주세요")
+            return false
         }
 
         if (password == "") {
-            alert("비밀번호를 입력하여 주세요");
-            return false;
+            alert("비밀번호를 입력하여 주세요")
+            return false
         }
 
-        return true;
+        return true
     }
 
     async function onSubmitLogin(event) {
-        event.preventDefault();
+        event.preventDefault()
         if (!isValidForm()) {
-            return;
+            return
         }
 
-        // const response = await apiFetch(API.ACCOUNT.LOGIN_NORMAL, {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //         "userId" : userId,
-        //         "userPw" : password,
-        //     }),
-        // }).catch(handleApiError);
+        const response = await apiFetch(API.ACCOUNT.LOGIN, {
+            method: 'POST',
+            body: JSON.stringify({
+                "loginInfo": {
+                    "userId" : userId,
+                    "userPw" : password,
+                },
+            }),
+        }).catch(handleApiError)
 
-        // if (response.success) {
-        //     alert(`로그인에 성공하였습니다. ${userId} 님 안녕하세요.`);
-            
-        //     // 계정 정보 Store 업데이트
-        //     userInfo.set(userId); // TODO 추후 서버에서 받은 사용자 정보로 저장되도록 수정 필요
-        //     isLoggedIn.set(true);
+        if (response.success) {
+            // 계정 정보 Store 업데이트
+            userInfo.set(userId)
+            isLoggedIn.set(true)
+            alert(`로그인에 성공하였습니다. ${userId} 님 안녕하세요.`)
+            window.location.href = PATHS.HOME
+            return
+        }
 
-        //     window.location.href = "/";
-        //     return;
-        // }
-
-        alert('로그인에 실패하였습니다. 아이디와 비밀번호를 다시 한번 확인해 주세요.');
-        return;
+        alert('로그인에 실패하였습니다. 아이디와 비밀번호를 다시 한번 확인해 주세요.')
+        return
     }
 </script>
 
