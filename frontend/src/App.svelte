@@ -1,20 +1,34 @@
 <script>
 	import { Router, Route } from 'svelte-routing'
 	import { PATHS } from './constants/paths'
+	import { isLoggedIn } from './utils/auth'
+	import { onMount } from 'svelte'
 
-	import Home from './routes/Home.svelte'
+	import Home              from './routes/Home.svelte'
 	import SettingInsertPage from './routes/site_setting/SettingInsertPage.svelte'
-	import SettingEditPage from './routes/site_setting/SettingEditPage.svelte'
+	import SettingEditPage   from './routes/site_setting/SettingEditPage.svelte'
 
 	import LoginPage from './routes/account/LoginPage.svelte'
-	import JoinPage from './routes/account/JoinPage.svelte'
+	import JoinPage  from './routes/account/JoinPage.svelte'
 
 	import AccessListPage from './routes/access_level/AccessListPage.svelte'
 	import AccessEditPage from './routes/access_level/AccessEditPage.svelte'
 
-	import InspectionListPage from './routes/inspection/InspectionListPage.svelte'
+	import InspectionListPage   from './routes/inspection/InspectionListPage.svelte'
 	import InspectionInsertPage from './routes/inspection/InspectionInsertPage.svelte'
-	import InspectionEditPage from './routes/inspection/InspectionEditPage.svelte'
+	import InspectionEditPage   from './routes/inspection/InspectionEditPage.svelte'
+
+
+	onMount(() => {
+		const publicPaths = [PATHS.ACCOUNT.LOGIN, PATHS.ACCOUNT.JOIN]
+		const currentPath = window.location.pathname
+		const isPublic    = publicPaths.some(path => currentPath.startsWith(path))
+
+		if (!$isLoggedIn && !isPublic) {
+			// 로그인 안 된 상태인데, 비공개 페이지 접근하면 리디렉트
+			window.location.href = PATHS.ACCOUNT.LOGIN
+		}
+	})
 </script>
 
 
