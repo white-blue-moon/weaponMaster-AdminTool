@@ -24,8 +24,8 @@
 		const currentPath = window.location.pathname
 		const isPublic    = publicPaths.some(path => currentPath.startsWith(path))
 
+		// 로그인 안 된 상태인데, 비공개 페이지 접근하면 리디렉트
 		if (!$isLoggedIn && !isPublic) {
-			// 로그인 안 된 상태인데, 비공개 페이지 접근하면 리디렉트
 			window.location.href = PATHS.ACCOUNT.LOGIN
 		}
 	})
