@@ -23,4 +23,9 @@ export const API = {
         UPDATE:      (id) => `${ROOT}/inspection/${id}`,
         DELETE:      (id) => `${ROOT}/inspection/${id}`,
     },
+    ACCOUNT: {
+        LOGIN:     `${ROOT}/account/login`,
+        JOIN:      `${ROOT}/account/join`,
+        ID_CHECK:   (userId) => `${ROOT}/account/${userId}`,
+    },
 };

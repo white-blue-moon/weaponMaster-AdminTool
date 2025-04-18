@@ -1,68 +1,75 @@
 <script>
-    import Gnb from '../../components/Gnb.svelte';
-    import VisualBanner from '../../components/VisualBanner.svelte';
-    import Footer from '../../components/Footer.svelte';
+    import { API } from '../../constants/api'
+    import { PATHS } from '../../constants/paths'
+    
+    import Gnb from '../../components/Gnb.svelte'
+    import VisualBanner from '../../components/VisualBanner.svelte'
+    import Footer from '../../components/Footer.svelte'
 
-    let userId = "";
-    let isUserIdExist = false;
-    let password = "";
-    let confirmPassword = "";
+
+    let userId          = ""
+    let isUserIdExist   = true
+    let password        = ""
+    let confirmPassword = ""
 
     // TODO 유저 아이디, 혹은 password 를 다시 입력하는 경우 관련 valid 변수 다시 false 로 바꾸는 함수 필요
     async function checkDuplicateId() {
-        // const response = await apiFetch(API.ACCOUNT.EXIST_USER(userId), {
-        //     method: 'GET',
-        // }).catch(handleApiError);
+        const response = await apiFetch(API.ACCOUNT.ID_CHECK(userId), {
+            method: 'GET',
+        }).catch(handleApiError)
 
-        // if (response.exist) {
-        //     alert('이미 존재하는 아이디입니다');
-        //     isUserIdExist = true;
-        //     return;
-        // }
+        if (response.success) {
+            alert('사용 가능한 아이디입니다')
+            isUserIdExist = false
+            return
+        }
 
-        alert('사용 가능한 아이디입니다');
-        isUserIdExist = false;
-        return;
+        alert('이미 존재하는 아이디입니다')
+        isUserIdExist = true
+        return
     }
 
     function isValidForm() {
         if (userId.trim() == "" || password.trim() == "" || confirmPassword.trim() == "") {
-            alert('비어 있는 입력칸을 입력 후 시도해 주세요')
-            return false;
+            alert('비어 있는 입력칸을 입력 후 다시 시도해 주세요.')
+            return false
         }
 
         if (password !== confirmPassword) {
-            alert("비밀번호가 일치하지 않습니다 다시 확인해 주세요");
-            return false;
+            alert("비밀번호가 일치하지 않습니다. 다시 확인해 주세요.")
+            return false
         }
 
-        return true;
+        if (isUserIdExist) {
+            alert("이미 존재하는 유저아이디입니다. 새로운 아이디로 시도해 주세요.")
+            return false
+        }
+
+        return true
     }
 
     async function onSubmitJoin(event) {
-        event.preventDefault();
+        event.preventDefault()
         if (!isValidForm()) {
-            return;
+            return
         }
 
-        // const response = await apiFetch(API.ACCOUNT.JOIN, {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //         "userId" : userId,
-        //         "userPw" : password,
-        //         "dfServerId" : servers.find(s => s.id == server)?.serverId, // 올바른 서버 ID 가져오기
-        //         "dfCharacterName" : character,
-        //     }),
-        // }).catch(handleApiError);
+        const response = await apiFetch(API.ACCOUNT.JOIN, {
+            method: 'POST',
+            body: JSON.stringify({
+                "userId": userId,
+                "userPw": password,
+            }),
+        }).catch(handleApiError)
 
-        // if (response.success) {
-        //     alert('회원가입이 완료되었습니다.');
-        //     window.location.href = "/";
-        //     return;
-        // }
+        if (response.success) {
+            alert('회원가입이 완료되었습니다.')
+            window.location.href = PATHS.HOME
+            return
+        }
 
-        alert('회원가입에 실패하였습니다.');
-        return;
+        alert('회원가입에 실패하였습니다.')
+        return
     }
 </script>
 
