@@ -1,6 +1,6 @@
 <script>
     import { PATHS } from "../constants/paths";
-  import { handleLogout, userInfo } from "../utils/auth";
+    import { handleLogout, userInfo } from "../utils/auth";
 
     function handleMouseEnter(e) {
         const target = e.currentTarget;
@@ -44,7 +44,7 @@
 <div class="nav">
     <h1>
         <a href="/">
-            <img src="https://developers.neople.co.kr/img/logo.png" alt="Neople Developers">
+            <img src="/images/logo.png" alt="Neople Developers">
         </a>
     </h1>
     <ul>
@@ -95,7 +95,7 @@
     .nav ul{width:1200px;margin:0 auto;overflow:hidden;zoom:1;padding:0;}
     .nav ul:after{content:"";display:block;clear:both}
     .nav ul li{float:left;padding-top:28px;height:46px}
-    .nav ul li:first-child{margin-left:307px}
+    .nav ul li:first-child{margin-left:200px}
     .nav ul li a{display:block;float:left;padding:0;margin-right:30px;font-size:15px;color:#818181}
     .nav ul li.active a{padding-bottom:25px;color:#2d2d2d;border-bottom:3px solid #fabe00}
  
@@ -110,14 +110,16 @@
         overflow: hidden;
         display: none; /* 기본적으로 숨김 */
         transition: height 0.3s ease; /* height 애니메이션 적용 */
-    }
+    } 
+
+    /* 305 -> 190 (115) */
  
     .nav ul li ul li{position:relative;left:50%;padding:0;margin:0 0 0 -600px !important;width:1200px}
     .nav ul li ul li a{float:left;padding:0;margin:18px 30px 0 0;font-size:15px;color:#818181 !important}
     .nav ul li ul li a:hover{color:#e0aa00 !important}
-    .nav ul li.m1 ul li a:first-child{margin-left:305px;}
-    .nav ul li.m2 ul li a:first-child{margin-left:416px;}
-    .nav ul li.m3 ul li a:first-child{margin-left:501px;}
+    .nav ul li.m1 ul li a:first-child{margin-left:199px;}
+    .nav ul li.m2 ul li a:first-child{margin-left:310px;}
+    .nav ul li.m3 ul li a:first-child{margin-left:395px;}
     .nav .topbtn{position:absolute;top:23px;left:50%;width:300px;margin-left:342px;text-align:right;}
     .nav .topbtn a{display:inline-block;width:77px;height:27px;border:1px solid #cecece;border-radius:10px;color:#b3b3b3;text-align:center;line-height:28px;font-size:11px;}
     .nav .topbtn a:hover{border:1px solid #a7a7a7;color:#818181}

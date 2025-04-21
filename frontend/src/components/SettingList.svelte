@@ -8,6 +8,7 @@
 
     import BoardSearch from './BoardSearch.svelte'
     
+    
     export let settings = []
     export let state = SETTING_STATE
     export let stateText = SETTING_STATE_TEXT
