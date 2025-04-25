@@ -7,6 +7,7 @@
     import Gnb from "../../components/Gnb.svelte"
     import VisualBanner from "../../components/VisualBanner.svelte"
     import Footer from "../../components/Footer.svelte"
+    import BoldLink from '../../components/BoldLink.svelte';
 
     let userId   = ""
     let password = ""
@@ -86,7 +87,11 @@
                 <li>
                     <a href={ PATHS.ACCOUNT.JOIN }>회원가입</a>
                 </li>
-                <li><span>관리자 권한은 이곳 어드민 툴에서 부여 가능하며 공지사항 작성 등 권한이 주어집니다.</span></li>
+                <li>
+                    <span>
+                        <BoldLink href={ PATHS.WEAPON_MASTER } text="웨펀마스터" /> 관리자 권한은 이곳에서 부여 가능하며 공지사항 작성 등 권한이 주어집니다.
+                    </span>
+                </li>
             </ul>
         </form>
     </article>
@@ -192,9 +197,9 @@
 
     .login .login_admin li.logo {
         margin: 0 auto;
-        width: 108px;
+        width: 114px;
         height: 42px;
-        background: url(https://resource.df.nexon.com/ui/img/login/logo_nx.png) no-repeat;
+        background: url(/images/logo_blue_moon_img.png) no-repeat;
     }
 
     .login .login_admin li {

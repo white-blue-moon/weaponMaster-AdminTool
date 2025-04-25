@@ -1,16 +1,21 @@
 <script>
-    import { NEOPLE_UI } from '../constants/resourcePath';
+  import { PATHS } from "../constants/paths"
+
+  import BoldLink from "./BoldLink.svelte"
 </script>
 
 
 <footer>
     <ul>
-        <li class="copy">이 홈페이지는 네오플 Developers 홈페이지를 참고하여 제작되었으며, 비상업적 포트폴리오 제출용으로 사용되었습니다.<br>원저작권은 NEOPLE Inc. 및 NEXON Korea Corporation에 있습니다.</li>
+        <li class="copy">
+            이 홈페이지는 <BoldLink href={ "https://developers.neople.co.kr/" } text={ "네오플 Developers 홈페이지" }/>를 참고하여 제작된 비상업적 개인 프로젝트입니다.<br />
+            원저작권은 NEOPLE Inc. 및 NEXON Korea Corporation에 있으며,<br />
+            본 사이트는 공식 제작물은 아닙니다.
+        </li>
         <li class="flogo">
-            <!-- TODO 링크 경로 그대로 두는 게 좋을지, home 으로 이동시킬지 고민 -->
-            <a href="http://www.nexon.com/Home/Game.aspx" target="_blank"><img class="logo-blue-moon" src="/images/logo_blue_moon_img.png" alt="NEXON"></a>
-            <a href="http://www.neople.co.kr" target="_blank"><img src="/images/logo_admin_tool_footer.png" alt="NEOPLE"></a>
-            <a href="http://df.nexon.com" target="_blank"><img src="/images/logo_weapon_footer.png" alt="던전앤파이터"></a>
+            <a target="_blank"><img class="logo-blue-moon" src="/images/logo_blue_moon_img.png" alt="블루문"></a>
+            <a href={ PATHS.HOME } target="_blank"><img src="/images/logo_admin_tool_footer.png" alt="어드민툴"></a>
+            <a href={ PATHS.WEAPON_MASTER } target="_blank"><img src="/images/logo_weapon_footer.png" alt="웨펀마스터"></a>
         </li>
     </ul>
 </footer>
@@ -20,7 +25,7 @@
     footer{position:relative;height:95px;border-top:1px solid #e4e4e4;clear:both}
     footer ul{position:relative;margin:0 auto;width:1200px}
     footer ul li{list-style:none}
-    footer ul li.copy{float:left;margin:37px 0 0 50px;font-size:12px;color:#9f9f9f}
+    footer ul li.copy{float:left;margin:23px 0 0 50px;font-size:12px;color:#9f9f9f}
     footer ul li.flogo{float:right;margin:23px 32px 0 0}
     footer ul li.flogo a{display:inline-block;margin-right:24px}
     footer ul li.menu{position:relative;float:left;margin:37px 0 0 30px;font-size:12px;color:#9f9f9f}

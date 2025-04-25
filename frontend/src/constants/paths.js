@@ -22,4 +22,6 @@ export const PATHS = {
         EDIT:   (id) => `/inspection/edit/${id}`,
         EDIT_TEMPLATE:  '/inspection/edit/:id',
     },
+
+    WEAPON_MASTER: `http://localhost:8080/`,
 };
