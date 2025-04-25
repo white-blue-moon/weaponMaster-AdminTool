@@ -1,30 +1,30 @@
 <script>
-    import { NEOPLE_UI } from "../constants/resourcePath";
+    import { NEOPLE_UI } from "../constants/resourcePath"
 
-    export let background = "/img/svisual_df.jpg";
-    export let title = "ADMIN TOOL";
+    export let background = "/img/svisual_df.jpg"
+    export let title = "ADMIN TOOL"
 
-    const imgFileName = background.split("/").pop();
-    const visual260 = "svisual_df.jpg";
+    const imgFileName = background.split("/").pop()
+    const visual260   = "svisual_df.jpg"
 </script>
+
 
 <div class="{ imgFileName == visual260 ? 's_visual260' : 's_visual' } s_df"  style="--background-img: url({ NEOPLE_UI + background })">
     <h2>{ title }</h2>
     {#if imgFileName == visual260}
         <h3>
             어드민 툴에 오신 것을 환영합니다.<br>
-            Weapon Master 운영에 필요한 다양한 기능을 제공하고 있습니다.
+            Weapon Master 운영을 위한 다양한 관리 기능을 제공합니다.
         </h3>
     {/if}
     <ul class="his">
         <li>
             <!-- TODO 경로 출력 자동화하기 -->
             <!-- 홈  -->
-            <!-- <span> &gt; 로그인 </span> -->
-            <!-- <span> &gt; 던전앤파이터</span> -->
         </li>
     </ul>
 </div>
+
 
 <style>
     .s_df {

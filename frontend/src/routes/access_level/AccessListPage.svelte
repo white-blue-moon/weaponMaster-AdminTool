@@ -43,7 +43,7 @@
 
 {#if settings != null}
     <Gnb />
-    <VisualBanner background="/img/svisual3.jpg" title="접근 권한 관리"/>
+    <VisualBanner background="/img/svisual3.jpg" title="웨펀마스터 계정관리"/>
     <AccessList 
         settings={ settings }
         state={ ACCESS_LEVEL }
