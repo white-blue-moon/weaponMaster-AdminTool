@@ -32,7 +32,7 @@
             <table class="table-agreement">
             <thead>
                 <tr>
-                <th class="table-left">수집 및 이용 목적</th>
+                <th class="table-left">수집 및 <br /> 이용 목적</th>
                 <th>항목</th>
                 <th class="table-left">보유 및 이용기간</th>
                 </tr>

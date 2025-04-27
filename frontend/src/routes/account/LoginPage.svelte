@@ -159,16 +159,16 @@
         line-height: 53px;
         text-indent: 15px; /* 플레이스홀더 포함, 텍스트 입력 시작점 조정 */
         outline: none; /* 기본 포커스 스타일 제거 */
+        box-sizing: border-box; /* 테두리와 패딩을 포함한 크기 계산 */
     }
 
     input:focus {
-      border: #e0aa00 solid 2px; /* 포커스 시 테두리 색상 */
+      border: #e0aa00 solid 1.5px; /* 포커스 시 테두리 색상 */
       border-radius: 5px;
     }
 
     input::placeholder {
-        opacity: 0.5; /* 투명도 조절 */
-        margin-left: 0px;
+        color: #bec5cc;
     }
 
     .login .login_normal li.btn button {
