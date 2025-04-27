@@ -7,6 +7,7 @@
     import { formatDateReadable } from '../utils/time'
 
     import BoardSearch from './BoardSearch.svelte'
+    import Top from './Top.svelte';
     
     
     export let settings = []
@@ -202,9 +203,7 @@
     </article>
 </section>
 
-<!-- TODO 별도 컴포넌트로 빼기 -->
-<a class="top" style="position: fixed; display: inline;" id="gnbTopBtn">TOP</a>
-
+<Top />
 
 <style lang="scss">
     * {

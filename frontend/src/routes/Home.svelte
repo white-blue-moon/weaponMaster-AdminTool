@@ -3,6 +3,7 @@
     import VisualBanner from "../components/VisualBanner.svelte";
     import SettingList from "../components/SettingList.svelte";
     import Footer from "../components/Footer.svelte";
+    import Top from "../components/Top.svelte";
 </script>
 
 
