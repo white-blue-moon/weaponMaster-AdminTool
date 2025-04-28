@@ -33,6 +33,7 @@
 
         if (response != null) {
             siteSetting = response.siteSetting
+            
             if (isInsert) {
                 siteSetting.active_state     = STATE_NOT_SELECTED
                 siteSetting.settings_comment = ""

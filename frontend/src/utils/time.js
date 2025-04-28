@@ -27,21 +27,27 @@ export function formatDateReadable(inputDate) {
     return date.toLocaleString('ko-KR', options);
 }
 
-// ex. 01/28 오후 1:00 와 같이 표시
+// ex. 04/17(목) 5:00AM
 export function formatDateSimple(inputDate) {
     const date = new Date(inputDate)
 
-    const month = String(date.getMonth() + 1).padStart(2, '0') // 01~12
-    const day   = String(date.getDate()).padStart(2, '0')      // 01~31
+    const month = String(date.getMonth() + 1).padStart(2, '0') // 01 ~ 12
+    const day   = String(date.getDate()).padStart(2, '0')      // 01 ~ 31
+
+    // 요일을 계산 (0: 일요일, 1: 월요일, ... 6: 토요일)
+    const weekdays  = ['일', '월', '화', '수', '목', '금', '토']
+    const dayOfWeek = weekdays[date.getDay()]
 
     let hours  = date.getHours()
-    const amPm = hours >= 12 ? '오후' : '오전'
+    const amPm = hours >= 12 ? 'PM' : 'AM'
     hours = hours % 12 || 12 // 12시간 형식 (0시는 12로 변환)
 
-    const minutes = String(date.getMinutes()).padStart(2, '0') // 00~59
+    const minutes = String(date.getMinutes()).padStart(2, '0') // 00 ~ 59
 
-    return `${month}/${day} ${amPm} ${hours}:${minutes}`
+    
+    return `${month}/${day}(${dayOfWeek}) ${hours}:${minutes}${amPm}`
 }
+
 
 // calender 에서 사용하는 시간 포맷
 export function formatCalenderDate(inputDate) {
@@ -57,8 +63,7 @@ export function formatCalenderDate(inputDate) {
 export function getCalenderHourTime(hour) {
     const now = new Date()
 
-    // 보통 당일에 세팅하기보다 최소 하루 전에 세팅하므로 하루 뒤의 날짜로 default 설정
-    now.setDate(now.getDate() + 1);
+    now.setDate(now.getDate());
     now.setHours(hour, 0, 0, 0)
 
     const calenderDate = formatCalenderDate(now)

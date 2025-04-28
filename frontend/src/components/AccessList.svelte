@@ -124,12 +124,8 @@
 
     <article class="board_list news_list">
         {#if displayedSettings.length == 0}
-            <ul>
-                {#if searchKeyword == ""}
-                    <li class="title">검색 결과가 없습니다.</li>
-                {:else}
-                    <li class="title">"{ searchKeyword }" 에 대한 검색 결과가 없습니다.</li>
-                {/if}
+            <ul class="nodata">
+                <li>검색 결과가 없습니다.</li>
             </ul>
         {:else}
             {#each displayedSettings as setting}
@@ -145,14 +141,16 @@
                                     &nbsp;({ getReservedDateText(setting.id) } 예약)
                                 </span>
                             {/if}
-                            {#if state === INSPECTION_STATE}
-                            <span class="reservation-info">
-                                &nbsp;({ formatDateSimple(setting.start_date) } ~ { formatDateSimple(setting.end_date) })
-                            </span>
-                            {/if}
                         </a>
                         <div class="iconset"></div>
                     </li>
+                    {#if state === INSPECTION_STATE}
+                        <li style="width: 360px;">
+                            <span class="maintenance-time">
+                                {formatDateSimple(setting.start_date)} ~ {formatDateSimple(setting.end_date)}
+                            </span>
+                        </li>
+                    {/if}
                     <li class="date">{ setting.create_date.split('T')[0] }</li>
                     <li class="hits">#{ setting.id }</li>
                 </ul>
@@ -348,15 +346,21 @@
         color: #3392ff;
     }
 
+    .maintenance-time {
+        background-color: #e8f0fe;
+        color: #1a73e8;
+        padding: 6px 10px;
+        font-weight: 500;
+        font-size: 14px;
+        display: inline-block;
+        margin-top: 4px;
+        min-width: 270px;
+    }
+
+
     .news_list ul li.date {
         width: 200px;
         font-size: 13px;
-    }
-
-    .board_list ul li {
-        color: #898c92;
-        font-weight: 400;
-        text-align: center;
     }
 
     .board_list ul li.hits {
@@ -367,9 +371,21 @@
         font-size: 13px;
     }
 
-    .board_list ul li {
-        color: #898c92;
-        font-weight: 400;
+    .board_list ul.nodata {
+        cursor: default;
+    }
+
+    .board_list ul.nodata li {
+        width: 1300px;
+        height: 200px;
+        font-size: 26px;
+        font-weight: 300;
+        text-align: center;
+        line-height: 200px;
+    }
+
+    .board_list ul.nodata:hover {
+        background: none;
     }
 
     .news_list ul li.category.state-on {
@@ -465,24 +481,6 @@
 
     .bold {
         font-weight: 500 !important;
-    }
-
-    /* top 버튼 */
-    .top {
-        display: none;
-        position: absolute;
-        right: 40px;
-        bottom: 40px;
-        width: 70px;
-        height: 70px;
-        background: #484e5f;
-        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.12);
-        text-align: center;
-        color: #fff;
-        font-size: 13px;
-        line-height: 70px;
-        cursor: pointer;
-        z-index: 100;
     }
 
     .footer {

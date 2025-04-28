@@ -150,12 +150,8 @@
 
     <article class="board_list news_list">
         {#if displayedSettings.length == 0}
-            <ul>
-                {#if searchKeyword == ""}
-                    <li class="title">검색 결과가 없습니다.</li>
-                {:else}
-                    <li class="title">"{ searchKeyword }" 에 대한 검색 결과가 없습니다.</li>
-                {/if}
+            <ul class="nodata">
+                <li>검색 결과가 없습니다.</li>
             </ul>
         {:else}
             {#each displayedSettings as setting}
@@ -299,148 +295,10 @@
         background-position: 0 -50px; // 체크 이미지 하얀색으로 변경 (이미지 내 위치 이동)            
     }
 
-    // .board_srch {
-    //     display: flex;
-    //     margin-left: auto;
-    //     position: relative;
-    //     width: 380px;
-    // }
-
-    // .board_srch .select_gy {
-    //     display: flex;
-    // }
-
-    // .select {
-    //     position: relative;
-    //     margin: 0;
-    //     width: 100%;
-    //     height: 42px;
-    //     z-index: 99;
-    //     font-size: 14px;
-    //     font-weight: 400;
-    //     color: #6a6e76;
-    //     z-index: 1;
-    // }
-
-    // select {
-    //     display: none;
-    // }
-
-    // .select_gy .select .active-option {
-    //     background: #f8f9fb;
-    //     border-color: #e7e8ed;
-    // }
-
-    // .select .active-option {
-    //     width: 100%;
-    //     height: 42px;
-    //     background: #fff;
-    //     border: 1px solid #e7e8ed;
-    //     color: #6a6e76;
-    //     line-height: 39px;
-    //     cursor: pointer;
-    // }
-
-    // .active-option {
-    //     padding: 0 0 0 13px;
-    //     width: 100%;
-    //     display: block;
-    // }
-
-    // .select .active-option:before {
-    //     content: "";
-    //     position: absolute;
-    //     top: 14px;
-    //     right: 10px;
-    //     width: 15px;
-    //     height: 15px;
-    //     background: url("#{$DF_UI}/img/form/select.png") no-repeat;
-    // }
-
-    // .select .option-list {
-    //     border: 1px solid #e7e8ed;
-    //     overflow-y: auto;
-    // }
-
-    // .option-list {
-    //     width: 100%;
-    //     position: absolute;
-    //     visibility: hidden;
-    //     z-index: 100;
-    // }
-
-    // .select .option-list ul {
-    //     color: #6a6e76;
-    //     max-height: 245px;
-    // }
-
-    // .select_gy .select .option-list ul li.on {
-    //     background: #fff;
-    // }
-
-    // .option-list li {
-    //     padding: 0 0 0 13px;
-    //     width: 100%;
-    //     height: 41px;
-    //     line-height: 39px;
-    //     border-bottom: 1px solid #e7e8ed;
-    //     cursor: pointer;
-    // }
-
     li {
         list-style: none;
     }
 
-    // .board_srch .bs_ipt {
-    //     display: flex;
-    //     align-items: center;
-    //     width: 260px;
-    //     height: 42px;
-    //     border: 1px solid #e7e8ed;
-    //     border-left: none;
-    //     background: #f8f9fb;
-    //     font-size: 0;
-    // }
-
-    // .board_srch .bs_ipt input[type="text"] {
-    //     padding: 0;
-    //     margin: 0;
-    //     width: calc(100% - 60px);
-    //     height: 40px;
-    //     border: none;
-    //     background: #f8f9fb;
-    //     color: #6a6e76;
-    //     font-size: 14px;
-    //     outline: none; /* 기본 포커스 스타일 제거 */
-    // }
-
-    // input[type="text"] {
-    //     display: block;
-    //     line-height: 53px;
-    //     text-indent: 20px;
-    // }
-
-    // .board_srch .bs_ipt a.btn_del {
-    //     display: none;
-    //     position: relative;
-    //     margin-left: auto;
-    //     width: 30px;
-    //     height: 30px;
-    //     background: url("#{$DF_UI}/img/btn/btn_clse_18x18.png") no-repeat 50%;
-    //     cursor: pointer;
-    //     font-size: 0;
-    //     text-indent: -999px;
-    // }
-
-    // .board_srch .bs_ipt label {
-    //     margin-left: auto;
-    //     width: 30px;
-    //     height: 30px;
-    //     background: url("#{$DF_UI}/img/btn/btn_srch_30x30.png") no-repeat;
-    //     cursor: pointer;
-    // }
-
-    /* 공지사항 리스트 영역 */
     .news_list {
         border-top: none;
     }
@@ -525,6 +383,23 @@
     .board_list ul li {
         color: #898c92;
         font-weight: 400;
+    }
+
+    .board_list ul.nodata {
+        cursor: default;
+    }
+
+    .board_list ul.nodata li {
+        width: 1300px;
+        height: 200px;
+        font-size: 26px;
+        font-weight: 300;
+        text-align: center;
+        line-height: 200px;
+    }
+
+    .board_list ul.nodata:hover {
+        background: none;
     }
 
     .news_list ul li.category.state-on {
@@ -620,24 +495,6 @@
 
     .bold {
         font-weight: 500 !important;
-    }
-
-    /* top 버튼 */
-    .top {
-        display: none;
-        position: absolute;
-        right: 40px;
-        bottom: 40px;
-        width: 70px;
-        height: 70px;
-        background: #484e5f;
-        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.12);
-        text-align: center;
-        color: #fff;
-        font-size: 13px;
-        line-height: 70px;
-        cursor: pointer;
-        z-index: 100;
     }
 
     .footer {
