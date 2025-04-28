@@ -1,5 +1,6 @@
 import { STATE_ACTIVE_ON, ACTIVE_ON_COMPLETE } from '../constants/state.js'
 import cron from 'node-cron'
+import db from "../mysql/db.js"
 
 const activeCronJobs = new Map() // 활성화된 예약 작업을 관리하기 위한 Map
 

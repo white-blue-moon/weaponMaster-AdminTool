@@ -13,10 +13,10 @@ const port = 7770
 app.use(cors())         // 다른 도메인에서의 요청을 허용(CORS 정책 적용)
 app.use(express.json()) // 요청 본문(JSON 형식)을 파싱하여 req.body에 저장
 
-app.use('/site_setting', siteSettingAPI)
-app.use('/access_level', accessLevelAPI)
-app.use('/inspection',   inspectionAPI)
-app.use('/account',      accountAPI)
+app.use(siteSettingAPI)
+app.use(accessLevelAPI)
+app.use(inspectionAPI)
+app.use(accountAPI)
 
 app.listen(port, () => {
     console.log(`[AdminTool backend Server] running at http://localhost:${port}`)

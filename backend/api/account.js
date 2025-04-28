@@ -9,7 +9,7 @@ const router = express.Router()
 
 // TODO -> 공통 반환 값 처리 필요 (success: true/false)
 // 아이디 중복확인
-router.get('/:userId', asyncHandler(async (req, res) => {
+router.get('/account/:userId', asyncHandler(async (req, res) => {
     const { userId } = req.params
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [userId])
@@ -21,7 +21,7 @@ router.get('/:userId', asyncHandler(async (req, res) => {
 }))
 
 // 회원가입
-router.post('/join', asyncHandler(async (req, res) => {
+router.post('/account/join', asyncHandler(async (req, res) => {
     const { userInfo } = req.body
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [userInfo.userId])
@@ -38,7 +38,7 @@ router.post('/join', asyncHandler(async (req, res) => {
 }))
 
 // 로그인
-router.post('/login', asyncHandler(async (req, res) => {
+router.post('/account/login', asyncHandler(async (req, res) => {
     const { loginInfo } = req.body
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [loginInfo.userId])

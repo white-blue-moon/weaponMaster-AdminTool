@@ -6,7 +6,7 @@ import express from 'express'
 
 const router = express.Router()
 
-router.get('/list', asyncHandler(async (req, res) => {
+router.get('/access_level/list', asyncHandler(async (req, res) => {
     const [results] = await db.query('SELECT * FROM user_info ORDER BY id DESC')
 
     res.json({
@@ -14,7 +14,7 @@ router.get('/list', asyncHandler(async (req, res) => {
     })
 }))
 
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/access_level/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
 
     const [results] = await db.query('SELECT * FROM user_info WHERE id = ?', [id])
@@ -27,7 +27,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
    })
 }))
 
-router.put('/:id', asyncHandler(async (req, res) => {
+router.put('/access_level/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
     const { setting } = req.body
 
@@ -39,7 +39,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
     res.send({ success: true })
 }))
 
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/access_level/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
 
     const [results] = await db.query('DELETE FROM user_info WHERE id = ?', [id])

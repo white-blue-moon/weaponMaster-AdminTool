@@ -8,7 +8,7 @@ import express from 'express'
 
 const router = express.Router()
 
-router.get('/active', asyncHandler(async (req, res) => {
+router.get('/inspection/active', asyncHandler(async (req, res) => {
     let isInspectionOn = false
     let inspection
 
@@ -25,7 +25,7 @@ router.get('/active', asyncHandler(async (req, res) => {
    })
 }))
 
-router.get('/list', asyncHandler(async (req, res) => {
+router.get('/inspection/list', asyncHandler(async (req, res) => {
     const [results] = await db.query('SELECT * FROM inspection ORDER BY id DESC')
 
     res.json({
@@ -33,7 +33,7 @@ router.get('/list', asyncHandler(async (req, res) => {
    })
 }))
 
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/inspection/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
 
     const [results] = await db.query('SELECT * FROM inspection WHERE id = ?', [id])
@@ -46,7 +46,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
    })
 }))
 
-router.put('/:id', asyncHandler(async (req, res) => {
+router.put('/inspection/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
     const { setting } = req.body
 
@@ -58,7 +58,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
     res.send({ success: true })
 }))
 
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/inspection/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
 
     const [results] = await db.query('DELETE FROM inspection WHERE id = ?', [id])
@@ -69,7 +69,7 @@ router.delete('/:id', asyncHandler(async (req, res) => {
     res.send({ success: true })
 }))
 
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/inspection/', asyncHandler(async (req, res) => {
     const { setting } = req.body
     if (!setting) {
         return res.status(400).send({ message: '[INSERT ERROR] Invalid input. Please provide a valid inspection-input' })

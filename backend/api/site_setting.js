@@ -9,7 +9,7 @@ import express from 'express'
 const router = express.Router()
 
 // TODO DB 에러처리 필요, 반환 값 공통화 필요
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/site_setting', asyncHandler(async (req, res) => {
     const { siteSetting, reservedDate } = req.body
     if (!siteSetting || typeof siteSetting !== 'object') {
         return res.status(400).send({ message: '[INSERT ERROR] Invalid input. Please provide a valid siteSetting object.' })
@@ -22,9 +22,9 @@ router.post('/', asyncHandler(async (req, res) => {
         return res.status(400).send({ message: '[INSERT ERROR] Missing required fields: active_state or settings.' })
     }
 
-    const [results] = await db.query('INSERT INTO  (active_state, settings_comment, settings) VALUES (?, ?, ?)', [state, title || null, settings])
+    const [results] = await db.query('INSERT INTO site_setting (active_state, settings_comment, settings) VALUES (?, ?, ?)', [state, title || null, settings])
     if (results.affectedRows === 0) {
-        return res.status(404).send({ message: `[INSERT ERROR] ` })
+        return res.status(404).send({ message: `[INSERT ERROR] site_setting` })
     }
 
     // 예약 상태로 요청 시 예약 내역 등록
@@ -43,7 +43,7 @@ router.post('/', asyncHandler(async (req, res) => {
     res.send({ success: true })
 }))
 
-router.get('/list', asyncHandler(async (req, res) => {
+router.get('/site_setting/list', asyncHandler(async (req, res) => {
     const [siteSettings] = await db.query('SELECT * FROM site_setting ORDER BY id DESC')
     const [reservedRes]  = await db.query('SELECT * FROM site_setting_reserved')
 
@@ -53,32 +53,19 @@ router.get('/list', asyncHandler(async (req, res) => {
     })
 }))
 
-router.get('/last', asyncHandler(async (req, res) => {
+router.get('/site_setting/last', asyncHandler(async (req, res) => {
     // 가장 최근 생성된 홈페이지 설정 조회
     const [results] = await db.query('SELECT * FROM site_setting ORDER BY id DESC LIMIT 1')
     if (results.length === 0) {
         return res.status(404).send({ message: `[SELECT ERROR] No last site_setting found` })
     }
 
-    // 예약 내역 존재 시 조회
-    const siteSetting = results[0]
-    let reservedDate
-    if (siteSetting.active_state == STATE_RESERVED) {
-       const [reservedRes] = await db.query('SELECT * FROM site_setting_reserved WHERE settings_id = ?', [siteSetting.id])
-       if (reservedRes.length === 0) {
-           return res.status(404).send({ message: `[SELECT ERROR] No site_setting_reserved found with settings_id ${siteSetting.id}` })
-       }
-
-       reservedDate = reservedRes.reserved_date
-    }
-
     res.json({
-        siteSetting:  siteSetting,
-        reservedDate: reservedDate,
+        siteSetting:  results[0],
     })
 }))
 
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/site_setting/:id', asyncHandler(async (req, res) => {
      const { id } = req.params
 
      // 홈페이지 설정 조회
@@ -105,7 +92,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
     })
 }))
 
-router.put('/:id', asyncHandler(async (req, res) => {
+router.put('/site_setting/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
     const { siteSetting, reservedDate } = req.body
     
@@ -158,7 +145,6 @@ router.put('/:id', asyncHandler(async (req, res) => {
 
     // 2-3. 예약 -> 예약 시간 변경 (예약 내역 업데이트)
     if (selectRes[0].active_state == STATE_RESERVED && state == STATE_RESERVED) {
-        // TODO 시간 포멧 동일한지, 연산 정상 동작하는지 확인 필요
         if (selectRes[0].reserved_date != reservedDate) {
             const [updateRes] = await db.query('UPDATE site_setting_reserved SET reserved_date = ?, reserved_state = ? WHERE settings_id = ?', [reservedDate, ACTIVE_ON_BEFORE, id])
             if (updateRes.affectedRows === 0) {
@@ -180,7 +166,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
     res.send({ success: true })
 }))
 
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
 
     // 1. 예약 여부 확인
