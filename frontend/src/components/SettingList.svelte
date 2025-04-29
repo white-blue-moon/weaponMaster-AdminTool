@@ -4,7 +4,7 @@
     import { onMount } from "svelte"
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { PATHS } from '../constants/paths'
-    import { formatDateReadable } from '../utils/time'
+    import { formatDateSimple } from '../utils/time'
 
     import BoardSearch from './BoardSearch.svelte'
     import Top from './Top.svelte';
@@ -103,7 +103,7 @@
     }
 
     function getReservedDateText(id) {
-        return formatDateReadable(reservedInfoMap[id].reserved_date)
+        return formatDateSimple(reservedInfoMap[id].reserved_date)
     }
 
     function toggleFilter(filterKey) {
@@ -164,7 +164,7 @@
                             { setting.settings_comment }
                             {#if setting.active_state == SETTING_STATE.RESERVED}
                                 <span class="reservation-info">
-                                    &nbsp;({ getReservedDateText(setting.id) } 예약)
+                                    { getReservedDateText(setting.id) } 예약
                                 </span>
                             {/if}
                         </a>
@@ -358,7 +358,11 @@
     }
 
     .reservation-info {
-        color: #3392ff;
+        background-color: #fff8e1;
+        color: #e0aa00;
+        padding: 0 3px;
+        font-weight: 500;
+        display: inline-block;
     }
 
     .news_list ul li.date {

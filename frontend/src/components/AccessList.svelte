@@ -353,10 +353,8 @@
         font-weight: 500;
         font-size: 14px;
         display: inline-block;
-        margin-top: 4px;
         min-width: 270px;
     }
-
 
     .news_list ul li.date {
         width: 200px;
