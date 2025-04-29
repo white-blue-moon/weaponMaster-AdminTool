@@ -18,8 +18,24 @@
     let siteSetting = {}
     let settings    = {}
 
+    let maxVersionsMap = {}
+
     // RESERVED 날짜 선택 기본 오전 10:00으로 설정
     let reservedDate = getCalenderHourTime(10)
+
+    async function fetchMaxVersions() {
+        const response = await apiFetch(API.SITE_SETTING.MAX_VERSIONS, {
+            method: 'GET',
+        }).catch(handleApiError);
+
+        if (response.success) {
+            maxVersionsMap = response.maxVersionsMap
+            return
+        }
+
+        alert('설정 가능 버전 확인 API 요청에 실패하였습니다')
+        return
+    }
 
     async function fetchSetting() {
         let apiURL = API.SITE_SETTING.READ(settingID)
@@ -48,6 +64,7 @@
     }
 
     onMount(async ()=> {
+        await fetchMaxVersions()
         await fetchSetting()
     });
 
@@ -86,11 +103,32 @@
         return true
     }
 
+    function checkValidVersion() {
+        for (const [key, value] of Object.entries(settings)) {
+            const maxVersion = maxVersionsMap[key]
+            if (value > maxVersion) {
+                return { 
+                    isValid:    false, 
+                    label:      SETTING_LABEL[key], 
+                    maxVersion: maxVersion, 
+                }
+            }
+        }
+
+        return { isValid: true }
+    }
+
     async function handleEdit() {
         if (!isValidForm()) {
             return
         }
 
+        const checkVersion = checkValidVersion()
+        if (!checkVersion.isValid) {
+            alert(`${checkVersion.label} 항목은 최대 ${checkVersion.maxVersion} 버전까지만 설정 가능합니다.`)
+            return
+        }
+        
         let apiURL = API.SITE_SETTING.UPDATE(settingID)
         let apiMethod = 'PUT'
         if (isInsert) {

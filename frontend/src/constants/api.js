@@ -3,12 +3,13 @@ const ROOT = 'http://localhost:7770'; // TODO .env 파일을 통한 경로 관�
 export const API = {
     HOME: ROOT,
     SITE_SETTING: {
-        CREATE:     `${ROOT}/site_setting`,
-        LIST:       `${ROOT}/site_setting/list`,
-        READ_LAST:  `${ROOT}/site_setting/last`,
-        READ:        (id) => `${ROOT}/site_setting/${id}`,
-        UPDATE:      (id) => `${ROOT}/site_setting/${id}`,
-        DELETE:      (id) => `${ROOT}/site_setting/${id}`,
+        CREATE:       `${ROOT}/site_setting`,
+        LIST:         `${ROOT}/site_setting/list`,
+        READ_LAST:    `${ROOT}/site_setting/last`,
+        MAX_VERSIONS: `${ROOT}/site_setting/max_versions`,
+        READ:          (id) => `${ROOT}/site_setting/${id}`,
+        UPDATE:        (id) => `${ROOT}/site_setting/${id}`,
+        DELETE:        (id) => `${ROOT}/site_setting/${id}`,
     },
     ACCESS_LEVEL: {
         LIST:       `${ROOT}/access_level/list`,
