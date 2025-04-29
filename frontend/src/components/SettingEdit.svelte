@@ -66,7 +66,22 @@
     onMount(async ()=> {
         await fetchMaxVersions()
         await fetchSetting()
+
+        setDefaultSetting()
     });
+
+    // 신규로 추가된 설정에 대해서는 기본 0으로 할당해서 저장되도록 함
+    function setDefaultSetting() {
+        for (const key of Object.keys(SETTING_LABEL)) {
+            if (!(key in settings)) {
+                settings[key] = 0
+            }
+
+            if (maxVersionMap[key] == null) {
+                maxVersionMap[key] = 0
+            }
+        }
+    }
 
     // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요
     async function handleDelete() {
