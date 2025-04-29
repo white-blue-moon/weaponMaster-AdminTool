@@ -18,7 +18,7 @@
     let siteSetting = {}
     let settings    = {}
 
-    let maxVersionsMap = {}
+    let maxVersionMap = {}
 
     // RESERVED 날짜 선택 기본 오전 10:00으로 설정
     let reservedDate = getCalenderHourTime(10)
@@ -29,7 +29,7 @@
         }).catch(handleApiError);
 
         if (response.success) {
-            maxVersionsMap = response.maxVersionsMap
+            maxVersionMap = response.maxVersionMap
             return
         }
 
@@ -105,7 +105,7 @@
 
     function checkValidVersion() {
         for (const [key, value] of Object.entries(settings)) {
-            const maxVersion = maxVersionsMap[key]
+            const maxVersion = maxVersionMap[key]
             if (value > maxVersion) {
                 return { 
                     isValid:    false, 
@@ -125,7 +125,7 @@
 
         const checkVersion = checkValidVersion()
         if (!checkVersion.isValid) {
-            alert(`${checkVersion.label} 항목은 최대 ${checkVersion.maxVersion} 버전까지만 설정 가능합니다.`)
+            alert(`"${checkVersion.label}" 은 현재 \n최대 ${checkVersion.maxVersion} 버전까지만 설정 가능합니다.`)
             return
         }
         

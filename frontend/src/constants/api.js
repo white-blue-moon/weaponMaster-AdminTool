@@ -6,7 +6,7 @@ export const API = {
         CREATE:       `${ROOT}/site_setting`,
         LIST:         `${ROOT}/site_setting/list`,
         READ_LAST:    `${ROOT}/site_setting/last`,
-        MAX_VERSIONS: `${ROOT}/site_setting/max_versions`,
+        MAX_VERSIONS: `${ROOT}/site_setting/maxVersions`,
         READ:          (id) => `${ROOT}/site_setting/${id}`,
         UPDATE:        (id) => `${ROOT}/site_setting/${id}`,
         DELETE:        (id) => `${ROOT}/site_setting/${id}`,
