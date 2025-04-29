@@ -4,6 +4,7 @@ import { reserveCron, deleteCron } from "../utils/cron.js"
 
 import db from "../mysql/db.js"
 import express from 'express'
+import { FOCUS_BANNER_TYPE } from "../constants/focusBannerType.js"
 
 
 const router = express.Router()
@@ -195,5 +196,23 @@ router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
 
     res.send({ success: true })
 }))
+
+router.get('/site_setting/max_versions', asyncHandler(async (req, res) => {
+    const maxVersionMap = {};
+
+    maxVersionMap['publisher_logo_ver']         = await getMaxVersion('SELECT version FROM ref_publisher_logo ORDER BY version DESC LIMIT 1');
+    maxVersionMap['home_main_focus_ver']        = await getMaxVersion('SELECT version FROM ref_focus_banner_info WHERE banner_type = ? ORDER BY version DESC LIMIT 1', [FOCUS_BANNER_TYPE.MAIN]);
+    maxVersionMap['home_news_focus_first_ver']  = await getMaxVersion('SELECT version FROM ref_focus_banner_info WHERE banner_type = ? ORDER BY version DESC LIMIT 1', [FOCUS_BANNER_TYPE.NEWS_FIRST]);
+    maxVersionMap['home_news_focus_second_ver'] = await getMaxVersion('SELECT version FROM ref_focus_banner_info WHERE banner_type = ? ORDER BY version DESC LIMIT 1', [FOCUS_BANNER_TYPE.NEWS_SECOND]);
+    maxVersionMap['character_banner_ver']       = await getMaxVersion('SELECT version FROM ref_character_banner ORDER BY version DESC LIMIT 1');
+    maxVersionMap['inspection_main_focus_ver']  = await getMaxVersion('SELECT version FROM ref_focus_banner_info WHERE banner_type = ? ORDER BY version DESC LIMIT 1', [FOCUS_BANNER_TYPE.INSPECTION_MAIN]);
+
+    res.send({ success: true,  maxVersionMap: maxVersionMap})
+}))
+
+async function getMaxVersion(query, params = []) {
+    const [result] = await db.query(query, params)
+    return (result.length === 0) ? 0 : result[0].version
+}
 
 export default router
