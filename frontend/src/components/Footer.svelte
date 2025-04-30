@@ -26,7 +26,7 @@
     footer ul{position:relative;margin:0 auto;width:1200px}
     footer ul li{list-style:none}
     footer ul li.copy{float:left;margin:23px 0 0 50px;font-size:12px;color:#9f9f9f}
-    footer ul li.flogo{float:right;margin:23px 32px 0 0}
+    footer ul li.flogo{float:right;margin:22px 32px 0 0}
     footer ul li.flogo a{display:inline-block;margin-right:24px}
     footer ul li.menu{position:relative;float:left;margin:37px 0 0 30px;font-size:12px;color:#9f9f9f}
     footer ul li.menu a{color:#828282}
