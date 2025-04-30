@@ -1,6 +1,8 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { STATE_RESERVED, ACTIVE_ON_BEFORE } from "../constants/state.js"
 import { reserveCron, deleteCron } from "../utils/cron.js"
+import { saveUserLog } from "../utils/user_log.js"
+import { LOG_ACT_TYPE, LOG_CONTENTS_TYPE } from "../constants/userLogType.js"
 
 import db from "../mysql/db.js"
 import express from 'express'
@@ -11,7 +13,7 @@ const router = express.Router()
 
 // TODO DB 에러처리 필요, 반환 값 공통화 필요
 router.post('/site_setting', asyncHandler(async (req, res) => {
-    const { siteSetting, reservedDate } = req.body
+    const { siteSetting, reservedDate, adminUserId } = req.body
     if (!siteSetting || typeof siteSetting !== 'object') {
         return res.status(400).send({ message: '[INSERT ERROR] Invalid input. Please provide a valid siteSetting object.' })
     }
@@ -40,6 +42,8 @@ router.post('/site_setting', asyncHandler(async (req, res) => {
         // 에약 내역 cron 등록
         reserveCron(id, reservedDate)
     }
+
+    await saveUserLog(adminUserId, LOG_CONTENTS_TYPE.WEAPON_SITE_SETTING, LOG_ACT_TYPE.CREATE, id, state)
 
     return res.send({ success: true })
 }))
@@ -113,10 +117,10 @@ router.get('/site_setting/:id', asyncHandler(async (req, res) => {
 
 router.put('/site_setting/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { siteSetting, reservedDate } = req.body
+    const { siteSetting, reservedDate, adminUserId } = req.body
     
-    const state = siteSetting.active_state
-    const title = siteSetting.settings_comment
+    const state    = siteSetting.active_state
+    const title    = siteSetting.settings_comment
     const settings = JSON.stringify(siteSetting.settings)
 
     // 1. 기존 state 값 확인
@@ -182,11 +186,14 @@ router.put('/site_setting/:id', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[UPDATE ERROR] site_setting with id ${id}` })
     }
 
+    await saveUserLog(adminUserId, LOG_CONTENTS_TYPE.WEAPON_SITE_SETTING, LOG_ACT_TYPE.UPDATE, id, state)
+
     return res.send({ success: true })
 }))
 
 router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
-    const { id } = req.params
+    const { id }          = req.params
+    const { adminUserId } = req.body
 
     // 1. 예약 여부 확인
     const [selectRes] = await db.query('SELECT * FROM site_setting WHERE id = ?', [id])
@@ -211,6 +218,8 @@ router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
     if (results.affectedRows === 0) {
         return res.status(404).send({ message: `[DELETE ERROR] site_setting with id ${id}` })
     }
+
+    await saveUserLog(adminUserId, LOG_CONTENTS_TYPE.WEAPON_SITE_SETTING, LOG_ACT_TYPE.DELETE, id)
 
     return res.send({ success: true })
 }))
