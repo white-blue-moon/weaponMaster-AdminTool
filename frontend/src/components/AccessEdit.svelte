@@ -6,6 +6,7 @@
     // import { userInfo, isLoggedIn } from "../utils/auth"
     import { formatDate } from "../utils/time"
     import { PATHS } from '../constants/paths'
+  import { userInfo } from '../utils/auth';
 
 
     export let isInsert = false
@@ -14,9 +15,9 @@
     let settingID = url.split('/').pop()
     let setting
 
-    const apiUrlBase = API.ACCESS_LEVEL
-    const hrefBase   = PATHS.ACCESS_LEVEL
-    const stateEntries = Object.entries(ACCESS_LEVEL_TEXT)
+    const apiUrlBase         = API.ACCESS_LEVEL
+    const hrefBase           = PATHS.ACCESS_LEVEL
+    const stateEntries       = Object.entries(ACCESS_LEVEL_TEXT)
     const STATE_NOT_SELECTED = -1
     
     async function fetchSetting() {
@@ -48,6 +49,9 @@
 
         const response = await apiFetch(apiUrlBase.DELETE(settingID), {
             method: 'DELETE',
+            body: JSON.stringify({
+                "adminUserId": $userInfo,
+            }),
         }).catch(handleApiError)
 
         if (response.success) {
@@ -82,7 +86,8 @@
         const response = await apiFetch(apiUrlBase.UPDATE(settingID), {
             method: 'PUT',
             body: JSON.stringify({
-                "setting": setting,
+                "setting":     setting,
+                "adminUserId": $userInfo,
             }),
         }).catch(handleApiError);
 
