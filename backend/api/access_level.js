@@ -1,9 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { saveUserLog } from "../utils/user_log.js"
+import { LOG_ACT_TYPE, LOG_CONTENTS_TYPE } from "../constants/userLogType.js"
 
 import db from "../mysql/db.js"
 import express from 'express'
-import { LOG_ACT_TYPE, LOG_CONTENTS_TYPE } from "../constants/userLogType.js"
+
 
 
 const router = express.Router()
@@ -11,7 +12,7 @@ const router = express.Router()
 router.get('/access_level/list', asyncHandler(async (req, res) => {
     const [results] = await db.query('SELECT * FROM user_info ORDER BY id DESC')
 
-    res.json({
+    return res.json({
         userInfoList:  results,
     })
 }))
@@ -24,7 +25,7 @@ router.get('/access_level/:id', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[SELECT ERROR] No user_info found with id ${id}` })
     }
 
-    res.json({
+    return res.json({
        userInfo: results[0],
    })
 }))
@@ -40,7 +41,7 @@ router.put('/access_level/:id', asyncHandler(async (req, res) => {
 
     await saveUserLog(adminUserId, LOG_CONTENTS_TYPE.WEAPON_ACCOUNT_MANAGEMENT, LOG_ACT_TYPE.UPDATE, id, setting.state)
     
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 router.delete('/access_level/:id', asyncHandler(async (req, res) => {
@@ -54,7 +55,7 @@ router.delete('/access_level/:id', asyncHandler(async (req, res) => {
 
     await saveUserLog(adminUserId, LOG_CONTENTS_TYPE.WEAPON_ACCOUNT_MANAGEMENT, LOG_ACT_TYPE.DELETE, id)
     
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 export default router

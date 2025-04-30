@@ -1,5 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { getNowDate }   from "../utils/time.js"
+import { saveUserLog } from "../utils/user_log.js"
+import { LOG_ACT_TYPE, LOG_CONTENTS_TYPE } from "../constants/userLogType.js"
 
 import db from "../mysql/db.js"
 import express from 'express'
@@ -14,10 +16,10 @@ router.get('/account/:userId', asyncHandler(async (req, res) => {
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [userId])
     if (results.length > 0) {
-        res.send({ success: false })
+        return res.send({ success: false })
     }
 
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 // 회원가입
@@ -34,7 +36,9 @@ router.post('/account/join', asyncHandler(async (req, res) => {
         return res.status(404).send({ success: false, message: `[JOIN ERROR] INSERT data FAIL, user_id: ${userInfo.userId}` })
     }
 
-    res.send({ success: true })
+    await saveUserLog(userInfo.userId, LOG_CONTENTS_TYPE.ADMIN_TOOL, LOG_ACT_TYPE.JOIN, insertRes.insertId)
+   
+    return res.send({ success: true })
 }))
 
 // 로그인
@@ -55,7 +59,9 @@ router.post('/account/login', asyncHandler(async (req, res) => {
         return res.status(404).send({ success: false, message: `[LOGIN ERROR] UPDATE last_login_date FAIL, user_id: ${loginInfo.userId}` })
     }
 
-    res.send({ success: true })
+    await saveUserLog(loginInfo.userId, LOG_CONTENTS_TYPE.ADMIN_TOOL, LOG_ACT_TYPE.LOGIN)
+    
+    return res.send({ success: true })
 }))
 
 // TODO 로그아웃

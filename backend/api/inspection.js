@@ -19,7 +19,7 @@ router.get('/inspection/active', asyncHandler(async (req, res) => {
         inspection = results[0]
     }
 
-    res.json({
+    return res.json({
         isInspectionOn: isInspectionOn,
         inspection:     inspection,
    })
@@ -28,7 +28,7 @@ router.get('/inspection/active', asyncHandler(async (req, res) => {
 router.get('/inspection/list', asyncHandler(async (req, res) => {
     const [results] = await db.query('SELECT * FROM inspection ORDER BY id DESC')
 
-    res.json({
+    return res.json({
         inspectionList: results,
    })
 }))
@@ -41,7 +41,7 @@ router.get('/inspection/:id', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[SELECT ERROR] No inspection found with id ${id}` })
     }
 
-    res.json({
+    return res.json({
        inspection: results[0],
    })
 }))
@@ -55,7 +55,7 @@ router.put('/inspection/:id', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[UPDATE ERROR] inspection with id ${id}` })
     }
 
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 router.delete('/inspection/:id', asyncHandler(async (req, res) => {
@@ -66,7 +66,7 @@ router.delete('/inspection/:id', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[DELETE ERROR] inspection with id ${id}` })
     }
 
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 router.post('/inspection/', asyncHandler(async (req, res) => {
@@ -80,7 +80,7 @@ router.post('/inspection/', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[INSERT ERROR] inspection` })
     }
 
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 export default router

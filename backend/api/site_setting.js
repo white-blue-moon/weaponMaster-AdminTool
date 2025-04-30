@@ -41,14 +41,14 @@ router.post('/site_setting', asyncHandler(async (req, res) => {
         reserveCron(id, reservedDate)
     }
 
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 router.get('/site_setting/list', asyncHandler(async (req, res) => {
     const [siteSettings] = await db.query('SELECT * FROM site_setting ORDER BY id DESC')
     const [reservedRes]  = await db.query('SELECT * FROM site_setting_reserved')
 
-    res.json({
+    return res.json({
         siteSettings:  siteSettings,
         reservedInfo:  reservedRes,
     })
@@ -61,7 +61,7 @@ router.get('/site_setting/last', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[SELECT ERROR] No last site_setting found` })
     }
 
-    res.json({
+    return res.json({
         siteSetting:  results[0],
     })
 }))
@@ -76,7 +76,7 @@ router.get('/site_setting/maxVersions', asyncHandler(async (req, res) => {
     maxVersionMap['character_banner_ver']       = await getMaxVersion('SELECT version FROM ref_character_banner ORDER BY version DESC LIMIT 1');
     maxVersionMap['inspection_main_focus_ver']  = await getMaxVersion('SELECT version FROM ref_focus_banner_info WHERE banner_type = ? ORDER BY version DESC LIMIT 1', [FOCUS_BANNER_TYPE.INSPECTION_MAIN]);
 
-    res.send({ success: true,  maxVersionMap: maxVersionMap})
+    return res.send({ success: true,  maxVersionMap: maxVersionMap})
 }))
 
 async function getMaxVersion(query, params = []) {
@@ -105,7 +105,7 @@ router.get('/site_setting/:id', asyncHandler(async (req, res) => {
         reservedDate = reservedRes[0].reserved_date
      }
 
-     res.json({
+    return res.json({
         siteSetting:  siteSetting,
         reservedDate: reservedDate,
     })
@@ -182,7 +182,7 @@ router.put('/site_setting/:id', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[UPDATE ERROR] site_setting with id ${id}` })
     }
 
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
@@ -212,7 +212,7 @@ router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
         return res.status(404).send({ message: `[DELETE ERROR] site_setting with id ${id}` })
     }
 
-    res.send({ success: true })
+    return res.send({ success: true })
 }))
 
 export default router
