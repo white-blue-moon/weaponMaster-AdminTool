@@ -91,7 +91,7 @@
 
 <style>
     .nav{clear:both;position:relative;margin:0;width:100%;height:74px;background:#fff;border-bottom:1px solid #d9d9d9;z-index:100}
-    .nav h1{position:absolute;top:14px;left:50%;margin:0 0 0 -593px;width:140px;height:46px;}
+    .nav h1{position:absolute;top:9px;left:50%;margin:0 0 0 -593px;width:140px;height:46px;}
     .nav ul{width:1200px;margin:0 auto;overflow:hidden;zoom:1;padding:0;}
     .nav ul:after{content:"";display:block;clear:both}
     .nav ul li{float:left;padding-top:28px;height:46px}
