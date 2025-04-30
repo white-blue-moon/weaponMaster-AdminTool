@@ -14,9 +14,9 @@
 	import AccessListPage from './routes/access_level/AccessListPage.svelte'
 	import AccessEditPage from './routes/access_level/AccessEditPage.svelte'
 
-	import InspectionListPage   from './routes/inspection/InspectionListPage.svelte'
-	import InspectionInsertPage from './routes/inspection/InspectionInsertPage.svelte'
-	import InspectionEditPage   from './routes/inspection/InspectionEditPage.svelte'
+	import MaintenanceListPage   from './routes/maintenance/MaintenanceListPage.svelte'
+	import MaintenanceInsertPage from './routes/maintenance/MaintenanceInsertPage.svelte'
+	import MaintenanceEditPage   from './routes/maintenance/MaintenanceEditPage.svelte'
 
 
 	onMount(() => {
@@ -47,9 +47,9 @@
 	<Route path={ PATHS.ACCESS_LEVEL.EDIT_TEMPLATE } component={ AccessEditPage }/>
 
 	<!-- 점검 제어 -->
-	<Route path={ PATHS.INSPECTION.LIST } 		   component={ InspectionListPage }/>
-	<Route path={ PATHS.INSPECTION.INSERT } 	   component={ InspectionInsertPage }/>
-	<Route path={ PATHS.INSPECTION.EDIT_TEMPLATE } component={ InspectionEditPage }/>
+	<Route path={ PATHS.MAINTENANCE.LIST } 		   component={ MaintenanceListPage }/>
+	<Route path={ PATHS.MAINTENANCE.INSERT } 	   component={ MaintenanceInsertPage }/>
+	<Route path={ PATHS.MAINTENANCE.EDIT_TEMPLATE } component={ MaintenanceEditPage }/>
 </Router>
 
 

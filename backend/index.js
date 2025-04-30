@@ -3,7 +3,7 @@ import cors from 'cors'
 
 import siteSettingAPI from "./api/site_setting.js"
 import accessLevelAPI from "./api/access_level.js"
-import inspectionAPI  from "./api/inspection.js"
+import maintenanceAPI from "./api/maintenance.js"
 import accountAPI     from "./api/account.js"
 
 
@@ -15,7 +15,7 @@ app.use(express.json()) // 요청 본문(JSON 형식)을 파싱하여 req.body�
 
 app.use(siteSettingAPI)
 app.use(accessLevelAPI)
-app.use(inspectionAPI)
+app.use(maintenanceAPI)
 app.use(accountAPI)
 
 app.listen(port, () => {

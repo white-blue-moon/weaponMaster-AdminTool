@@ -1,11 +1,11 @@
 <script>
     import { onMount } from "svelte"
-    import { ACCESS_LEVEL, INSPECTION_STATE, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
+    import { ACCESS_LEVEL, MAINTENANCE_STATE, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { formatDateReadable, formatDateSimple } from '../utils/time'
     import { PATHS } from "../constants/paths"
 
     import BoardSearch from "./BoardSearch.svelte"
-  import Top from "./Top.svelte";
+    import Top from "./Top.svelte";
     
 
     export let settings      = []
@@ -144,7 +144,7 @@
                         </a>
                         <div class="iconset"></div>
                     </li>
-                    {#if state === INSPECTION_STATE}
+                    {#if state === MAINTENANCE_STATE}
                         <li style="width: 360px;">
                             <span class="maintenance-time">
                                 {formatDateSimple(setting.start_date)} ~ {formatDateSimple(setting.end_date)}

@@ -17,12 +17,12 @@ export const API = {
         UPDATE:      (id) => `${ROOT}/access_level/${id}`,
         DELETE:      (id) => `${ROOT}/access_level/${id}`,
     },
-    INSPECTIOIN: {
-        CREATE:     `${ROOT}/inspection`,
-        LIST:       `${ROOT}/inspection/list`,
-        READ:        (id) => `${ROOT}/inspection/${id}`,
-        UPDATE:      (id) => `${ROOT}/inspection/${id}`,
-        DELETE:      (id) => `${ROOT}/inspection/${id}`,
+    MAINTENANCE: {
+        CREATE:     `${ROOT}/maintenance`,
+        LIST:       `${ROOT}/maintenance/list`,
+        READ:        (id) => `${ROOT}/maintenance/${id}`,
+        UPDATE:      (id) => `${ROOT}/maintenance/${id}`,
+        DELETE:      (id) => `${ROOT}/maintenance/${id}`,
     },
     ACCOUNT: {
         LOGIN:     `${ROOT}/account/login`,

@@ -1,26 +1,26 @@
 <script>
     import { API } from '../constants/api'
     import { apiFetch, handleApiError } from '../utils/apiFetch'
-    import { INSPECTION_STATE_TEXT } from '../constants/settingState'
+    import { MAINTENANCE_STATE_TEXT } from '../constants/settingState'
     import { onMount } from "svelte"
-    // import { userInfo, isLoggedIn } from "../utils/auth"
     import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time"
     import { PATHS } from '../constants/paths'
+    import { userInfo } from '../utils/auth'
 
 
     export let isInsert = false
 
-    const apiUrlBase   = API.INSPECTIOIN
-    const hrefBase     = PATHS.INSPECTION
-    const stateEntries = Object.entries(INSPECTION_STATE_TEXT)
+    const apiUrlBase   = API.MAINTENANCE
+    const hrefBase     = PATHS.MAINTENANCE
+    const stateEntries = Object.entries(MAINTENANCE_STATE_TEXT)
     const STATE_NOT_SELECTED = -1
 
     let url       = window.location.pathname
     let settingID = url.split('/').pop()
     let setting   = { state: STATE_NOT_SELECTED, title: "" }
 
-    let inspecStartDate = getCalenderHourTime(5)
-    let inspecEndDate   = getCalenderHourTime(10)
+    let maintenanceStartDate = getCalenderHourTime(5)
+    let maintenanceEndDate   = getCalenderHourTime(10)
     
     async function fetchSetting() {
         const response = await apiFetch(apiUrlBase.READ(settingID), {
@@ -28,16 +28,16 @@
         }).catch(handleApiError);
 
         if (response != null) {
-            const inspection = response.inspection
+            const maintenance = response.maintenance
             setting = {
-                id:          inspection.id,
-                state:       inspection.active_state,
-                title:       inspection.comment,
-                create_date: inspection.create_date,
+                id:          maintenance.id,
+                state:       maintenance.active_state,
+                title:       maintenance.comment,
+                create_date: maintenance.create_date,
             }
             
-            inspecStartDate = formatCalenderDate(inspection.start_date)
-            inspecEndDate   = formatCalenderDate(inspection.end_date)
+            maintenanceStartDate = formatCalenderDate(maintenance.start_date)
+            maintenanceEndDate   = formatCalenderDate(maintenance.end_date)
         }
     }
 
@@ -56,6 +56,9 @@
 
         const response = await apiFetch(apiUrlBase.DELETE(settingID), {
             method: 'DELETE',
+            body: JSON.stringify({
+                "adminUserId": $userInfo,
+            }),
         }).catch(handleApiError)
 
         if (response.success) {
@@ -87,8 +90,8 @@
             return
         }
 
-        setting.start_date = inspecStartDate
-        setting.end_date   = inspecEndDate
+        setting.start_date = maintenanceStartDate
+        setting.end_date   = maintenanceEndDate
 
         let apiUrl    = apiUrlBase.UPDATE(settingID)
         let apiMethod = 'PUT' 
@@ -100,7 +103,8 @@
         const response = await apiFetch(apiUrl, {
             method: apiMethod,
             body: JSON.stringify({
-                "setting": setting,
+                "setting":     setting,
+                "adminUserId": $userInfo,
             }),
         }).catch(handleApiError);
 
@@ -133,11 +137,11 @@
 
                     <dd class="reserved">
                         <label class="reserved_label" for="start-date">점검 시작 날짜</label>
-                        <input type="datetime-local" id="start-date" bind:value={ inspecStartDate }/>
+                        <input type="datetime-local" id="start-date" bind:value={ maintenanceStartDate }/>
                     </dd>
                     <dd class="reserved">
                         <label class="reserved_label" for="end-date">점검 종료 날짜</label>
-                        <input type="datetime-local" id="end-date" bind:value={ inspecEndDate }/>
+                        <input type="datetime-local" id="end-date" bind:value={ maintenanceEndDate }/>
                     </dd>
 
                 <dd>
@@ -147,7 +151,7 @@
                     <p class="sinfo">
                         <span class="date">
                             {#if isInsert}
-                                INSERT INSPECTION
+                                INSERT MAINTENANCE
                             {:else}
                                 { formatDate(setting.create_date) }
                             {/if}

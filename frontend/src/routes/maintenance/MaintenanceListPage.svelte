@@ -2,7 +2,7 @@
     import { API } from '../../constants/api'
     import { apiFetch, handleApiError } from '../../utils/apiFetch'
     import { onMount } from "svelte"
-    import { INSPECTION_STATE, INSPECTION_STATE_TEXT } from '../../constants/settingState'
+    import { MAINTENANCE_STATE, MAINTENANCE_STATE_TEXT } from '../../constants/settingState'
     import { PATHS } from '../../constants/paths'
     
     import Gnb from "../../components/Gnb.svelte"
@@ -15,19 +15,19 @@
 
     const getStateClass = (state) => {
         switch (state) {
-            case INSPECTION_STATE.OFF:   return "state-off"
-            case INSPECTION_STATE.ON:    return "state-on"
+            case MAINTENANCE_STATE.OFF:   return "state-off"
+            case MAINTENANCE_STATE.ON:    return "state-on"
             default: return ""
         }
     }
 
     onMount(async () => {
-        const response = await apiFetch(API.INSPECTIOIN.LIST, {
+        const response = await apiFetch(API.MAINTENANCE.LIST, {
             method: "GET",
         }).catch(handleApiError)
 
         if (response != null) {
-            settings  = response.inspectionList.reduce((acc, item) => {
+            settings  = response.maintenanceList.reduce((acc, item) => {
                 acc.push({
                     id:          item.id,
                     state:       item.active_state,
@@ -49,10 +49,10 @@
     <VisualBanner background="/img/svisual5.jpg" title="홈페이지 점검 상태 제어"/>
     <AccessList 
         settings={ settings }
-        state={ INSPECTION_STATE }
-        stateText={ INSPECTION_STATE_TEXT }
+        state={ MAINTENANCE_STATE }
+        stateText={ MAINTENANCE_STATE_TEXT }
         getStateClass={ getStateClass }
-        hrefBase={ PATHS.INSPECTION }
+        hrefBase={ PATHS.MAINTENANCE }
     />
     <Footer />
 {/if}

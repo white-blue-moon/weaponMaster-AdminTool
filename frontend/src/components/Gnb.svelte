@@ -70,10 +70,10 @@
 
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <li class="m3" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
-            <a href={ PATHS.INSPECTION.LIST }>점검 제어</a>
+            <a href={ PATHS.MAINTENANCE.LIST }>점검 제어</a>
             <ul>
                 <li>
-                    <a href={ PATHS.INSPECTION.LIST }>홈페이지 점검 상태 제어</a>
+                    <a href={ PATHS.MAINTENANCE.LIST }>홈페이지 점검 상태 제어</a>
                 </li>
             </ul>
         </li>

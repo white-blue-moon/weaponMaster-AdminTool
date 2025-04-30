@@ -20,12 +20,12 @@ export const ACCESS_LEVEL_TEXT = {
     [ACCESS_LEVEL.ADMIN]:   "관리자",
 }
 
-export const INSPECTION_STATE = {
+export const MAINTENANCE_STATE = {
     OFF: 0,
     ON:  1,
 }
 
-export const INSPECTION_STATE_TEXT = {
-    [INSPECTION_STATE.OFF]:  "OFF",
-    [INSPECTION_STATE.ON]:   "ON",
+export const MAINTENANCE_STATE_TEXT = {
+    [MAINTENANCE_STATE.OFF]:  "OFF",
+    [MAINTENANCE_STATE.ON]:   "ON",
 }

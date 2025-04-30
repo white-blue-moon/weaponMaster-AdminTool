@@ -38,8 +38,8 @@ CREATE TABLE site_setting_reserved (
 ) CHARSET=utf8 COMMENT='설정 예약 관리 테이블';
 
 -- 홈페이지 점검 정보 관리 테이블
-DROP TABLE IF EXISTS inspection;
-CREATE TABLE inspection (
+DROP TABLE IF EXISTS maintenance;
+CREATE TABLE maintenance (
     id              INT AUTO_INCREMENT PRIMARY KEY COMMENT '기본 키 컬럼',
     active_state    TINYINT     NOT NULL DEFAULT 0 COMMENT '설정 ON 반영 상태 여부 (0: OFF, 1: ON)',
     comment         VARCHAR(255) COMMENT '점검 사유 등 내용 기재 (선택사항)',
@@ -49,4 +49,4 @@ CREATE TABLE inspection (
     update_date     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '점검 정보 최종 수정 시간'
 ) CHARSET=utf8 COMMENT='홈페이지 점검 정보 관리 테이블';
 -- 홈페이지 점검 정보 관리 테이블 인덱스 추가
-CREATE INDEX idx_inspection_active_state_date ON inspection (active_state, start_date, end_date);
+CREATE INDEX idx_maintenance_active_state_date ON maintenance (active_state, start_date, end_date);

@@ -16,11 +16,11 @@ export const PATHS = {
         EDIT:   (id) => `/access_level/edit/${id}`,
         EDIT_TEMPLATE:  '/access_level/edit/:id',
     },
-    INSPECTION: {
-        LIST:   `/inspection/list`,
-        INSERT: `/inspection/insert`,
-        EDIT:   (id) => `/inspection/edit/${id}`,
-        EDIT_TEMPLATE:  '/inspection/edit/:id',
+    MAINTENANCE: {
+        LIST:   `/maintenance/list`,
+        INSERT: `/maintenance/insert`,
+        EDIT:   (id) => `/maintenance/edit/${id}`,
+        EDIT_TEMPLATE:  '/maintenance/edit/:id',
     },
 
     WEAPON_MASTER: `http://localhost:8080/`,
