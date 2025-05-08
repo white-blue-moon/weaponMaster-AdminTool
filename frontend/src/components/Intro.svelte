@@ -69,7 +69,7 @@
                     removeIntro = true
                     setCookie('canAccessAdminPage', true)
                     navigate(PATHS.HOME, { state: { fromAccessGate: true } })
-                }, 5920)
+                }, 5993)
 
             }, loadingDataAniTime)
             
