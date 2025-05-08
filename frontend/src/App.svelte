@@ -3,7 +3,10 @@
 	import { PATHS } from './constants/paths'
 	import { isLoggedIn } from './utils/auth'
 	import { onMount } from 'svelte'
+	import { canAccessAdminPage } from './utils/auth'
+	import { navigate } from 'svelte-routing'
 
+	import AccessGate from './routes/AccessGate.svelte'
 	import Home              from './routes/Home.svelte'
 	import SettingInsertPage from './routes/site_setting/SettingInsertPage.svelte'
 	import SettingEditPage   from './routes/site_setting/SettingEditPage.svelte'
@@ -20,19 +23,29 @@
 
 
 	onMount(() => {
+		// 홈페이지 접근 비밀번호 입력해야 하는 상태면 ACCESS_GATE 로 리다이렉트
+		if (!$canAccessAdminPage) {
+			navigate(PATHS.ACCESS_GATE, { replace: true })
+			return
+		}
+
 		const publicPaths = [PATHS.ACCOUNT.LOGIN, PATHS.ACCOUNT.JOIN]
 		const currentPath = window.location.pathname
 		const isPublic    = publicPaths.some(path => currentPath.startsWith(path))
 
-		// 로그인 안 된 상태인데, 비공개 페이지 접근하면 리디렉트
+		// 로그인 안 된 상태인데, 비공개 페이지 접근하면 리다이렉트
 		if (!$isLoggedIn && !isPublic) {
-			window.location.href = PATHS.ACCOUNT.LOGIN
+			navigate(PATHS.ACCOUNT.LOGIN, { replace: true })
+			return
 		}
 	})
 </script>
 
 
 <Router>
+	<!-- 페이지 자체 접근 제한 -->
+	<Route path={ PATHS.ACCESS_GATE } component={ AccessGate }/>
+
 	<!-- 홈, 홈페이지 설정 관련 -->
 	<Route path={ PATHS.HOME } 						 component={ Home }/>
 	<Route path={ PATHS.SITE_SETTING.INSERT } 		 component={ SettingInsertPage }/>

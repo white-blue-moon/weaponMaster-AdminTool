@@ -5,6 +5,7 @@ import siteSettingAPI from "./api/site_setting.js"
 import accessLevelAPI from "./api/access_level.js"
 import maintenanceAPI from "./api/maintenance.js"
 import accountAPI     from "./api/account.js"
+import accessGateAPI  from "./api/access_gate.js"
 
 
 const app = express()
@@ -17,6 +18,7 @@ app.use(siteSettingAPI)
 app.use(accessLevelAPI)
 app.use(maintenanceAPI)
 app.use(accountAPI)
+app.use(accessGateAPI)
 
 app.listen(port, () => {
     console.log(`[AdminTool backend Server] running at http://localhost:${port}`)

@@ -7,6 +7,8 @@ export const LOG_CONTENTS_TYPE = {
 }
 
 export const LOG_ACT_TYPE = {
+    ACCESS_GATE_LOGIN: 0,
+
     LOGIN:  1,
     LOGOUT: 2,
     JOIN:   3, // 회원가입
