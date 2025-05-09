@@ -7,7 +7,8 @@
     import { formatDateSimple } from '../utils/time'
 
     import BoardSearch from './BoardSearch.svelte'
-    import Top from './Top.svelte';
+    import Top from './Top.svelte'
+    import Spinner from './Spinner.svelte'
     
     
     export let settings = []
@@ -36,18 +37,29 @@
     let selectedFilters = new Set()
     let searchKeyword   = ""
 
+    let isLoading = false
+
     onMount(async () => {
+        isLoading = true
+
         const response = await apiFetch(API.SITE_SETTING.LIST, {
             method: "GET",
         }).catch(handleApiError)
 
         if (response != null) {
-            settings  = response.siteSettings
+            settings = response.siteSettings
             
             buildSettingsMap()
             buildReservedInfoMap(response.reservedInfo)
             updateDisplayedSettings()
+
+            isLoading = false
+            return
         }
+
+        isLoading = false
+        alert('설정 정보 리스트 불러오기에 실패하였습니다')
+        return
     })
 
     function buildSettingsMap() {
@@ -150,9 +162,17 @@
 
     <article class="board_list news_list">
         {#if displayedSettings.length == 0}
-            <ul class="nodata">
-                <li>검색 결과가 없습니다.</li>
-            </ul>
+            {#if isLoading}
+                <ul>
+                    <li>
+                        <Spinner margin_bottom="2px"/> 설정 리스트를 불러오는 중입니다.
+                    </li>
+                </ul>
+            {:else}
+                <ul class="nodata">
+                    <li>검색 결과가 없습니다.</li>
+                </ul>
+            {/if}
         {:else}
             {#each displayedSettings as setting}
                 <ul>
