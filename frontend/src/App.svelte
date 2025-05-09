@@ -20,6 +20,8 @@
 	import MaintenanceListPage   from './routes/maintenance/MaintenanceListPage.svelte'
 	import MaintenanceInsertPage from './routes/maintenance/MaintenanceInsertPage.svelte'
 	import MaintenanceEditPage   from './routes/maintenance/MaintenanceEditPage.svelte'
+  	
+	import NotFoundPage from './components/NotFoundPage.svelte';
 
 
 	onMount(() => {
@@ -63,6 +65,9 @@
 	<Route path={ PATHS.MAINTENANCE.LIST } 		   component={ MaintenanceListPage }/>
 	<Route path={ PATHS.MAINTENANCE.INSERT } 	   component={ MaintenanceInsertPage }/>
 	<Route path={ PATHS.MAINTENANCE.EDIT_TEMPLATE } component={ MaintenanceEditPage }/>
+
+	<!-- 잘못된 경로 -->
+	<Route path="*" component={ NotFoundPage } />
 </Router>
 
 
