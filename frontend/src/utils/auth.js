@@ -40,16 +40,18 @@ export function handleCapsLock(event, setCapsLockWarning) {
 }
 
 export function setCookie(name, value, day = 1) {
-    const expires  = new Date();
-    const oneDayMs = (24 * 60 * 60 * 1000);
+    const expires  = new Date()
+    const oneDayMs = (24 * 60 * 60 * 1000)
 
-    expires.setTime(expires.getTime() + (day * oneDayMs)); // day 일 후 만료
-    document.cookie = `${name}=${encodeURIComponent(value)}; path=/; expires=${expires.toUTCString()};`;
-    return;
+    expires.setTime(expires.getTime() + (day * oneDayMs)) // day 일 후 만료
+    document.cookie = `${name}=${encodeURIComponent(value)}; path=/; expires=${expires.toUTCString()};`
+
+    canAccessAdminPage.set(true)
+    return
 }
 
-function getCookieValue(name) {
+export function getCookieValue(name) {
     // 정규식: "쿠키이름=값;" > "쿠키이름, =, 값, ;" > 값
-    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    return match ? decodeURIComponent(match[2]) : null;
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'))
+    return match ? decodeURIComponent(match[2]) : null
 }
