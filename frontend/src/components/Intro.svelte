@@ -7,10 +7,10 @@
     import { canAccessAdminPage, setCookie } from '../utils/auth'
 
 
-    let introOn      = false
-    let removeIntro  = false
-    let isLoading    = false
-    let showSkillGif = false
+    let introOn        = false
+    let removeIntro    = false
+    let isLoading      = false
+    let showSkillScene = false
 
     let loadingDataPercent  = 0    // 고정 시간 동안 진행될 로딩바 진행 상태 (0 → 100%)
     let loadingDelayPercent = 0    // 실제 통신 진척도 로딩바 진행 상태 (0 → 100%)
@@ -61,8 +61,8 @@
 
             // 기본 연출 시간 동안 대기 후 cover 분리 애니메이션 시작
             setTimeout(() => {
-                introOn      = true
-                showSkillGif = true
+                introOn        = true
+                showSkillScene = true
 
                 // cover 전환 이후 DOM 제거
                 setTimeout(() => {
@@ -73,7 +73,6 @@
 
             }, loadingDataAniTime)
             
-            // isLoading = false -> 추가 입력 막도록 하기 위해 true 유지
             return
         }
 
@@ -191,8 +190,16 @@
         <div class="loading_delay" style="width: {loadingDelayPercent}vw;"></div>
     </div>
 {/if}
-{#if showSkillGif}
-    <img src="/images/skill_scene.gif" alt="Skill Scene" class="skill-scene-gif" />
+{#if showSkillScene}
+    <!-- muted: 브라우저에서 자동재생 허용을 위한 음소거, playsinline: 모바일에서 전체화면 방지 -->
+    <video
+        src="/videos/skill_scene.mp4"
+        autoplay
+        muted
+        playsinline
+        loop
+        class="skill-scene"
+    ></video>
 {/if}
 
   
@@ -243,7 +250,7 @@
   border-color: #e0aa00;
 }
 
-.skill-scene-gif {
+.skill-scene {
     position: absolute;
     top: 50%;
     left: 50%;
