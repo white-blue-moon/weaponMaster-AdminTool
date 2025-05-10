@@ -190,7 +190,7 @@
         <div class="loading_delay" style="width: {loadingDelayPercent}vw;"></div>
     </div>
 {/if}
-<!-- muted: 브라우저에서 자동재생 허용을 위한 음소거, playsinline: 모바일에서 전체화면 방지 -->
+<!-- muted: 음소거, playsinline: 모바일에서 전체화면 방지 -->
 <video
     bind:this={ skillScene }
     src="/videos/skill_scene.mp4"
