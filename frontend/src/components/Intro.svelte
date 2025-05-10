@@ -7,10 +7,10 @@
     import { canAccessAdminPage, setCookie } from '../utils/auth'
 
 
-    let introOn        = false
-    let removeIntro    = false
-    let isLoading      = false
-    let showSkillScene = false
+    let introOn     = false
+    let removeIntro = false
+    let isLoading   = false
+    let skillScene
 
     let loadingDataPercent  = 0    // 고정 시간 동안 진행될 로딩바 진행 상태 (0 → 100%)
     let loadingDelayPercent = 0    // 실제 통신 진척도 로딩바 진행 상태 (0 → 100%)
@@ -61,8 +61,8 @@
 
             // 기본 연출 시간 동안 대기 후 cover 분리 애니메이션 시작
             setTimeout(() => {
-                introOn        = true
-                showSkillScene = true
+                introOn = true
+                skillScene.play()
 
                 // cover 전환 이후 DOM 제거
                 setTimeout(() => {
@@ -190,17 +190,16 @@
         <div class="loading_delay" style="width: {loadingDelayPercent}vw;"></div>
     </div>
 {/if}
-{#if showSkillScene}
-    <!-- muted: 브라우저에서 자동재생 허용을 위한 음소거, playsinline: 모바일에서 전체화면 방지 -->
-    <video
-        src="/videos/skill_scene.mp4"
-        autoplay
-        muted
-        playsinline
-        loop
-        class="skill-scene"
-    ></video>
-{/if}
+<!-- muted: 브라우저에서 자동재생 허용을 위한 음소거, playsinline: 모바일에서 전체화면 방지 -->
+<video
+    bind:this={ skillScene }
+    src="/videos/skill_scene.mp4"
+    preload="auto"
+    muted
+    playsinline
+    loop
+    class="skill-scene"
+></video>
 
   
 <style>
