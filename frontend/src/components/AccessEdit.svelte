@@ -6,7 +6,7 @@
     // import { userInfo, isLoggedIn } from "../utils/auth"
     import { formatDate } from "../utils/time"
     import { PATHS } from '../constants/paths'
-  import { userInfo } from '../utils/auth';
+    import { userInfo } from '../utils/auth';
 
 
     export let isInsert = false

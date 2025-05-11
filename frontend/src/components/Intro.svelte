@@ -193,7 +193,7 @@
 <!-- muted: 음소거, playsinline: 모바일에서 전체화면 방지 -->
 <video
     bind:this={ skillScene }
-    src="/videos/skill_scene.mp4"
+    src="videos/skill_scene.mp4"
     preload="auto"
     muted
     playsinline
@@ -203,10 +203,10 @@
 
   
 <style>
-.intro{position:fixed;left:0;top:0;height:100vh;background:url('/images/intro_logo.png') 50% 50% no-repeat #151922;z-index:200}
+.intro{position:fixed;left:0;top:0;height:100vh;background:url('/admin-front/images/intro_logo.png') 50% 50% no-repeat #151922;z-index:200}
 .intro .cover1{position:absolute;left:0;top:0;width:100vw;height:50vh;background:#151922;z-index:100}
 .intro .cover2{position:absolute;left:0;top:50%;width:100vw;height:50vh;background:#151922;overflow:hidden}
-.intro .cover:after{content:'';display:block;position:absolute;left:calc(50% - 121px);bottom:-69px;width:242px;height:125px;background:url('/images/intro_logo.png') 50% 0 no-repeat}
+.intro .cover:after{content:'';display:block;position:absolute;left:calc(50% - 121px);bottom:-69px;width:242px;height:125px;background:url('/admin-front/images/intro_logo.png') 50% 0 no-repeat}
 .intro .cover2:after{bottom:auto;top:69px;height:81px;background-position:50% 100%}
 .intro .loading_data{transition:1s;position:absolute;left:0;top:50%;width:0vw;height:1px;background:#e0aa00;opacity:0.4}
 .intro .loading_delay{transition:2s;position:absolute;left:0;top:50%;width:0vw;height:1px;background:#e0aa00;opacity:1}

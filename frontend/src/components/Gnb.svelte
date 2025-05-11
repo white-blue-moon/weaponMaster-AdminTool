@@ -44,7 +44,7 @@
 <div class="nav">
     <h1>
         <a href="/">
-            <img src="/images/logo.png" alt="Neople Developers">
+            <img src="images/logo.png" alt="Neople Developers">
         </a>
     </h1>
     <ul>

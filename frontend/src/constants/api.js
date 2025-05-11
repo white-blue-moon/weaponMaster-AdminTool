@@ -1,4 +1,7 @@
-const ROOT = 'http://localhost:7770'; // TODO .env 파일을 통한 경로 관리 추후 고려 ex) const ROOT = import.meta.env.API_ROOT
+// 환경에 따른 API 경로 설정 (개발/배포 환경)
+const isDevelopment = window.location.hostname === 'localhost';
+
+const ROOT = isDevelopment ? 'http://localhost:7770' : 'https://weapon-master-portfolio.duckdns.org/admin-back';
 
 export const API = {
     VERIFY_ACCESS_GATE: `${ROOT}/access-gate/verify`,

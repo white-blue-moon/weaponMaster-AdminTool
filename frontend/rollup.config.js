@@ -36,7 +36,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		file: 'public/admin-front/build/bundle.js',  // 빌드 경로 설정
 	},
 	plugins: [
 		svelte({

@@ -13,9 +13,9 @@
             본 사이트는 공식 제작물은 아닙니다.
         </li>
         <li class="flogo">
-            <a target="_blank"><img class="logo-blue-moon" src="/images/logo_blue_moon_img.png" alt="블루문"></a>
-            <a href={ PATHS.HOME } target="_blank"><img src="/images/logo_admin_tool_footer.png" alt="어드민툴"></a>
-            <a href={ PATHS.WEAPON_MASTER } target="_blank"><img src="/images/logo_weapon_footer.png" alt="웨펀마스터"></a>
+            <a target="_blank"><img class="logo-blue-moon" src="images/logo_blue_moon_img.png" alt="블루문"></a>
+            <a href={ PATHS.HOME } target="_blank"><img src="images/logo_admin_tool_footer.png" alt="어드민툴"></a>
+            <a href={ PATHS.WEAPON_MASTER } target="_blank"><img src="images/logo_weapon_footer.png" alt="웨펀마스터"></a>
         </li>
     </ul>
 </footer>
