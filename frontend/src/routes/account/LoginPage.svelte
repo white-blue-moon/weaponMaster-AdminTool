@@ -213,7 +213,7 @@
         margin: 0 auto;
         width: 114px;
         height: 42px;
-        background: url(/images/logo_blue_moon_img.png) no-repeat;
+        background: url(/admin-front/images/logo_blue_moon_img.png) no-repeat;
     }
 
     .login .login_admin li {

@@ -1,28 +1,30 @@
+const BASE = `/admin-front`;
+
 export const PATHS = {
-    ACCESS_GATE: '/access-gate',
-    HOME: '/',
+    ACCESS_GATE: `${BASE}/access-gate`,
+    HOME: `${BASE}/`,
     ACCOUNT: {
-        JOIN:   '/account/join',
-        LOGIN:  '/account/login',
+        JOIN:   `${BASE}/account/join`,
+        LOGIN:  `${BASE}/account/login`,
     },
     SITE_SETTING: {
-        LIST:   '/',
-        INSERT: `/site_setting/insert`,
-        EDIT:   (id) => `/site_setting/edit/${id}`,
-        EDIT_TEMPLATE:  '/site_setting/edit/:id',
+        LIST:   `${BASE}/`,
+        INSERT: `${BASE}/site_setting/insert`,
+        EDIT:   (id) => `${BASE}/site_setting/edit/${id}`,
+        EDIT_TEMPLATE:  `${BASE}/site_setting/edit/:id`,
     },
     ACCESS_LEVEL: {
-        LIST:   `/access_level/list`,
-        INSERT: `/access_level/insert`,
-        EDIT:   (id) => `/access_level/edit/${id}`,
-        EDIT_TEMPLATE:  '/access_level/edit/:id',
+        LIST:   `${BASE}/access_level/list`,
+        INSERT: `${BASE}/access_level/insert`,
+        EDIT:   (id) => `${BASE}/access_level/edit/${id}`,
+        EDIT_TEMPLATE:  `${BASE}/access_level/edit/:id`,
     },
     MAINTENANCE: {
-        LIST:   `/maintenance/list`,
-        INSERT: `/maintenance/insert`,
-        EDIT:   (id) => `/maintenance/edit/${id}`,
-        EDIT_TEMPLATE:  '/maintenance/edit/:id',
+        LIST:   `${BASE}/maintenance/list`,
+        INSERT: `${BASE}/maintenance/insert`,
+        EDIT:   (id) => `${BASE}/maintenance/edit/${id}`,
+        EDIT_TEMPLATE:  `${BASE}/maintenance/edit/:id`,
     },
 
-    WEAPON_MASTER: `http://localhost:8080/`,
+    WEAPON_MASTER: `https://weapon-master-portfolio.duckdns.org/weapon-front/`,
 };
