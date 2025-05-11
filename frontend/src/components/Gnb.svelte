@@ -43,7 +43,7 @@
 
 <div class="nav">
     <h1>
-        <a href="/">
+        <a href="{ PATHS.HOME }">
             <img src="images/logo.png" alt="Neople Developers">
         </a>
     </h1>
