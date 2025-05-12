@@ -12,12 +12,13 @@
     const location = useLocation();
 
     onMount(() => {
-        const isFromGate = $location?.state?.fromAccessGate;
+        const isFromGate = sessionStorage.getItem('fromAccessGate') === 'true';
         
         if (isFromGate) {
             // 화면이 렌더링될 준비가 되었을 때(show = true) 실행되도록 예약
             // → 이렇게 하면 화면이 '서서히 등장하는' 애니메이션 효과를 줄 수 있음
             requestAnimationFrame(() => show = true);
+            sessionStorage.removeItem('fromAccessGate'); // 비밀번호 입력 후 한 번만 연출
         }
 
         if (!isFromGate) {
