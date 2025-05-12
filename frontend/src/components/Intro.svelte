@@ -199,7 +199,6 @@
     preload="auto"
     muted
     playsinline
-    loop
     class="skill-scene"
 ></video>
 
