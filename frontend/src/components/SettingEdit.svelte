@@ -247,7 +247,7 @@
                 {#if !isInsert}
                     <a on:click={ handleDelete } id="deleteButton" class="btn btntype_bk46 bold" style="width:140px">삭제</a>
                 {/if}
-                <a href='/' class="btn btntype_bk46 bold list" style="width:140px">목록</a>
+                <a href={ PATHS.HOME } class="btn btntype_bk46 bold list" style="width:140px">목록</a>
             </div>          
         </article>
 
