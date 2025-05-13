@@ -1,7 +1,7 @@
 <script>
     import { API } from '../../constants/api'
     import { apiFetch, handleApiError } from '../../utils/apiFetch'
-    import { userInfo, isLoggedIn, handleCapsLock } from "../../utils/auth"
+    import { adminUserInfo, isAdminLoggedIn, handleCapsLock } from "../../utils/auth"
     import { PATHS } from "../../constants/paths"
 
     import Gnb from "../../components/Gnb.svelte"
@@ -47,8 +47,8 @@
 
         if (response.success) {
             // 계정 정보 Store 업데이트
-            userInfo.set(userId)
-            isLoggedIn.set(true)
+            adminUserInfo.set(userId)
+            isAdminLoggedIn.set(true)
             alert(`로그인에 성공하였습니다. ${userId} 님 안녕하세요.`)
             window.location.href = PATHS.HOME
             return

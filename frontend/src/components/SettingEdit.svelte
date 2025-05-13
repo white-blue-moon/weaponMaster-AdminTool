@@ -7,7 +7,7 @@
     // import { userInfo, isLoggedIn } from "../utils/auth";
     import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time";
     import { PATHS } from '../constants/paths';
-  import { userInfo } from '../utils/auth';
+  import { adminUserInfo } from '../utils/auth';
 
     export let isInsert = false
 
@@ -94,7 +94,7 @@
         const response = await apiFetch(API.SITE_SETTING.DELETE(settingID), {
             method: 'DELETE',
             body: JSON.stringify({
-                "adminUserId":  $userInfo,
+                "adminUserId":  $adminUserInfo,
             }),
         }).catch(handleApiError)
 
@@ -161,7 +161,7 @@
             body: JSON.stringify({
                 "siteSetting":  siteSetting,
                 "reservedDate": reservedDate,
-                "adminUserId":  $userInfo,
+                "adminUserId":  $adminUserInfo,
             }),
         }).catch(handleApiError);
 

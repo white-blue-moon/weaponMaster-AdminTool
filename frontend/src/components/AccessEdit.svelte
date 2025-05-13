@@ -6,7 +6,7 @@
     // import { userInfo, isLoggedIn } from "../utils/auth"
     import { formatDate } from "../utils/time"
     import { PATHS } from '../constants/paths'
-    import { userInfo } from '../utils/auth';
+    import { adminUserInfo } from '../utils/auth';
 
 
     export let isInsert = false
@@ -50,7 +50,7 @@
         const response = await apiFetch(apiUrlBase.DELETE(settingID), {
             method: 'DELETE',
             body: JSON.stringify({
-                "adminUserId": $userInfo,
+                "adminUserId": $adminUserInfo,
             }),
         }).catch(handleApiError)
 
@@ -87,7 +87,7 @@
             method: 'PUT',
             body: JSON.stringify({
                 "setting":     setting,
-                "adminUserId": $userInfo,
+                "adminUserId": $adminUserInfo,
             }),
         }).catch(handleApiError);
 

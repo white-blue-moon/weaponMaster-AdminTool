@@ -1,7 +1,7 @@
 <script>
 	import { Router, Route } from 'svelte-routing'
 	import { PATHS } from './constants/paths'
-	import { isLoggedIn } from './utils/auth'
+	import { isAdminLoggedIn } from './utils/auth'
 	import { onMount } from 'svelte'
 	import { canAccessAdminPage } from './utils/auth'
 	import { navigate } from 'svelte-routing'
@@ -36,7 +36,7 @@
 		const isPublic    = publicPaths.some(path => currentPath.startsWith(path))
 
 		// 로그인 안 된 상태인데, 비공개 페이지 접근하면 리다이렉트
-		if (!$isLoggedIn && !isPublic) {
+		if (!$isAdminLoggedIn && !isPublic) {
 			navigate(PATHS.ACCOUNT.LOGIN, { replace: true })
 			return
 		}

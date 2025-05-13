@@ -7,27 +7,27 @@ export const canAccessAdminPage = writable(
 );
 
 // 사용자 정보 저장소
-export const userInfo = writable(
-    JSON.parse(localStorage.getItem("userInfo")) || null
+export const adminUserInfo = writable(
+    JSON.parse(localStorage.getItem("adminUserInfo")) || null
 )
 
 // 로그인 상태 저장소
-export const isLoggedIn = writable(
-    JSON.parse(localStorage.getItem("isLoggedIn")) || false
+export const isAdminLoggedIn = writable(
+    JSON.parse(localStorage.getItem("isAdminLoggedIn")) || false
 )
 
 // 구독을 통해 변경될 때 브라우저 저장소에 저장
-userInfo.subscribe((value) => {
-    localStorage.setItem("userInfo", JSON.stringify(value))
+adminUserInfo.subscribe((value) => {
+    localStorage.setItem("adminUserInfo", JSON.stringify(value))
 })
 
-isLoggedIn.subscribe((value) => {
-    localStorage.setItem("isLoggedIn", JSON.stringify(value))
+isAdminLoggedIn.subscribe((value) => {
+    localStorage.setItem("isAdminLoggedIn", JSON.stringify(value))
 })
 
 export function handleLogout() {
-    userInfo.set(null)
-    isLoggedIn.set(false)
+    adminUserInfo.set(null)
+    isAdminLoggedIn.set(false)
 
     alert("로그아웃 되었습니다.")
     window.location.href = PATHS.HOME

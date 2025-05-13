@@ -5,7 +5,7 @@
     import { onMount } from "svelte"
     import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time"
     import { PATHS } from '../constants/paths'
-    import { userInfo } from '../utils/auth'
+    import { adminUserInfo } from '../utils/auth'
 
 
     export let isInsert = false
@@ -57,7 +57,7 @@
         const response = await apiFetch(apiUrlBase.DELETE(settingID), {
             method: 'DELETE',
             body: JSON.stringify({
-                "adminUserId": $userInfo,
+                "adminUserId": $adminUserInfo,
             }),
         }).catch(handleApiError)
 
@@ -104,7 +104,7 @@
             method: apiMethod,
             body: JSON.stringify({
                 "setting":     setting,
-                "adminUserId": $userInfo,
+                "adminUserId": $adminUserInfo,
             }),
         }).catch(handleApiError);
 
