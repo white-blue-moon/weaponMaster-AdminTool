@@ -1,7 +1,7 @@
 import fs from 'fs';
 
-const buildDir  = './public/weapon-front/build';
-const indexPath = './public/weapon-front/index.html';
+const buildDir  = './public/admin-front/build';
+const indexPath = './public/admin-front/index.html';
 
 // 번들 파일 검색
 const files  = fs.readdirSync(buildDir);
