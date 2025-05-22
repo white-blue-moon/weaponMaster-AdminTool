@@ -9,11 +9,11 @@ export const isAdminLoggedIn    = localStorageWritable("isAdminLoggedIn", false)
 export const adminUserInfo      = localStorageWritable("adminUserInfo", null)    // 사용자 정보 (아이디 등)
 
 export function authLogin(userId, token) {
-    const expireTs = Date.now() + (DURATION.HOUR_MS * 4) // 4시간 후 만료
+    const expireMs = Date.now() + (DURATION.HOUR_MS * 4) // 4시간 후 만료
 
-    adminUserInfo.set(userId, expireTs)
-    adminToolToken.set(token, expireTs)
-    isAdminLoggedIn.set(true, expireTs)
+    adminUserInfo.set(userId, expireMs)
+    adminToolToken.set(token, expireMs)
+    isAdminLoggedIn.set(true, expireMs)
 
     alert(`로그인에 성공하였습니다.\n${userId} 님 안녕하세요.`)
     window.location.href = PATHS.HOME
@@ -75,9 +75,9 @@ function getCookieValue(name) {
 
 function setCookie(name, value, day = 1) {
     const expires  = new Date()
-    const expireTs = expires.getTime() + (day * DURATION.DAY_MS) // day 일 후 만료
+    const expireMs = expires.getTime() + (day * DURATION.DAY_MS) // day 일 후 만료
     
-    expires.setTime(expireTs)
+    expires.setTime(expireMs)
     document.cookie = `${name}=${encodeURIComponent(value)}; path=/; expires=${expires.toUTCString()};`
 }
 
@@ -115,14 +115,14 @@ function isValidStoredData(obj) {
     if (!obj)                    return false
     if (typeof obj !== "object") return false
     if (!("value" in obj))       return false
-    if (!("expireTs" in obj))    return false
+    if (!("expireMs" in obj))    return false
   
     return true
 }
   
-function isExpired(expireTs) {
-    if (typeof expireTs !== "number") return true
-    if (expireTs <= Date.now())       return true
+function isExpired(expireMs) {
+    if (typeof expireMs !== "number") return true
+    if (expireMs <= Date.now())       return true
   
     return false
 }
@@ -138,15 +138,15 @@ function getStoredValue(key, defaultValue) {
       return defaultValue
     }
   
-    if (isExpired(parsed.expireTs)) {
+    if (isExpired(parsed.expireMs)) {
       return defaultValue
     }
   
     return parsed.value
 }
 
-function saveToLocalStorage(key, value, expireTs) {
-    const toStore  = { value, expireTs }
+function saveToLocalStorage(key, value, expireMs) {
+    const toStore  = { value, expireMs }
     localStorage.setItem(key, JSON.stringify(toStore))
 }
   
@@ -158,8 +158,8 @@ function localStorageWritable(key, defaultValue = "") {
     return {
         subscribe: store.subscribe,
         update:    store.update,
-        set: (value, expireTs = defaultExpire) => { 
-            saveToLocalStorage(key, value, expireTs)
+        set: (value, expireMs = defaultExpire) => { 
+            saveToLocalStorage(key, value, expireMs)
             store.set(value)
         },
     }
