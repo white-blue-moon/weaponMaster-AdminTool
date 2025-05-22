@@ -1,11 +1,11 @@
 import { writable } from "svelte/store";
 import { PATHS } from "../constants/paths";
 
-export const canAccessAdminPage = cookieWritable("canAccessPage", false); // 홈페이지 자체 접근 가능 여부
+export const canAccessAdminPage = cookieWritable("canAccessAdminPage", false); // 홈페이지 자체 접근 가능 여부
 export const adminToolToken     = cookieWritable("adminToolToken", null); // 관리자 전용 토큰 값
 
-export const isAdminLoggedIn    = localStorageWritable("isLoggedIn", false); // 로그인 여부
-export const adminUserInfo      = localStorageWritable("userInfo", null);    // 사용자 정보 (아이디 등)
+export const isAdminLoggedIn    = localStorageWritable("isAdminLoggedIn", false); // 로그인 여부
+export const adminUserInfo      = localStorageWritable("adminUserInfo", null);    // 사용자 정보 (아이디 등)
 
 export function handleLogout() {
     adminUserInfo.set(null);

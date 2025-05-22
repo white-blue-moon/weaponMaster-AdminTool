@@ -10,7 +10,7 @@ import { ADMIN_TOKEN_TYPE } from "../constants/adminTokenType.js"
 
 const router = express.Router()
 
-// TODO -> 공통 반환 값 처리 필요 (success: true/false)
+// TODO -> 공통 반환 값 처리 필요
 // 아이디 중복확인
 router.get('/account/:userId', asyncHandler(async (req, res) => {
     const { userId } = req.params
@@ -63,14 +63,22 @@ router.post('/account/login', asyncHandler(async (req, res) => {
         return res.send({ success: false, message: `[LOGIN ERROR] wrong pw, user_id: ${loginInfo.userId}` })
     }
 
+    const [tokenRes] = await db.query('SELECT * FROM admin_token WHERE type = ?', [ADMIN_TOKEN_TYPE.ADMIN_TOOL])
+    if (tokenRes.length === 0) {
+        return res.status(400).send({ success: false, message: `[LOGIN ERROR] admin token error` })
+    }
+
     const [updateRes] = await db.query('UPDATE admin_tool_user_info SET last_login_date = ? WHERE user_id = ?', [getNowDate(), loginInfo.userId])
     if (updateRes.affectedRows === 0) {
-        return res.status(404).send({ success: false, message: `[LOGIN ERROR] UPDATE last_login_date FAIL, user_id: ${loginInfo.userId}` })
+        return res.status(500).send({ success: false, message: `[LOGIN ERROR] UPDATE last_login_date FAIL, user_id: ${loginInfo.userId}` })
     }
 
     await saveUserLog(loginInfo.userId, LOG_CONTENTS_TYPE.ADMIN_TOOL, LOG_ACT_TYPE.LOGIN)
     
-    return res.send({ success: true })
+    return res.send({ 
+        success: true,
+        token:   tokenRes[0].token,
+     })
 }))
 
 // TODO 로그아웃
