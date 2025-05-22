@@ -9,7 +9,7 @@ export const isAdminLoggedIn    = localStorageWritable("isAdminLoggedIn", false)
 export const adminUserInfo      = localStorageWritable("adminUserInfo", null)    // 사용자 정보 (아이디 등)
 
 export function authLogin(userId, token) {
-    const expireTs = Date.now() + DURATION.DAY_MS
+    const expireTs = Date.now() + (DURATION.HOUR_MS * 4) // 4시간 후 만료
 
     adminUserInfo.set(userId, expireTs)
     adminToolToken.set(token, expireTs)
@@ -21,8 +21,11 @@ export function authLogin(userId, token) {
 }
 
 export function authLogout() {
+    adminToolToken.set(null)
+    adminUserInfo.set(null)
+    isAdminLoggedIn.set(false)
+
     localStorage.removeItem("adminUserInfo")
-    localStorage.removeItem("adminToolToken")
     localStorage.removeItem("isAdminLoggedIn")
     
     alert("로그아웃 되었습니다.")
@@ -30,11 +33,35 @@ export function authLogout() {
     return
 }
 
+export function isSessionExpired() {
+    const isExpired = !getStoredValue("adminUserInfo") || 
+                      !getStoredValue("adminToolToken") || 
+                      !getStoredValue("isAdminLoggedIn")
+    
+    if (isExpired) {
+      return true
+    }
+
+    return false
+}
+
 // Caps Lock 감지
 export function handleCapsLock(event, setCapsLockWarning) {
-  const capsLockOn = event.getModifierState("CapsLock")
-  setCapsLockWarning(capsLockOn)
+    const capsLockOn = event.getModifierState("CapsLock")
+    setCapsLockWarning(capsLockOn)
 }
+
+export function safeJsonParse(str) {
+    if (!str) {
+      return null
+    }
+
+    try {
+        return JSON.parse(str)
+    } catch {
+        return null
+    }
+}  
 
 function getCookieValue(name) {
     // 정규식: "쿠키이름=값;" > "쿠키이름, =, 값, ;" > 값
@@ -72,17 +99,6 @@ function initParse(value, defaultValue) {
     return value
 }
 
-function safeJsonParse(str) {
-    try {
-        return JSON.parse(str)
-    } catch(e) {
-        // TODO 로컬 확인용 로그
-        // console.warn("JSON parse error: ", e)
-        return null
-    }
-}  
-
-// 쿠키 기반 writable
 function cookieWritable(key, defaultValue = "") {
     const raw     = getCookieValue(key)
     const initial = initParse(raw, defaultValue)
