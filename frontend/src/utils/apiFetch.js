@@ -5,18 +5,18 @@ export async function apiFetch(url, options = {}) {
             'Content-Type': 'application/json',
             ...options.headers,
         },
-    });
+    })
 
     if (!response.ok) {
         const errorData = await response.json();
         const errJson   = JSON.stringify(errorData)
-        throw new Error(errJson || 'API 요청 실패');
+        throw new Error(errJson || 'API 요청 실패')
     }
 
-    return response.json();
+    return response.json()
 }
 
 export function handleApiError(error) {
-    console.error('API Error:', error.message);
-    return null; // 에러 발생 시 기본값 반환
+    console.error('API Error:', error.message)
+    return { "success": false }
 }

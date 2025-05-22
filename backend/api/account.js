@@ -5,6 +5,7 @@ import { LOG_ACT_TYPE, LOG_CONTENTS_TYPE } from "../constants/userLogType.js"
 
 import db from "../mysql/db.js"
 import express from 'express'
+import { ADMIN_TOKEN_TYPE } from "../constants/adminTokenType.js"
 
 
 const router = express.Router()
@@ -28,12 +29,20 @@ router.post('/account/join', asyncHandler(async (req, res) => {
 
     const [results] = await db.query('SELECT * FROM admin_tool_user_info WHERE user_id = ?', [userInfo.userId])
     if (results.length > 0) {
-        return res.status(404).send({ success: false, message: `[JOIN ERROR] user_id ${userInfo.userId} already exist` })
+        return res.status(400).send({ success: false, message: `[JOIN ERROR] user_id ${userInfo.userId} already exist` })
+    }
+
+    const [tokenRes] = await db.query('SELECT * FROM admin_token WHERE type = ?', [ADMIN_TOKEN_TYPE.ADMIN_TOOL])
+    if (tokenRes.length === 0) {
+        return res.status(400).send({ success: false, message: `[JOIN ERROR] no admin authorized` })
+    }
+    if (userInfo.token !== tokenRes[0].token) {
+        return res.status(400).send({ success: false, message: `[JOIN ERROR] no admin authorized` })
     }
 
     const [insertRes] = await db.query('INSERT admin_tool_user_info (user_id, user_pw) values (?, ?)', [userInfo.userId, userInfo.userPw])
     if (insertRes.affectedRows === 0) {
-        return res.status(404).send({ success: false, message: `[JOIN ERROR] INSERT data FAIL, user_id: ${userInfo.userId}` })
+        return res.status(500).send({ success: false, message: `[JOIN ERROR] INSERT data FAIL, user_id: ${userInfo.userId}` })
     }
 
     await saveUserLog(userInfo.userId, LOG_CONTENTS_TYPE.ADMIN_TOOL, LOG_ACT_TYPE.JOIN, insertRes.insertId)

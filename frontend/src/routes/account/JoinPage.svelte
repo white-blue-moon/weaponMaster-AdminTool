@@ -14,6 +14,7 @@
     let userId          = ""
     let password        = ""
     let confirmPassword = ""
+    let token           = ""
 
     let isUserIdAvailable = false
     let isChecking        = false
@@ -57,7 +58,7 @@
     }
 
     function isValidForm() {
-        if (userId.trim() == "" || password.trim() == "" || confirmPassword.trim() == "") {
+        if (userId.trim() == "" || password.trim() == "" || confirmPassword.trim() == "" || token.trim() == "") {
             alert('비어 있는 입력칸을 입력 후 시도해 주세요')
             return false
         }
@@ -89,6 +90,7 @@
                 "userInfo": {
                     "userId": userId,
                     "userPw": password,
+                    "token":  token,
                 },
             }),
         }).catch(handleApiError)
@@ -152,6 +154,11 @@
                 <div class="form-row">
                     <label for="confirmPassword">비밀번호 확인<span class="required">*</span></label>
                     <input id="confirmPassword" type="password" bind:value={ confirmPassword } placeholder="비밀번호를 다시 입력하세요" />
+                </div>
+
+                <div class="form-row">
+                    <label for="adminToken">관리자 토큰<span class="required">*</span></label>
+                    <input id="adminToken" type="password" bind:value={ token } placeholder="관리자 전용 토큰을 입력해 주세요" />
                 </div>
 
                 <div class="form-row">
