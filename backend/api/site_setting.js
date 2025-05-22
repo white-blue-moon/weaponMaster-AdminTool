@@ -3,17 +3,23 @@ import { STATE_RESERVED, ACTIVE_ON_BEFORE } from "../constants/state.js"
 import { reserveCron, deleteCron } from "../utils/cron.js"
 import { saveUserLog } from "../utils/user_log.js"
 import { LOG_ACT_TYPE, LOG_CONTENTS_TYPE } from "../constants/userLogType.js"
+import { FOCUS_BANNER_TYPE } from "../constants/focusBannerType.js"
+import { isAdminAuthorized } from "../utils/adminPermision.js"
 
 import db from "../mysql/db.js"
 import express from 'express'
-import { FOCUS_BANNER_TYPE } from "../constants/focusBannerType.js"
 
 
 const router = express.Router()
 
 // TODO DB 에러처리 필요, 반환 값 공통화 필요
 router.post('/site_setting', asyncHandler(async (req, res) => {
-    const { siteSetting, reservedDate, adminUserId } = req.body
+    const { siteSetting, reservedDate, adminUserId, adminToken } = req.body
+
+    if(!await isAdminAuthorized(adminUserId, adminToken)) {
+        return res.status(400).send({ message: '[INSERT ERROR] no admin authorized' })
+    }
+
     if (!siteSetting || typeof siteSetting !== 'object') {
         return res.status(400).send({ message: '[INSERT ERROR] Invalid input. Please provide a valid siteSetting object.' })
     }
@@ -117,11 +123,15 @@ router.get('/site_setting/:id', asyncHandler(async (req, res) => {
 
 router.put('/site_setting/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { siteSetting, reservedDate, adminUserId } = req.body
+    const { siteSetting, reservedDate, adminUserId, adminToken } = req.body
     
     const state    = siteSetting.active_state
     const title    = siteSetting.settings_comment
     const settings = JSON.stringify(siteSetting.settings)
+
+    if(!await isAdminAuthorized(adminUserId, adminToken)) {
+        return res.status(400).send({ message: '[UPDATE ERROR] no admin authorized' })
+    }
 
     // 1. 기존 state 값 확인
     const [selectRes] = await db.query('SELECT * FROM site_setting WHERE id = ?', [id])
@@ -134,7 +144,7 @@ router.put('/site_setting/:id', asyncHandler(async (req, res) => {
         // 예약 내역 DB 데이터 제거
         const [deleteRes] = await db.query('DELETE FROM site_setting_reserved WHERE settings_id = ?', [id])
         if (deleteRes.affectedRows === 0) {
-            return res.status(404).send({ message: `[DELETE ERROR] site_setting_reserved, settings_id: ${id}` })
+            return res.status(500).send({ message: `[DELETE ERROR] site_setting_reserved, settings_id: ${id}` })
         }
 
         // 에약 내역 cron 데이터 제거
@@ -149,7 +159,7 @@ router.put('/site_setting/:id', asyncHandler(async (req, res) => {
         if (reservedRes.length === 0) {
             const [insertRes] = await db.query('INSERT site_setting_reserved (settings_id, reserved_date) values (?, ?)', [id, reservedDate])
             if (insertRes.affectedRows === 0) {
-                return res.status(404).send({ message: `[INSERT ERROR] site_setting_reserved, settings_id: ${id}` })
+                return res.status(500).send({ message: `[INSERT ERROR] site_setting_reserved, settings_id: ${id}` })
             }
         }
 
@@ -157,6 +167,7 @@ router.put('/site_setting/:id', asyncHandler(async (req, res) => {
         if (reservedRes.length !== 0) {
             const [updateRes] = await db.query('UPDATE site_setting_reserved SET reserved_date = ?, reserved_state = ? WHERE settings_id = ?', [reservedDate, ACTIVE_ON_BEFORE, id])
             if (updateRes.affectedRows === 0) {
+                // TODO -> 콘솔에 남기는 것 외에 res 로도 반환해야 할지 체크해 보기
                 console.error(`[UPDATE ERROR] site_setting_reserves, settings_id: ${id}`)
                 return
             }
@@ -192,8 +203,12 @@ router.put('/site_setting/:id', asyncHandler(async (req, res) => {
 }))
 
 router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
-    const { id }          = req.params
-    const { adminUserId } = req.body
+    const { id } = req.params
+    const { adminUserId, adminToken } = req.body
+
+    if(!await isAdminAuthorized(adminUserId, adminToken)) {
+        return res.status(400).send({ message: '[UPDATE ERROR] no admin authorized' })
+    }
 
     // 1. 예약 여부 확인
     const [selectRes] = await db.query('SELECT * FROM site_setting WHERE id = ?', [id])
@@ -206,7 +221,7 @@ router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
         // DB 쪽 예약 내역 삭제
         const [deleteRes] = await db.query('DELETE FROM site_setting_reserved WHERE settings_id = ?', [id])
         if (deleteRes.affectedRows === 0) {
-            return res.status(404).send({ message: `[DELETE ERROR] site_setting_reserved with settings_id ${id}` })
+            return res.status(500).send({ message: `[DELETE ERROR] site_setting_reserved with settings_id ${id}` })
         }
 
         // cron 쪽 예약 내역 삭제
@@ -216,7 +231,7 @@ router.delete('/site_setting/:id', asyncHandler(async (req, res) => {
     // 3. 홈페이지 설정값 삭제
     const [results] = await db.query('DELETE FROM site_setting WHERE id = ?', [id])
     if (results.affectedRows === 0) {
-        return res.status(404).send({ message: `[DELETE ERROR] site_setting with id ${id}` })
+        return res.status(500).send({ message: `[DELETE ERROR] site_setting with id ${id}` })
     }
 
     await saveUserLog(adminUserId, LOG_CONTENTS_TYPE.WEAPON_SITE_SETTING, LOG_ACT_TYPE.DELETE, id)

@@ -3,6 +3,7 @@ import { STATE_ACTIVE_ON } from "../constants/state.js"
 import { getNowDate } from "../utils/time.js"
 import { saveUserLog } from "../utils/user_log.js"
 import { LOG_ACT_TYPE, LOG_CONTENTS_TYPE } from "../constants/userLogType.js"
+import { isAdminAuthorized } from "../utils/adminPermision.js"
 
 import db from "../mysql/db.js"
 import express from 'express'
@@ -50,11 +51,15 @@ router.get('/maintenance/:id', asyncHandler(async (req, res) => {
 
 router.put('/maintenance/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { setting, adminUserId } = req.body
+    const { setting, adminUserId, adminToken } = req.body
+
+    if(! await isAdminAuthorized(adminUserId, adminToken)) {
+        return res.status(400).send({ message: `[UPDATE ERROR] no admin authorized` })
+    }
 
     const [updateRes] = await db.query('UPDATE maintenance SET active_state = ?, comment = ?, start_date = ?, end_date = ? WHERE id = ?', [setting.state, setting.title, setting.start_date, setting.end_date, id])
     if (updateRes.affectedRows === 0) {
-        return res.status(404).send({ message: `[UPDATE ERROR] maintenance with id ${id}` })
+        return res.status(500).send({ message: `[UPDATE ERROR] maintenance with id ${id}` })
     }
 
     await saveUserLog(adminUserId, LOG_CONTENTS_TYPE.WEAPON_MAINTENANCE_CONTROL, LOG_ACT_TYPE.UPDATE, id, setting.state)
@@ -63,8 +68,12 @@ router.put('/maintenance/:id', asyncHandler(async (req, res) => {
 }))
 
 router.delete('/maintenance/:id', asyncHandler(async (req, res) => {
-    const { id }          = req.params
-    const { adminUserId } = req.body
+    const { id } = req.params
+    const { adminUserId, adminToken } = req.body
+
+    if(!await isAdminAuthorized(adminUserId, adminToken)) {
+        return res.status(400).send({ message: `[DELETE ERROR] no admin authorized` })
+    }
 
     const [results] = await db.query('DELETE FROM maintenance WHERE id = ?', [id])
     if (results.affectedRows === 0) {
@@ -77,14 +86,19 @@ router.delete('/maintenance/:id', asyncHandler(async (req, res) => {
 }))
 
 router.post('/maintenance/', asyncHandler(async (req, res) => {
-    const { setting, adminUserId } = req.body
+    const { setting, adminUserId, adminToken } = req.body
+
+    if(!await isAdminAuthorized(adminUserId, adminToken)) {
+        return res.status(400).send({ message: `[INSERT ERROR] no admin authorized` })
+    }
+
     if (!setting) {
         return res.status(400).send({ message: '[INSERT ERROR] Invalid input. Please provide a valid maintenance-input' })
     }
 
     const [result] = await db.query('INSERT INTO maintenance (active_state, comment, start_date, end_date) VALUES (?, ?, ?, ?)', [setting.state, setting.title, setting.start_date, setting.end_date])
     if (result.affectedRows === 0) {
-        return res.status(404).send({ message: `[INSERT ERROR] maintenance` })
+        return res.status(500).send({ message: `[INSERT ERROR] maintenance` })
     }
 
     await saveUserLog(adminUserId, LOG_CONTENTS_TYPE.WEAPON_MAINTENANCE_CONTROL, LOG_ACT_TYPE.CREATE, result.insertId, setting.state)
