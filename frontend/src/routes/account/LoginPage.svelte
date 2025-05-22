@@ -1,7 +1,7 @@
 <script>
     import { API } from '../../constants/api'
     import { apiFetch, handleApiError } from '../../utils/apiFetch'
-    import { adminUserInfo, isAdminLoggedIn, handleCapsLock, adminToolToken } from "../../utils/auth"
+    import { handleCapsLock, authLogin } from "../../utils/auth"
     import { PATHS } from "../../constants/paths"
 
     import Gnb from "../../components/Gnb.svelte"
@@ -46,12 +46,7 @@
         }).catch(handleApiError)
 
         if (response.success) {
-            adminUserInfo.set(userId)
-            isAdminLoggedIn.set(true)
-            adminToolToken.set(response.token)
-
-            alert(`로그인에 성공하였습니다. ${userId} 님 안녕하세요.`)
-            window.location.href = PATHS.HOME
+            authLogin(userId, response.token)
             return
         }
 

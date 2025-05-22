@@ -1,6 +1,6 @@
 <script>
     import { PATHS } from "../constants/paths";
-    import { handleLogout, adminUserInfo } from "../utils/auth";
+    import { authLogout, adminUserInfo } from "../utils/auth";
 
     function handleMouseEnter(e) {
         const target = e.currentTarget;
@@ -80,7 +80,7 @@
     </ul>
     <div class="topbtn">
         {#if $adminUserInfo}
-            <a href="#" on:click={ handleLogout } >로그아웃</a>
+            <a href="#" on:click={ authLogout } >로그아웃</a>
         {:else}
             <a href={ PATHS.ACCOUNT.JOIN }>회원가입</a>
             <a href={ PATHS.ACCOUNT.LOGIN }>로그인</a>
