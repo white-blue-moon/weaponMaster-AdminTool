@@ -10,12 +10,12 @@ export async function isAdminAuthorized(userId, token) {
 
     const [tokenResults] = await db.query('SELECT * FROM admin_token WHERE type = ?', [ADMIN_TOKEN_TYPE.ADMIN_TOOL])
     if (tokenResults.length === 0) {
-        console.log(`[ADMIN PERMISSION ERROR] not found admin_token type: ${ADMIN_TOKEN_TYPE.ADMIN_TOOL}`)
+        console.log(`[ADMIN PERMISSION ERROR] not found admin_token. userId: ${userId}, type: ${ADMIN_TOKEN_TYPE.ADMIN_TOOL}`)
         return false
     }
 
     if (token !== tokenResults[0].token) {
-        console.log(`[ADMIN PERMISSION ERROR] no match admin token`)
+        console.log(`[ADMIN PERMISSION ERROR] no match admin token. userId: ${userId}`)
         return false
     }
 

@@ -2,3 +2,4 @@
 frontend/public/admin-front/build/
 .DS_Store
 frontend/deploy_local.sh
+frontend/deploy.sh
