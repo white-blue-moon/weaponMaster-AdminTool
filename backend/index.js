@@ -15,7 +15,7 @@ const port = 7770
 // [ 실제 배포 주소, 로컬 어드민 프론트, 로컬 웨펀마스터 프론트 ]
 app.use(cors({
     origin: [
-      'https://weapon-master-portfolio.duckdns.org',
+      'https://weapon-master-portfolio.uk',
       'http://localhost:8880',
       'http://localhost:8080'
     ]

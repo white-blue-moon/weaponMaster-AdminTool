@@ -62,7 +62,7 @@
             // 기본 연출 시간 동안 대기 후 cover 분리 애니메이션 시작
             setTimeout(() => {
                 introOn = true
-                skillScene.play()
+                skillScene.play() // TODO await 으로 기다리기
 
                 // cover 전환 이후 DOM 제거
                 setTimeout(() => {

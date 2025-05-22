@@ -1,7 +1,7 @@
 export const SERVICE_DOMAIN = 'https://weapon-master-portfolio.uk';
 
 const isDevelopment = window.location.hostname === 'localhost'; 
-const ROOT          = isDevelopment ? 'http://localhost:7070' : `${SERVICE_DOMAIN}/admin-back`; // (개발환경/배포환경)
+const ROOT          = isDevelopment ? 'http://localhost:7770' : `${SERVICE_DOMAIN}/admin-back`; // (개발환경/배포환경)
 
 export const API = {
     VERIFY_ACCESS_GATE: `${ROOT}/access-gate/verify`,

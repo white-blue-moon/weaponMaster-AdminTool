@@ -34,7 +34,10 @@ router.put('/access_level/:id', asyncHandler(async (req, res) => {
     const { id } = req.params
     const { setting, adminUserId } = req.body
 
-    const [updateRes] = await db.query('UPDATE user_info SET user_type = ?, user_id = ? WHERE id = ?', [setting.state, setting.title, id])
+    // TODO 아이디 변경은 못하게 막기 (프론트도 막기)
+    
+
+    const [updateRes] = await db.query('UPDATE user_info SET user_type = ? WHERE id = ?', [setting.state, id])
     if (updateRes.affectedRows === 0) {
         return res.status(404).send({ message: `[UPDATE ERROR] user_info with id ${id}` })
     }
@@ -47,6 +50,9 @@ router.put('/access_level/:id', asyncHandler(async (req, res) => {
 router.delete('/access_level/:id', asyncHandler(async (req, res) => {
     const { id }          = req.params
     const { adminUserId } = req.body
+
+    // TODO 해당 유저 관련 DB 데이터 삭제 필요
+    // TODO comment 쪽 데이터는 유지하기 or 삭제 상태로 업데이트
 
     const [results] = await db.query('DELETE FROM user_info WHERE id = ?', [id])
     if (results.affectedRows === 0) {

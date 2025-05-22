@@ -1,9 +1,8 @@
 <script>
     import { API } from '../constants/api'
     import { apiFetch, handleApiError } from '../utils/apiFetch'
-    import { ACCESS_LEVEL_TEXT, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
+    import { ACCESS_LEVEL_TEXT } from '../constants/settingState'
     import { onMount } from "svelte"
-    // import { userInfo, isLoggedIn } from "../utils/auth"
     import { formatDate } from "../utils/time"
     import { PATHS } from '../constants/paths'
     import { adminUserInfo } from '../utils/auth';
@@ -155,7 +154,7 @@
 
         <article class="bdview_btnarea line">
             <div class="btnst2">
-                <!-- 수정, 삭제는 관리자/소유자에게만 보이기 -->
+                <!-- 수정, 삭제는 관리자에게만 보이기 -->
                 <a on:click={ handleEdit } id="editButton" class="btn btntype_bk46 bold" style="width:140px">
                     {#if isInsert}
                         추가하기

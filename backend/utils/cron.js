@@ -4,6 +4,8 @@ import db from "../mysql/db.js"
 
 const activeCronJobs = new Map() // 활성화된 예약 작업을 관리하기 위한 Map
 
+// TODO -> 서버 재시작하면 -> 예약 중이었던 모든 설정들 다시 예약 작업 시작하도록 수정 필요
+
 // 예약 작업 스케줄링 함수
 export function reserveCron(id, reservedDate) {
     const cronDate   = getCronDateFormat(reservedDate)

@@ -22,8 +22,8 @@ CREATE TABLE admin_tool_user_log (
     update_date     TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '로그 수정 날짜'
 ) CHARSET=utf8mb4 COMMENT='어드민 툴 유저 로그 관리 테이블';
 -- 어드민 툴 유저 로그 관리 테이블 인덱스 추가
-CREATE INDEX idx_admin_tool_user_log_user_id        ON user_log(user_id);
-CREATE INDEX idx_admin_tool_user_log_create_date    ON user_log(create_date);
+CREATE INDEX idx_admin_tool_user_log_user_id        ON admin_tool_user_log(user_id);
+CREATE INDEX idx_admin_tool_user_log_create_date    ON admin_tool_user_log(create_date);
 
 -- 설정 예약 관리 테이블
 DROP TABLE IF EXISTS site_setting_reserved;
