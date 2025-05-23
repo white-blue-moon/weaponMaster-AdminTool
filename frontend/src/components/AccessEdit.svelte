@@ -5,7 +5,7 @@
     import { onMount } from "svelte"
     import { formatDate } from "../utils/time"
     import { PATHS } from '../constants/paths'
-    import { adminToolToken, adminUserInfo } from '../utils/auth';
+    import { adminToolToken, adminUserInfo, isAdminLoggedIn } from '../utils/auth';
 
 
     export let isInsert = false
@@ -156,16 +156,19 @@
 
         <article class="bdview_btnarea line">
             <div class="btnst2">
-                <!-- 수정, 삭제는 관리자에게만 보이기 -->
-                <a on:click={ handleEdit } id="editButton" class="btn btntype_bk46 bold" style="width:140px">
-                    {#if isInsert}
-                        추가하기
-                    {:else}
-                        수정 완료
+                <!-- 수정, 삭제는 관리자에게만 출력 -->
+                {#if $isAdminLoggedIn}
+                    <a on:click={ handleEdit } id="editButton" class="btn btntype_bk46 bold" style="width:140px">
+                        {#if isInsert}
+                            추가하기
+                        {:else}
+                            수정 완료
+                        {/if}
+                    </a>
+
+                    {#if !isInsert}
+                        <a on:click={ handleDelete } id="deleteButton" class="btn btntype_bk46 bold" style="width:140px">삭제</a>
                     {/if}
-                </a>
-                {#if !isInsert}
-                    <a on:click={ handleDelete } id="deleteButton" class="btn btntype_bk46 bold" style="width:140px">삭제</a>
                 {/if}
                 <a href={ hrefBase.LIST } class="btn btntype_bk46 bold list" style="width:140px">목록</a>
             </div>          

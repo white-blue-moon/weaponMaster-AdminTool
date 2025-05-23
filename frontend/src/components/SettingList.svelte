@@ -5,12 +5,13 @@
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { PATHS } from '../constants/paths'
     import { formatDateSimple } from '../utils/time'
+    import { isAdminLoggedIn } from '../utils/auth'
 
     import BoardSearch from './BoardSearch.svelte'
     import Top from './Top.svelte'
     import Spinner from './Spinner.svelte'
-    
-    
+
+
     export let settings = []
     export let state = SETTING_STATE
     export let stateText = SETTING_STATE_TEXT
@@ -197,10 +198,12 @@
         {/if}
     </article>
     
-    <!-- TODO 권한 있는 상태에서만 보이도록 하기 -->
-    <article class="btnarea_r mt30">
-        <a href={ PATHS.SITE_SETTING.INSERT } class="btn btntype_bu46 bold" id="newArticleButton" style="width:160px">INSERT</a>
-    </article>
+    <!-- 관리자에게만 출력 -->
+    {#if $isAdminLoggedIn}
+        <article class="btnarea_r mt30">
+            <a href={ PATHS.SITE_SETTING.INSERT } class="btn btntype_bu46 bold" id="newArticleButton" style="width:160px">INSERT</a>
+        </article>
+    {/if}
 
     <article class="paging mt60">
         <a class="first" on:click={ () => changePage(1) }>FIRST</a>

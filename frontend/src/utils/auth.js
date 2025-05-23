@@ -104,7 +104,7 @@ function setCookie(name, value, expireMs) {
 }
 
 function deleteCookie(name) {
-    document.cookie = `${encodeURIComponent(name)}=; path=/; Max-Age=0;`;
+    document.cookie = `${encodeURIComponent(name)}=; path=/; Max-Age=0;`
 }
 
 // 초기값 파싱 유틸

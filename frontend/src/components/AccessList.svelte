@@ -3,10 +3,11 @@
     import { ACCESS_LEVEL, MAINTENANCE_STATE, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { formatDateReadable, formatDateSimple } from '../utils/time'
     import { PATHS } from "../constants/paths"
+    import { isAdminLoggedIn } from "../utils/auth"
 
     import BoardSearch from "./BoardSearch.svelte"
-    import Top from "./Top.svelte";
-    
+    import Top from "./Top.svelte"
+
 
     export let settings      = []
     export let state         = SETTING_STATE
@@ -158,11 +159,13 @@
         {/if}
     </article>
     
-    <!-- TODO 권한 있는 상태에서만 보이도록 하기 -->
-    {#if state != ACCESS_LEVEL} 
-        <article class="btnarea_r mt30">
-            <a href={ hrefBase.INSERT } class="btn btntype_bu46 bold" id="newArticleButton" style="width:160px">INSERT</a>
-        </article>
+    <!-- 관리자에게만 출력 -->
+    {#if state != ACCESS_LEVEL}
+        {#if $isAdminLoggedIn}
+            <article class="btnarea_r mt30">
+                <a href={ hrefBase.INSERT } class="btn btntype_bu46 bold" id="newArticleButton" style="width:160px">INSERT</a>
+            </article>
+        {/if}
     {/if}
 
     <article class="paging mt60">
