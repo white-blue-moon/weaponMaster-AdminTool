@@ -95,13 +95,13 @@
 
             <ul class="login_admin">
                 <li class="logo" id="weaponMasterLogo"></li>
-                <li>잠깐! 아이디가 없으신가요? 회원가입 후 로그인할 수 있습니다!</li>
+                <li>페이지 열람은 가능하지만, 로그인 및 회원가입은 제한되어 있습니다.</li>
                 <li>
                     <a href={ PATHS.ACCOUNT.JOIN }>회원가입</a>
                 </li>
                 <li>
                     <span>
-                        <BoldLink href={ PATHS.WEAPON_MASTER } text="웨펀마스터" /> 관리자 권한은 이곳에서 부여 가능하며 공지사항 작성 등 권한이 주어집니다.
+                        <BoldLink href={ PATHS.WEAPON_MASTER } text="웨펀마스터" /> 관리자 권한은 이곳에서 부여되며, 공지 작성 등의 기능이 제공됩니다.
                     </span>
                 </li>
             </ul>
