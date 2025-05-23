@@ -47,10 +47,12 @@
 
         if (response.success) {
             authLogin(userId, response.token)
+            alert(`로그인에 성공하였습니다.\n${userId} 님 안녕하세요.`)
+            window.location.href = PATHS.HOME
             return
         }
 
-        alert('로그인에 실패하였습니다. 아이디와 비밀번호를 다시 한번 확인해 주세요.')
+        alert('로그인에 실패하였습니다.\n아이디와 비밀번호를 다시 한번 확인해 주세요.')
         return
     }
 </script>

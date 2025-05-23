@@ -15,21 +15,20 @@ export function authLogin(userId, token) {
     adminToolToken.set(token, expireMs)
     isAdminLoggedIn.set(true, expireMs)
 
-    alert(`로그인에 성공하였습니다.\n${userId} 님 안녕하세요.`)
-    window.location.href = PATHS.HOME
     return
 }
 
 export function authLogout() {
+    // 스토어 상태 초기화
     adminToolToken.set(null)
     adminUserInfo.set(null)
     isAdminLoggedIn.set(false)
 
+    // 쿠키 / 로컬 스토리지 제거
+    deleteCookie("adminToolToken")
     localStorage.removeItem("adminUserInfo")
     localStorage.removeItem("isAdminLoggedIn")
     
-    alert("로그아웃 되었습니다.")
-    window.location.href = PATHS.HOME
     return
 }
 
@@ -39,10 +38,18 @@ export function isSessionExpired() {
                       !getCookieValue("adminToolToken")  
     
     if (isExpired) {
-      return true
+        authLogout()
+        return true
     }
 
     return false
+}
+
+export function onLogout() {
+    authLogout()
+    alert("로그아웃 되었습니다.")
+    window.location.href = PATHS.HOME
+    return
 }
 
 // Caps Lock 감지
@@ -94,6 +101,10 @@ function setCookie(name, value, expireMs) {
     expires.setTime(expireMs)
 
     document.cookie = `${name}=${encodeURIComponent(value)}; path=/; expires=${expires.toUTCString()};`
+}
+
+function deleteCookie(name) {
+    document.cookie = `${encodeURIComponent(name)}=; path=/; Max-Age=0;`;
 }
 
 // 초기값 파싱 유틸
