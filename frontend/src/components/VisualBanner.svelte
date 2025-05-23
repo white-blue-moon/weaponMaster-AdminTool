@@ -11,12 +11,14 @@
 
 <div class="{ imgFileName == visual260 ? 's_visual260' : 's_visual' } s_df"  style="--background-img: url({ NEOPLE_UI + background })">
     <h2>{ title }</h2>
-    {#if title == "홈페이지 설정 제어"}
+    {#if title === "홈페이지 설정 제어"}
         <h3>
             Weapon Master의 실제 운영 관리 툴입니다.<br>
+        </h3>
+        <h4 style="color: #cccac3;">
             포트폴리오 검토를 위해 제출된 것으로,<br>
             관리자 접근은 제출자 본인에게만 제한되어 있습니다.
-        </h3>
+        </h4>
     {/if}
     <ul class="his">
         <li>

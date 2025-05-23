@@ -4,3 +4,4 @@ frontend/public/admin-front/build/
 frontend/deploy_local.sh
 frontend/deploy.sh
 backend/deploy.sh
+frontend/deploy_build.sh
