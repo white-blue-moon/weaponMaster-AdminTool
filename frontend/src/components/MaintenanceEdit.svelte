@@ -5,7 +5,7 @@
     import { onMount } from "svelte"
     import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time"
     import { PATHS } from '../constants/paths'
-    import { adminUserInfo } from '../utils/auth'
+    import { adminToolToken, adminUserInfo } from '../utils/auth'
 
 
     export let isInsert = false
@@ -58,6 +58,7 @@
             method: 'DELETE',
             body: JSON.stringify({
                 "adminUserId": $adminUserInfo,
+                "adminToken":  $adminToolToken,
             }),
         }).catch(handleApiError)
 
@@ -105,6 +106,7 @@
             body: JSON.stringify({
                 "setting":     setting,
                 "adminUserId": $adminUserInfo,
+                "adminToken":  $adminToolToken,
             }),
         }).catch(handleApiError);
 
