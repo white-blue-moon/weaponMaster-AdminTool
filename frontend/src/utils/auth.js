@@ -35,8 +35,8 @@ export function authLogout() {
 
 export function isSessionExpired() {
     const isExpired = !getStoredValue("adminUserInfo") || 
-                      !getStoredValue("adminToolToken") || 
-                      !getStoredValue("isAdminLoggedIn")
+                      !getStoredValue("isAdminLoggedIn") ||
+                      !getCookieValue("adminToolToken")  
     
     if (isExpired) {
       return true
@@ -61,7 +61,23 @@ export function safeJsonParse(str) {
     } catch {
         return null
     }
-}  
+}
+
+function cookieWritable(key, defaultValue = "") {
+    const raw           = getCookieValue(key)
+    const initial       = initParse(raw, defaultValue)
+    const store         = writable(initial)
+    const defaultExpire = Date.now() + DURATION.DAY_MS
+
+    return {
+        subscribe: store.subscribe,
+        update:    store.update,
+        set: (value, expireMs = defaultExpire) => {
+            setCookie(key, value, expireMs)
+            store.set(value)
+        },
+    }
+}
 
 function getCookieValue(name) {
     // 정규식: "쿠키이름=값;" > "쿠키이름, =, 값, ;" > 값
@@ -73,11 +89,10 @@ function getCookieValue(name) {
     return null
 }
 
-function setCookie(name, value, day = 1) {
+function setCookie(name, value, expireMs) {
     const expires  = new Date()
-    const expireMs = expires.getTime() + (day * DURATION.DAY_MS) // day 일 후 만료
-    
     expires.setTime(expireMs)
+
     document.cookie = `${name}=${encodeURIComponent(value)}; path=/; expires=${expires.toUTCString()};`
 }
 
@@ -97,18 +112,6 @@ function initParse(value, defaultValue) {
     }
   
     return value
-}
-
-function cookieWritable(key, defaultValue = "") {
-    const raw     = getCookieValue(key)
-    const initial = initParse(raw, defaultValue)
-    const store   = writable(initial)
-  
-    store.subscribe(value => {
-      setCookie(key, value)
-    })
-  
-    return store
 }
 
 function isValidStoredData(obj) {

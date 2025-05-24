@@ -4,10 +4,9 @@
     import { SETTING_LABEL } from '../constants/siteSettingLabel'
     import { apiFetch, handleApiError } from '../utils/apiFetch';
     import { onMount } from "svelte";
-    // import { userInfo, isLoggedIn } from "../utils/auth";
     import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time";
     import { PATHS } from '../constants/paths';
-  import { adminUserInfo } from '../utils/auth';
+    import { adminUserInfo } from '../utils/auth';
 
     export let isInsert = false
 

@@ -1,5 +1,6 @@
 import { isSessionExpired, safeJsonParse } from "./auth"
 import { API } from "../constants/api"
+import { PATHS } from "../constants/paths"
 
 export async function apiFetch(url, options = {}) {
     if (shouldCheckSession(url, options.body)) {
@@ -33,7 +34,7 @@ export function handleApiError(error) {
 }
 
 const exceptAPI   = [ API.ACCOUNT.LOGIN, API.ACCOUNT.JOIN ]
-const sessionKeys = ['userId', 'adminToken']
+const sessionKeys = ['userId', 'adminUserId', 'adminToken']
 
 function shouldCheckSession(url, body) {
     if (exceptAPI.some(api => url.startsWith(api))) {
