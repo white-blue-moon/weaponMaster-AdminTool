@@ -17,8 +17,11 @@
     let delayProgressTimer
     
     let loadingDataAniTime  = 2200 // 기본 연출 시간 (로딩바 + 커버 전환 시간)
+
+    let origiViewportContent;
   
     onMount(async () => {
+        disableMobileZoom()
         document.addEventListener('mousedown', handleClickOutside)
 
         // loading_data 로딩바 진행을 위한 타이머
@@ -32,8 +35,42 @@
     })
 
     onDestroy(() => {
+        restoreMobileZoom()
         document.removeEventListener('mousedown', handleClickOutside)
     })
+
+    function disableMobileZoom() {
+        if (!isMobile()) return
+
+        const viewportMeta = document.querySelector('meta[name="viewport"]')
+        if (viewportMeta) {
+            origiViewportContent = viewportMeta.content
+            viewportMeta.content = 'width=device-width, initial-scale=0.35, user-scalable=no'
+            return
+        }
+
+        return
+    }
+
+    function isMobile() {
+        if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+            return true
+        }
+
+        return false
+    }
+
+    function restoreMobileZoom() {
+        if (!isMobile()) return
+
+        const viewportMeta = document.querySelector('meta[name="viewport"]')
+        if (viewportMeta && origiViewportContent !== null) {
+            viewportMeta.content = origiViewportContent
+            return
+        }
+
+        return
+    }
 
     // 배경 클릭 시 비밀 코드 포커스를 유지하기 위한 함수
     function handleClickOutside() {
@@ -68,9 +105,9 @@
                 setTimeout(() => {
                     removeIntro = true
                     canAccessAdminPage.set(true)
-                    sessionStorage.setItem('fromAccessGate', 'true');
+                    sessionStorage.setItem('fromAccessGate', 'true')
                     
-                    navigate(PATHS.HOME);
+                    navigate(PATHS.HOME)
                 }, 5993)
 
             }, loadingDataAniTime)
