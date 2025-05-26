@@ -6,7 +6,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
-import css from 'rollup-plugin-css-only';
+import postcss from 'rollup-plugin-postcss';
 import deletePlugin from 'rollup-plugin-delete'; 
 
 const production = !process.env.ROLLUP_WATCH;
@@ -38,8 +38,9 @@ export default {
 		sourcemap: production ? false : true,
 		format: 'iife',
 		name: 'app',
-		dir: 'public/admin-front/build',    // 디렉토리로 변경
-		entryFileNames: 'bundle.[hash].js', // JS 번들에 해시 적용
+		dir: 'public/admin-front/build',    	  // 디렉토리 변경
+		entryFileNames: 'bundle.[hash].js',       // JS 번들 해시 적용
+		assetFileNames: 'bundle.[hash][extname]', // 정적 에셋 해시 적용
 	},
 	plugins: [
 		// 빌드 전에 이전 파일들 삭제
@@ -60,8 +61,11 @@ export default {
             })
 		}),
 
-		css({ output: 'bundle.css' }),
-
+		postcss({
+			extract: true,        // CSS 별도 파일로 추출 (기본 파일명에 해시 자동 적용)
+			minimize: production, // 프로덕션일 때 CSS 압축 (ex. body{margin:0;padding:0})
+			sourceMap: !production,
+		}),
 
 		resolve({
 			browser: true,

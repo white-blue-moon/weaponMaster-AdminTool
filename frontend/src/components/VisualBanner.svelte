@@ -15,7 +15,7 @@
         <h3>
             Weapon Master의 실제 운영 관리 툴입니다.<br>
         </h3>
-        <h4 style="color: #cccac3;">
+        <h4>
             포트폴리오 검토를 위해 제출된 것으로,<br>
             관리자 접근은 제출자 본인에게만 제한되어 있습니다.
         </h4>
@@ -37,6 +37,7 @@
     .s_visual260{position:relative;width:100%;height:260px;text-align:center;overflow:hidden;}
     .s_visual260 h2{margin:68px 0 12px 0;font-size:30px;color:#f5f5f5;font-weight:500;line-height:36px;}
     .s_visual260 h3{font-size:18px;color:#cccac3;font-weight:400;line-height:24px;}
+    .s_visual260 h4{color: #cccac3;}
 
     .s_visual260 ul.his{position:absolute;left:50%;bottom:10px;margin-left:-550px;width:1100px;color:#919191;font-size:13px;line-height:24px;list-style:none}
     .s_visual260 ul.his li{position:relative;margin-right:2px;text-align:right;}
