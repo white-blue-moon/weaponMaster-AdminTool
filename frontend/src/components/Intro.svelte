@@ -98,18 +98,7 @@
 
             // 기본 연출 시간 동안 대기 후 cover 분리 애니메이션 시작
             setTimeout(() => {
-                introOn = true
-                skillScene.play() // TODO await 으로 기다리기
-
-                // cover 전환 이후 DOM 제거
-                setTimeout(() => {
-                    removeIntro = true
-                    canAccessAdminPage.set(true)
-                    sessionStorage.setItem('fromAccessGate', 'true')
-                    
-                    navigate(PATHS.HOME)
-                }, 5993)
-
+                playSkillScene()
             }, loadingDataAniTime)
             
             return
@@ -120,6 +109,19 @@
         loadingDelayPercent = 0
         alert('잘못된 비밀번호 코드입니다.\n다시 입력해 주세요.')
         return
+    }
+
+    function playSkillScene() {
+        introOn = true
+
+        skillScene.play()
+
+        setTimeout(() => {
+            removeIntro = true
+            canAccessAdminPage.set(true)
+            sessionStorage.setItem('fromAccessGate', 'true')
+            navigate(PATHS.HOME)
+        }, 6450)
     }
 
     function startDelayProgress() {
