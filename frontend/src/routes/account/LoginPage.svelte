@@ -62,7 +62,7 @@
 <VisualBanner background="/img/svisual1.jpg" title="로그인"/>
 
 <section class="content">
-    <h3>아이디와 비밀번호를 입력하여 로그인해 주시기 바랍니다.</h3>
+    <h3>이 페이지는 열람만 가능하며, 로그인과 회원가입은 제한되어 있습니다.</h3>
 
     <article class="login">
         <form id="loginForm" on:submit={ onSubmitLogin }>
@@ -132,7 +132,7 @@
         position: relative;
         margin-top: 60px;
         color: #6a6e76;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 400;
         text-align: center;
         line-height: 25px;
