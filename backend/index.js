@@ -1,5 +1,6 @@
 import { resumeReservedCrons } from './utils/cron.js'
 
+import dotenv from "dotenv"
 import express from 'express'
 import cors from 'cors'
 
@@ -9,18 +10,19 @@ import maintenanceAPI from "./api/maintenance.js"
 import accountAPI     from "./api/account.js"
 import accessGateAPI  from "./api/access_gate.js"
 
+// .env 파일 로드
+dotenv.config()
 
 const app  = express()
 const port = 7770
 
 async function startServer() {
-    // CORS 정책 적용 [ 실제 배포 주소, 로컬 어드민 프론트, 로컬 웨펀마스터 프론트 ]
+    // .env 에서 CORS 목록 확인
+    const allowedOrigins = process.env.CORS_ORIGINS.split(',').map(url => url.trim())
+    
+    // CORS 정책 적용
     app.use(cors({
-        origin: [
-          'https://weapon-master-portfolio.uk',
-          'http://localhost:8880',
-          'http://localhost:8080'
-        ]
+        origin: allowedOrigins
     }))
 
     // 요청 본문(JSON 형식)을 파싱하여 req.body에 저장
