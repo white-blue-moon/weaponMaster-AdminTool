@@ -115,9 +115,9 @@
     }
 
     async function playSkillScene() {
-        introOn = true
-
         await skillScene.play()
+
+        introOn = true
 
         setTimeout(() => {
             removeIntro = true
