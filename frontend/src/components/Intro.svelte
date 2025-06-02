@@ -23,15 +23,6 @@
     onMount(async () => {
         disableMobileZoom()
         document.addEventListener('mousedown', handleClickOutside)
-
-        // loading_data 로딩바 진행을 위한 타이머
-        let loadingDataTimer = setInterval(() => {
-            if (loadingDataPercent < 100) {
-                loadingDataPercent += 4.545 // 2200ms 동안 100% 로 끝내기 위한 비율)
-            } else {
-                clearInterval(loadingDataTimer)
-            }
-        }, 22) // 약 2200ms
     })
 
     onDestroy(() => {
@@ -111,10 +102,10 @@
         return
     }
 
-    function playSkillScene() {
+    async function playSkillScene() {
         introOn = true
 
-        skillScene.play()
+        await skillScene.play()
 
         setTimeout(() => {
             removeIntro = true
