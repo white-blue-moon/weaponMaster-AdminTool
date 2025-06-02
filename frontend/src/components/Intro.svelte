@@ -12,8 +12,8 @@
     let isLoading   = false
     let skillScene
 
-    let loadingDataPercent  = 0    // 고정 시간 동안 진행될 로딩바 진행 상태 (0 → 100%)
-    let loadingDelayPercent = 0    // 실제 통신 진척도 로딩바 진행 상태 (0 → 100%)
+    let defaultLoadingPercent = 0    // 고정 시간 동안 진행될 로딩바 진행 상태 (0 → 100%)
+    let loadingDelayPercent   = 0    // 실제 통신 진척도 로딩바 진행 상태 (0 → 100%)
     let delayProgressTimer
     
     let loadingDataAniTime  = 2200 // 기본 연출 시간 (로딩바 + 커버 전환 시간)
@@ -23,12 +23,24 @@
     onMount(async () => {
         disableMobileZoom()
         document.addEventListener('mousedown', handleClickOutside)
+        setDefaultLoadingBar()
     })
 
     onDestroy(() => {
         restoreMobileZoom()
         document.removeEventListener('mousedown', handleClickOutside)
     })
+
+    // 화면을 가로지르는 초기 기본 로딩 바 연출 함수
+    function setDefaultLoadingBar() {
+        const loadingDataTimer = setInterval(() => {
+            if (defaultLoadingPercent < 100) {
+                defaultLoadingPercent += 4.545; // 2200ms 동안 100% 로 끝내기 위한 비율)
+            } else {
+                clearInterval(loadingDataTimer);
+            }
+        }, 22); // 약 2200ms
+    }
 
     function disableMobileZoom() {
         if (!isMobile()) return
@@ -218,7 +230,7 @@
                 </div>
             {/if}
         </div>
-        <div class="loading_data" style="width: {loadingDataPercent}vw;"></div>
+        <div class="loading_data" style="width: {defaultLoadingPercent}vw;"></div>
         <div class="loading_delay" style="width: {loadingDelayPercent}vw;"></div>
     </div>
 {/if}
