@@ -28,6 +28,17 @@ router.get('/maintenance/active', asyncHandler(async (req, res) => {
    })
 }))
 
+router.get('/maintenance/active/latest', asyncHandler(async (req, res) => {
+    let maintenance
+
+    const [results] = await db.query('SELECT * FROM maintenance WHERE active_state = ? ORDER BY id DESC LIMIT 1', [STATE_ACTIVE_ON])
+    if (results.length > 0) {
+        maintenance = results[0]
+    }
+
+    return res.json({maintenance: maintenance})
+}))
+
 router.get('/maintenance/list', asyncHandler(async (req, res) => {
     const [results] = await db.query('SELECT * FROM maintenance ORDER BY id DESC')
 
