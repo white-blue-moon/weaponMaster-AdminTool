@@ -5,7 +5,7 @@
     import { apiFetch, handleApiError } from '../utils/apiFetch'
     import { PATHS } from '../constants/paths'
     import { canAccessAdminPage } from '../utils/auth'
-    import { WEAPON_ASSETS } from '../constants/resourcePath';
+    import { ADMIN_ASSETS } from '../constants/resourcePath';
 
 
     let introOn     = false
@@ -238,7 +238,7 @@
 <!-- muted: 음소거, playsinline: 모바일에서 전체화면 방지 -->
 <video
     bind:this={ skillScene }
-    src="{WEAPON_ASSETS}/video/skill_scene_admin.mp4"
+    src="{ADMIN_ASSETS}/video/skill_scene_medic.mp4"
     preload="auto"
     muted
     playsinline
