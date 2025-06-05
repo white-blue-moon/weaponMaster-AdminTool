@@ -125,7 +125,7 @@
             canAccessAdminPage.set(true)
             sessionStorage.setItem('fromAccessGate', 'true')
             navigate(PATHS.HOME)
-        }, 6450)
+        }, 6700)
     }
 
     function startDelayProgress() {
