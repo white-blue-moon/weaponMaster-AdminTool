@@ -3,7 +3,7 @@ import { STATE_ACTIVE_ON } from "../constants/state.js"
 import { getNowDate } from "../utils/time.js"
 import { saveUserLog } from "../utils/user_log.js"
 import { LOG_ACT_TYPE, LOG_CONTENTS_TYPE } from "../constants/userLogType.js"
-import { isAdminAuthorized } from "../utils/adminPermision.js"
+import { isAdminAuthorized } from "../utils/adminPermission.js"
 
 import db from "../mysql/db.js"
 import express from 'express'
