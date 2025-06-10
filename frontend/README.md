@@ -1,7 +1,7 @@
 # Admin Tool Frontend
 
-> Svelte 기반의 관리자 페이지 프론트엔드  
-> 포트폴리오 제출을 위한 SPA 프로젝트입니다.
+> Svelte 기반의 관리자 페이지 프론트엔드 SPA 프로젝트입니다.  
+> 포트폴리오 제출용으로 제작되었습니다.
 
 ---
 
@@ -10,6 +10,7 @@
 - **Framework**: Svelte
 - **Bundler**: Rollup
 - **Style**: SCSS
+- **환경변수 관리**: `.env` 파일로 도메인 등 환경 설정 관리
 - **배포 방식**: Nginx + HTTPS + 경로 기반 서비스(`/admin-front/`)
 
 ---
@@ -82,3 +83,14 @@ npm run dev
 npm run build
 
 # Nginx에 배포될 정적 파일: /public/admin-front/
+```
+
+---
+
+## 환경 변수 (.env)
+
+프론트엔드에서 사용하는 주요 환경 변수 예시는 다음과 같습니다:
+
+```ini
+SERVICE_DOMAIN=https://yourdomain.com
+```
