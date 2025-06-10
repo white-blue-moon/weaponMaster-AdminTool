@@ -23,20 +23,22 @@ backend
 │   ├── account.js
 │   ├── access_level.js
 │   ├── site_setting.js
-│   └── ...
+│   └── (기타 API 관련 파일들)
 │
 ├── constants
 │   └── state.js
-│   └── ...
+│   └── (기타 상수 파일들)
 │
 ├── mysql
+│   ├── sql
+│   │   └── create.sql
 │   └── db.js
 │
 ├── utils
 │   ├── adminPermission.js
 │   ├── cron.js
 │   ├── time.js
-│   └── ...
+│   └── (기타 유틸리티 파일들)
 │
 ├── .env
 ├── deploy.sh
