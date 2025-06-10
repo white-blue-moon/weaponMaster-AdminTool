@@ -5,7 +5,7 @@
 	import { canAccessAdminPage } from './utils/auth'
 	import { navigate } from 'svelte-routing'
 
-	import AccessGate from './routes/AccessGate.svelte'
+	import AccessGate        from './routes/access-gate/AccessGate.svelte'
 	import Home              from './routes/Home.svelte'
 	import SettingInsertPage from './routes/site_setting/SettingInsertPage.svelte'
 	import SettingEditPage   from './routes/site_setting/SettingEditPage.svelte'

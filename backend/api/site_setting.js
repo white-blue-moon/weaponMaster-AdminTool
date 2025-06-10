@@ -45,7 +45,7 @@ router.post('/site_setting', asyncHandler(async (req, res) => {
             return res.status(404).send({ message: `[INSERT ERROR] site_setting_reserved, settings_id: ${id}` })
         }
     
-        // 에약 내역 cron 등록
+        // 예약 내역 cron 등록
         reserveCron(id, reservedDate)
     }
 
