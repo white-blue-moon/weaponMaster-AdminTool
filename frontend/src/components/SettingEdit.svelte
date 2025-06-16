@@ -23,6 +23,13 @@
     // RESERVED 날짜 선택 기본 오전 10:00으로 설정
     let reservedDate = getCalenderHourTime(10)
 
+    onMount(async ()=> {
+        await fetchMaxVersions()
+        await fetchSetting()
+
+        setDefaultSetting()
+    })
+
     async function fetchMaxVersions() {
         const response = await apiFetch(API.SITE_SETTING.MAX_VERSIONS, {
             method: 'GET',
@@ -62,13 +69,6 @@
             settings = { ...siteSetting.settings }
         }
     }
-
-    onMount(async ()=> {
-        await fetchMaxVersions()
-        await fetchSetting()
-
-        setDefaultSetting()
-    });
 
     // 신규로 추가된 설정에 대해서는 기본 0으로 할당해서 저장되도록 함
     function setDefaultSetting() {
