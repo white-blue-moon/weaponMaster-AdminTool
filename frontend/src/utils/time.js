@@ -12,6 +12,11 @@ export function formatDate(inputDate) {
     return `${year}.${month}.${day} ${hours}:${minutes}`;
 }
 
+// ex. 2025-06-18
+export function formatDateYMD(inputDate) {
+    return inputDate.split(' ')[0]
+}
+
 // ex. 2025년 1월 23일 오후 5:00 와 같이 표시
 export function formatDateReadable(inputDate) {
     const date = new Date(inputDate)

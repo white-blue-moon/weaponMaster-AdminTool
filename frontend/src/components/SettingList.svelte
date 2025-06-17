@@ -4,7 +4,7 @@
     import { onMount } from "svelte"
     import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { PATHS } from '../constants/paths'
-    import { formatDateSimple } from '../utils/time'
+    import { formatDateSimple, formatDateYMD } from '../utils/time'
     import { isAdminLoggedIn } from '../utils/auth'
 
     import BoardSearch from './BoardSearch.svelte'
@@ -191,7 +191,7 @@
                         </a>
                         <div class="iconset"></div>
                     </li>
-                    <li class="date">{ setting.create_date.split('T')[0] }</li>
+                    <li class="date">{ formatDateYMD(setting.create_date) }</li>
                     <li class="hits">#{ setting.id }</li>
                 </ul>
             {/each}

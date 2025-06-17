@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte"
     import { ACCESS_LEVEL, MAINTENANCE_STATE, SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
-    import { formatDateReadable, formatDateSimple } from '../utils/time'
+    import { formatDateReadable, formatDateSimple, formatDateYMD } from '../utils/time'
     import { PATHS } from "../constants/paths"
     import { isAdminLoggedIn } from "../utils/auth"
 
@@ -152,7 +152,7 @@
                             </span>
                         </li>
                     {/if}
-                    <li class="date">{ setting.create_date.split('T')[0] }</li>
+                    <li class="date">{ formatDateYMD(setting.create_date) }</li>
                     <li class="hits">#{ setting.id }</li>
                 </ul>
             {/each}
