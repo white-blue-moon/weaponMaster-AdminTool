@@ -18,10 +18,11 @@
     let delayProgressTimer
     
     let loadingDataAniTime  = 2200 // 기본 연출 시간 (로딩바 + 커버 전환 시간)
+    let loadingDataTimer
 
-    let origiViewportContent;
+    let origiViewportContent
   
-    onMount(async () => {
+    onMount(() => {
         disableMobileZoom()
         document.addEventListener('mousedown', handleClickOutside)
         setDefaultLoadingBar()
@@ -30,11 +31,13 @@
     onDestroy(() => {
         restoreMobileZoom()
         document.removeEventListener('mousedown', handleClickOutside)
+        cancelAnimationFrame(delayProgressTimer)
+        clearInterval(loadingDataTimer)
     })
 
     // 화면을 가로지르는 초기 기본 로딩 바 연출 함수
     function setDefaultLoadingBar() {
-        const loadingDataTimer = setInterval(() => {
+        loadingDataTimer = setInterval(() => {
             if (defaultLoadingPercent < 100) {
                 defaultLoadingPercent += 4.545; // 2200ms 동안 100% 로 끝내기 위한 비율)
             } else {

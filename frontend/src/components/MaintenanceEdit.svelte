@@ -21,6 +21,12 @@
 
     let maintenanceStartDate = getCalenderHourTime(5)
     let maintenanceEndDate   = getCalenderHourTime(10)
+
+    onMount(async ()=> {
+        if (!isInsert) {
+            await fetchSetting()
+        }
+    })
     
     async function fetchSetting() {
         const response = await apiFetch(apiUrlBase.READ(settingID), {
@@ -40,12 +46,6 @@
             maintenanceEndDate   = formatCalenderDate(maintenance.end_date)
         }
     }
-
-    onMount(async ()=> {
-        if (!isInsert) {
-            await fetchSetting()
-        }
-    })
 
     // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요
     async function handleDelete() {

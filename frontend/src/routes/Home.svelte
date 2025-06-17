@@ -1,6 +1,5 @@
 <script>
     import { onMount } from "svelte";
-    import { useLocation } from "svelte-routing";
 
     import Gnb from "../components/Gnb.svelte";
     import VisualBanner from "../components/VisualBanner.svelte";
@@ -9,7 +8,6 @@
     import Top from "../components/Top.svelte";
 
     let   show     = false;
-    const location = useLocation();
 
     onMount(() => {
         const isFromGate = sessionStorage.getItem('fromAccessGate') === 'true';
@@ -34,6 +32,8 @@
     <VisualBanner title="홈페이지 설정 제어"/>
     <SettingList />
     <Footer />
+    
+    <Top />
 </div>
 
 

@@ -18,6 +18,10 @@
     const hrefBase           = PATHS.ACCESS_LEVEL
     const stateEntries       = Object.entries(ACCESS_LEVEL_TEXT)
     const STATE_NOT_SELECTED = -1
+
+    onMount(async ()=> {
+        await fetchSetting()
+    })
     
     async function fetchSetting() {
         const response = await apiFetch(apiUrlBase.READ(settingID), {
@@ -34,10 +38,6 @@
             }      
         }
     }
-
-    onMount(async ()=> {
-        await fetchSetting()
-    })
 
     // TODO 수정/삭제 권한 있는지 확인 후 조작하도록 예외처리 필요
     async function handleDelete() {

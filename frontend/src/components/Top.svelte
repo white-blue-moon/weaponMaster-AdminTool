@@ -5,6 +5,14 @@
     const topButtonTriggerPoint = 650
     let   showTopButton         = false
 
+    onMount(() => {
+        window.addEventListener('scroll', handleScroll)
+    })
+
+    onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll)
+    })
+
     function handleScroll() {
         showTopButton = window.scrollY > topButtonTriggerPoint
     }
@@ -32,14 +40,6 @@
         // 첫 번째 프레임 시작
         requestAnimationFrame(animate)
     }
-
-    onMount(() => {
-        window.addEventListener('scroll', handleScroll)
-    })
-
-    onDestroy(() => {
-        window.removeEventListener('scroll', handleScroll)
-    })
 </script>
 
 

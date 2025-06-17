@@ -13,14 +13,6 @@
 
     let settings = null
 
-    const getStateClass = (state) => {
-        switch (state) {
-            case ACCESS_LEVEL.NORMAL:   return "access-normal"
-            case ACCESS_LEVEL.ADMIN:    return "access-admin"
-            default: return ""
-        }
-    }
-
     onMount(async () => {
         const response = await apiFetch(API.ACCESS_LEVEL.LIST, {
             method: "GET",
@@ -39,6 +31,14 @@
             }, [])
         }
     })
+
+    const getStateClass = (state) => {
+        switch (state) {
+            case ACCESS_LEVEL.NORMAL:   return "access-normal"
+            case ACCESS_LEVEL.ADMIN:    return "access-admin"
+            default: return ""
+        }
+    }
 </script>
 
 {#if settings != null}

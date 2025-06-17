@@ -1,6 +1,5 @@
 <script>
   import { PATHS } from "../constants/paths"
-
   import BoldLink from "./BoldLink.svelte"
 </script>
 
