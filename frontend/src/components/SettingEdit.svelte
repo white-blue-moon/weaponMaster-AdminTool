@@ -1,12 +1,16 @@
 <script>
-    import { API } from '../constants/api';
-    import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState';
+    import { API } from '../constants/api'
+    import { SETTING_STATE, SETTING_STATE_TEXT } from '../constants/settingState'
     import { SETTING_LABEL } from '../constants/siteSettingLabel'
-    import { apiFetch, handleApiError } from '../utils/apiFetch';
-    import { onMount } from "svelte";
-    import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time";
-    import { PATHS } from '../constants/paths';
-    import { adminToolToken, adminUserInfo, isAdminLoggedIn } from '../utils/auth';
+    import { apiFetch, handleApiError } from '../utils/apiFetch'
+    import { onMount } from "svelte"
+    import { formatDate, formatCalenderDate, getCalenderHourTime } from "../utils/time"
+    import { PATHS } from '../constants/paths'
+    import { adminToolToken, adminUserInfo, isAdminLoggedIn } from '../utils/auth'
+    import { WEAPON_ASSETS } from '../constants/resourcePath'
+
+    import Spinner from './Spinner.svelte'
+  
 
     export let isInsert = false
 
@@ -23,11 +27,14 @@
     // RESERVED 날짜 선택 기본 오전 10:00으로 설정
     let reservedDate = getCalenderHourTime(10)
 
+    let isApiLoaded  = false
+
     onMount(async ()=> {
         await fetchMaxVersions()
         await fetchSetting()
 
         setDefaultSetting()
+        isApiLoaded = true
     })
 
     async function fetchMaxVersions() {
@@ -178,7 +185,7 @@
 </script>
 
 
-{#if siteSetting}       
+{#if isApiLoaded}       
     <section class="content news">
         <div class="board_view news_view">
             <dl>
@@ -256,6 +263,14 @@
         </article>
 
     </section>
+{:else}
+    <div class="spinner-container">
+        <img src="{WEAPON_ASSETS}/gif/gunner_loading.gif" alt="콜라보 거너(여) 로딩"/>
+        <p>
+            <Spinner margin_bottom="4px" margin_right="6px"/>
+            <span class="loading-text">로딩중입니다.</span>
+        </p>
+    </div>
 {/if}
 
 
@@ -460,9 +475,6 @@
         color: rgb(57, 132, 198) !important;
     }
 
-
-
-    // ==========[ 수정 테스트 중]==========
     // 홈페이지 설정 값 입력 목록
     .settings-container {
         display: flex;
@@ -491,9 +503,6 @@
     input[type="number"]::-webkit-inner-spin-button {
         opacity: 1; /* (증가/감소) 버튼 기본 숨겨진 상태 해제 */
     }
-    // ==========[ 수정 테스트 중]==========
-
-
 
     .bdview_bnrarea {
         position: relative;
@@ -504,7 +513,6 @@
     
     .bdview_btnarea.line {
         padding-bottom: 20px;
-        // border-bottom: 1px solid #eeedf2;
     }
     
     .bdview_btnarea {
@@ -566,10 +574,22 @@
         font-weight: 500 !important;
     }
 
+    .spinner-container {
+        width: 100%;         
+        height: 318px;        
+        display: flex;       
+        justify-content: center;  /* 가로 중앙 정렬 */
+        align-items: center;      /* 세로 중앙 정렬 */
+        flex-direction: column;   /* 스피너와 텍스트를 세로로 배치 */
+    }
 
-    .footer {
-        margin-top: 160px !important;
-        padding-top: 50px;
-        border-top: 1px solid #e0e2ec;
+    .spinner-container img {
+        top: 108px;
+        padding-left: 150px;
+    }
+
+    .spinner-container p {
+        position: absolute;
+        top: 562px;
     }
 </style>
